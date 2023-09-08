@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Implications Interface</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <style>
+        .bubble {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .bubble:hover,
+        .bubble.selected {
+            background-color: #d9eef7;
+        }
+
+        .search-results,
+        .selected-statements {
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            min-height: 150px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between;">
+        <div style="width: 45%;">
+            <div class="selected-statements" id="selectedConditionsDiv"></div>
+            <input type="text" id="conditionsSearchBar" placeholder="Search Conditions..." onkeyup="searchStatements('conditions')">
+            <div class="search-results" id="conditionsSearchResults"></div>
+
+            <div class="selected-statements" id="selectedConclusionsDiv"></div>
+            <input type="text" id="conclusionsSearchBar" placeholder="Search Conclusions..." onkeyup="searchStatements('conclusions')">
+            <div class="search-results" id="conclusionsSearchResults"></div>
+        </div>
+        <div style="width: 45%;">
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        const statements = [
+    "A is a field",
+    "A is an integral domain",
+    "A has no zero divisors",
+    "Every ideal of A is finitely generated",
+    "A is Noetherian",
+    "A has ascending chain condition on ideals",
+    "Every prime ideal of A is maximal",
+    "A is Artinian",
+    "A has descending chain condition on ideals",
+    "A is a unique factorization domain (UFD)",
+    "Every non-zero, non-unit element of A can be factored into irreducibles",
+    "Irreducible elements of A are prime",
+    "Every non-zero, non-unit ideal of A is an intersection of prime ideals",
+    "M is a projective A-module",
+    "M is a free A-module",
+    "A is a Dedekind domain",
+    "A is a principal ideal domain (PID)",
+    "A is local",
+    "A has a unique maximal ideal",
+    "A is a regular ring",
+    "A has finite global dimension",
+    "A is a Cohen-Macaulay ring",
+    "A has dimension zero",
+    "A has Krull dimension d",
+    "M is a finitely generated A-module",
+    "M has finite length over A",
+    "M is torsion-free over A",
+    "M is an integral extension of A",
+    "Spec(A) is connected",
+    "Spec(A) is irreducible",
+    "A has property S2",
+    "A is normal",
+    "A is reduced",
+    "A has no nilpotent elements"
+    ];
+
+
+    const implications = [
+    { premise: ["A is a field"], conclusion: ["A is an integral domain"] },
+    { premise: ["A is an integral domain"], conclusion: ["A has no zero divisors"] },
+    { premise: ["A is Noetherian"], conclusion: ["Every ideal of A is finitely generated", "A has ascending chain condition on ideals"] },
+    { premise: ["A is Artinian"], conclusion: ["A has descending chain condition on ideals"] },
+    { premise: ["A is a unique factorization domain (UFD)"], conclusion: ["Every non-zero, non-unit element of A can be factored into irreducibles", "Irreducible elements of A are prime"] },
+    { premise: ["A is a principal ideal domain (PID)"], conclusion: ["A is Noetherian", "Every non-zero ideal of A is prime or invertible"] },
+    { premise: ["A is a field"], conclusion: ["Every prime ideal of A is maximal"] },
+    { premise: ["M is a free A-module"], conclusion: ["M is a projective A-module"] },
+    { premise: ["A is an integral domain", "Every non-zero, non-unit ideal of A is an intersection of prime ideals"], conclusion: ["A is a Dedekind domain"] },
+    { premise: ["A is a field"], conclusion: ["A is local", "A has a unique maximal ideal"] },
+    { premise: ["A is local"], conclusion: ["A has a unique maximal ideal"] },
+    { premise: ["A is a regular ring"], conclusion: ["A is Noetherian", "A has finite global dimension"] },
+    { premise: ["A is a Cohen-Macaulay ring"], conclusion: ["A is Noetherian", "A has property S2"] },
+    { premise: ["A is a unique factorization domain (UFD)"], conclusion: ["A is integrally closed in its field of fractions"] },
+    { premise: ["A is a principal ideal domain (PID)"], conclusion: ["A is a unique factorization domain (UFD)"] },
+    { premise: ["A is a field"], conclusion: ["A is reduced", "A has no nilpotent elements"] },
+    { premise: ["A is normal"], conclusion: ["A is integral domain", "A is reduced", "A is integrally closed in its field of fractions"] },
+    { premise: ["A has Krull dimension d"], conclusion: ["A is not a field if d>0"] },
+    { premise: ["M is an integral extension of A"], conclusion: ["M is a field if A is a field"] },
+    { premise: ["M has finite length over A"], conclusion: ["M is a finitely generated A-module"] },
+    { premise: ["A is Artinian"], conclusion: ["A has dimension zero"] },
+    { premise: ["Spec(A) is connected"], conclusion: ["A cannot be expressed as a direct sum of two non-zero rings"] },
+    { premise: ["A is reduced"], conclusion: ["A has no nilpotent elements"] },
+    { premise: ["A is a Dedekind domain"], conclusion: ["A is Noetherian", "A is an integral domain", "Every non-zero, non-unit ideal of A is an intersection of prime ideals"] },
+    { premise: ["A is normal", "Spec(A) is connected"], conclusion: ["A is an integral domain"] },
+    { premise: ["M is torsion-free over A", "A is an integral domain"], conclusion: ["M is an A-submodule of a free module"] },
+    { premise: ["A is Noetherian", "A has dimension zero"], conclusion: ["A is Artinian"] }
+];
+
+
+        function wrapWithText(statement) {
+            return "\\text{" + statement + "}";
+        }
+
+        function searchStatements(type) {
+            const searchBar = type === 'conditions' ? document.getElementById('conditionsSearchBar') : document.getElementById('conclusionsSearchBar');
+            const searchResultsDiv = type === 'conditions' ? document.getElementById('conditionsSearchResults') : document.getElementById('conclusionsSearchResults');
+            const searchValue = searchBar.value.toLowerCase();
+            
+            const results = statements.filter(statement => statement.toLowerCase().includes(searchValue));
+
+            searchResultsDiv.innerHTML = '';
+            results.forEach(result => {
+                let bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.innerHTML = result;
+                bubble.onclick = () => addToSelected(type, result);
+                searchResultsDiv.appendChild(bubble);
+            });
+        }
+
+        function addToSelected(type, statement) {
+            const selectedDiv = type === 'conditions' ? document.getElementById('selectedConditionsDiv') : document.getElementById('selectedConclusionsDiv');
+            
+            if (!Array.from(selectedDiv.childNodes).some(node => node.innerText === statement)) {
+                let bubble = document.createElement('div');
+                bubble.className = 'bubble selected';
+                bubble.innerHTML = statement;
+                bubble.onclick = function() {
+                    selectedDiv.removeChild(bubble);
+                    displayImplications();
+                };
+                selectedDiv.appendChild(bubble);
+            }
+            displayImplications();
+        }
+
+        function displayImplications() {
+            const conditions = Array.from(document.getElementById('selectedConditionsDiv').childNodes).map(node => node.innerText);
+            const conclusions = Array.from(document.getElementById('selectedConclusionsDiv').childNodes).map(node => node.innerText);
+
+            const matchingImplications = getImplications(conditions, conclusions);
+
+            let latexOutput = '';
+            matchingImplications.forEach(implication => {
+                const premise = implication.premise.map(wrapWithText).join(", ");
+                const conclusion = implication.conclusion.map(wrapWithText).join(", ");
+                latexOutput += `$$ ${premise} \\implies ${conclusion} $$`;
+            });
+
+            document.getElementById('output').innerHTML = latexOutput;
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        function getImplications(conditions, conclusions) {
+            return implications.filter(implication => {
+                const premiseMatches = conditions.every(cond => implication.premise.includes(cond));
+                const conclusionMatches = !conclusions.length || conclusions.every(concl => implication.conclusion.includes(concl));
+                return premiseMatches && conclusionMatches;
+            });
+        }
+    </script>
+</body>
+
+</html>
