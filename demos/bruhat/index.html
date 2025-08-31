@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S₄ Bruhat Graph</title>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 1rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; margin: 0 0 0.5rem; }
+    .controls { margin-bottom: 0.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    #cy { width: 100%; height: 78vh; border: 1px solid #ddd; border-radius: 12px; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 999px; background: #eef6ff; color: #174a7c; font-size: 0.85rem; }
+    .legend { font-size: 0.95rem; color: #333; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <h1>S₄ Bruhat Graph</h1>
+  <div class="controls">
+    <span class="badge" id="stats">Nodes: 0, Edges: 0</span>
+    <button id="layout">Re-layout</button>
+    <label><input type="checkbox" id="showLabels" checked> Show labels</label>
+    <span class="legend">Edge if \(w \to ws_i\) with \(\ell(ws_i) = \ell(w)+1\).</span>
+  </div>
+  <div id="cy"></div>
+
+  <script>
+    // Generate S4 permutations in one-line notation
+    function permutations(arr) {
+      if (arr.length === 1) return [arr];
+      const res = [];
+      for (let i = 0; i < arr.length; i++) {
+        const curr = arr[i];
+        const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+        for (const p of permutations(rest)) res.push([curr].concat(p));
+      }
+      return res;
+    }
+    function inversions(perm) {
+      let inv = 0;
+      for (let i = 0; i < perm.length; i++) {
+        for (let j = i + 1; j < perm.length; j++) {
+          if (perm[i] > perm[j]) inv++;
+        }
+      }
+      return inv;
+    }
+    function swapAdjacent(perm, i) {
+      const p = perm.slice();
+      [p[i], p[i+1]] = [p[i+1], p[i]];
+      return p;
+    }
+    function idStr(p){ return p.join(""); }
+
+    const S4 = permutations([1,2,3,4]);
+    // Precompute length and layers
+    const lengths = {};
+    const layers = {};
+    for (const p of S4) {
+      const id = idStr(p);
+      const l = inversions(p);
+      lengths[id] = l;
+      (layers[l] ??= []).push(p);
+    }
+
+    // Nodes
+    const nodes = S4.map(p => ({
+      data: { id: idStr(p), label: idStr(p), len: lengths[idStr(p)] }
+    }));
+
+    // Cover edges: w -> w s_i when length increases by 1
+    const edges = [];
+    for (const w of S4) {
+      const wlen = inversions(w);
+      for (let i=0; i<3; i++) { // s1,s2,s3
+        const ws = swapAdjacent(w, i);
+        const wsl = inversions(ws);
+        if (wsl === wlen + 1) {
+          edges.push({ data: { id: idStr(w) + "_s" + (i+1) + "_" + idStr(ws), source: idStr(w), target: idStr(ws), si: i+1 } });
+        }
+      }
+    }
+
+    // Layout by levels (length)
+    // Compute positions: y by length, x evenly spaced in layer
+    const positions = {};
+    const yGap = 120;
+    const xGap = 80;
+    Object.keys(layers).sort((a,b)=>a-b).forEach((l, row)=>{
+      const arr = layers[l];
+      const width = (arr.length - 1) * xGap;
+      arr.forEach((p, i) => {
+        const x = -width/2 + i * xGap;
+        const y = row * yGap;
+        positions[idStr(p)] = { x, y };
+      });
+    });
+
+    const cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements: { nodes, edges },
+      style: [
+        { selector: 'node',
+          style: {
+            'background-color': '#174a7c',
+            'label': 'data(label)',
+            'color': '#fff',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'font-size': 12,
+            'width': 36,
+            'height': 36,
+            'border-width': 0,
+            'text-margin-y': 0
+          }
+        },
+        { selector: 'edge',
+          style: {
+            'width': 2,
+            'line-color': '#9ec1db',
+            'target-arrow-color': '#9ec1db',
+            'curve-style': 'bezier',
+            'arrow-scale': 1,
+            'target-arrow-shape': 'triangle'
+          }
+        },
+        { selector: 'node[level]',
+          style: { }
+        }
+      ],
+      layout: {
+        name: 'preset',
+        positions: (ele) => positions[ele.id()],
+        fit: true,
+        padding: 40
+      },
+      wheelSensitivity: 0.25
+    });
+
+    // UI wiring
+    document.getElementById('stats').textContent = `Nodes: ${nodes.length}, Edges: ${edges.length}`;
+
+    document.getElementById('layout').addEventListener('click', () => {
+      cy.layout({ name: 'preset', positions: (ele)=>positions[ele.id()], fit: true, padding: 40 }).run();
+    });
+
+    document.getElementById('showLabels').addEventListener('change', (e) => {
+      cy.style().selector('node').style('label', e.target.checked ? 'data(label)' : '').update();
+    });
+  </script>
+</body>
+</html>

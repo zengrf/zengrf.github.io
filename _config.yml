@@ -1,0 +1,89 @@
+title: "Michael R. Zeng 曽若凡"
+description: "Graduate student in mathematics, University of Washington"
+url: "https://zengrf.github.io"   # user site URL
+baseurl: ""                       # keep empty for user sites (username.github.io)
+repository: "zengrf/zengrf.github.io"
+
+markdown: kramdown
+theme: null
+remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin: "mzeng"
+
+paginate: 10
+timezone: "America/Los_Angeles"
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-redirect-from
+  - jekyll-paginate
+  - jekyll-include-cache
+
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  hard_wrap: false
+  syntax_highlighter_opts:
+    disable: false
+
+include:
+  - "_pages"
+  - "demos"
+
+collections:
+  posts:
+    output: true
+    permalink: /blog/:year/:month/:day/:title/
+
+defaults:
+  # Site-wide defaults
+  - scope:
+      path: ""
+    values:
+      layout: single
+      author_profile: true
+      toc: false
+      classes: wide
+
+  # Pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+
+  # Posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: false
+      share: true
+
+author:
+  name: "Michael R. Zeng"
+  avatar: "/assets/img/avatar.png"
+  bio: "Math PhD student. Algebraic geometry, moduli, \\(ᵀ^1\\)-enriched enumerative geometry, and computational experiments."
+  location: "Seattle, WA"
+  links:
+    - label: "Email"
+      url: "mailto:your.email@uw.edu"
+      icon: "fas fa-envelope"
+    - label: "GitHub"
+      url: "https://github.com/zengrf"
+      icon: "fab fa-github"
+    - label: "Google Scholar"
+      url: "https://scholar.google.com/"
+      icon: "ai ai-google-scholar"
+
+# Social / SEO
+twitter:
+  username: ""
+logo: "/assets/img/avatar.png"
+
+# Optional analytics or comments systems can be configured later.
