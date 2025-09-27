@@ -1,0 +1,26 @@
+
+// Base colors
+$background-color: #fefdfb !default;
+$text-color: #2a1f18 !default;
+$link-color: #4c3426 !default; // warm umber instead of blue
+$link-hover-color: #d48c2f !default;
+$masthead-link-color: #4c3426 !default;
+$sidebar-link-color: #4c3426 !default;
+$border-color: rgba(78,56,40,0.12) !default;
+
+// All-serif
+$global-font-family: "EB Garamond","Noto Serif","Times New Roman",Times,serif !default;
+$header-font-family: "Cormorant Garamond","EB Garamond","Noto Serif","Times New Roman",Times,serif !default;
+$caption-font-family: "EB Garamond","Noto Serif","Times New Roman",Times,serif !default;
+$mono-font-family: "Courier Prime","Courier New",Courier,monospace !default;
+
+// Footer colors
+$footer-background-color: #faf6f0;
+$footer-text-color: #4c3426;
+$footer-link-color: #4c3426;
+$footer-link-hover-color: #d48c2f;
+
+@import "minimal-mistakes/skins/air";
+
+/* Extra: ensure serif headings regardless of theme defaults */
+h1,h2,h3,h4,h5,h6,.page__title,.site-title { font-family: "Cormorant Garamond","EB Garamond","Noto Serif",serif; }

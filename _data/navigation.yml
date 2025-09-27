@@ -1,3 +1,4 @@
+
 main:
   - title: "Home"
     url: /
@@ -9,7 +10,3 @@ main:
     url: /notes/
   - title: "小倉色紙"
     url: /ogura-shikishi/
-  - title: "Demos"
-    url: /demos/
-  - title: "Blog"
-    url: /blog/

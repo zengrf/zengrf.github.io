@@ -1,16 +1,12 @@
+
 {%- comment -%}
 Usage:
-{% include pdf-snippet.html file="/assets/pdfs/your.pdf" page=3 zoom="page-width" height="680px" %}
+{% include pdf-snippet.html file="/assets/pdfs/sample.pdf" page=2 zoom="page-width" height="640px" %}
 {%- endcomment -%}
-
 {%- assign f = include.file | default: "" -%}
 {%- assign p = include.page | default: 1 -%}
 {%- assign z = include.zoom | default: "page-width" -%}
-{%- assign h = include.height | default: "720px" -%}
-
-<div class="embed-container" style="padding-bottom: 0; height: {{ h }};">
-  <iframe
-    src="https://mozilla.github.io/pdf.js/web/viewer.html?file={{ f | uri_escape }}#page={{ p }}&zoom={{ z }}"
-    allowfullscreen="true">
-  </iframe>
+{%- assign h = include.height | default: "640px" -%}
+<div class="embed-container" style="padding-bottom:0;height:{{ h }};">
+  <iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file={{ f | uri_escape }}#page={{ p }}&zoom={{ z }}" allowfullscreen></iframe>
 </div>

@@ -1,0 +1,14 @@
+{
+  "__lang": "ja",
+  "home": {
+    "greeting": "こんにちは！",
+    "intro_html": "私はワシントン大学（シアトル）の数学科で博士課程 2 年目の学生です。<a href='https://math.washington.edu/people/jarod-alper'>Jarod Alper</a> と <a href='https://math.washington.edu/people/sara-billey'>Sara Billey</a> のもとで研究しています。代数幾何・ホモトピー論・組合せ論の交差領域に関心があります。最近は 3D プリントで数学を可視化することにも興味を持っています。",
+    "cta_notes": "Notes ハブを開く",
+    "cta_notes_desc": "ブログ記事、PDF スニペット、インタラクティブデモ（Bruhat グラフ、Pyodide、JupyterLite）。",
+    "ext_demo": "Sage/Macaulay2 チュートリアル",
+    "jl_html": "<strong>JupyterLite（オプション）</strong><br>リポジトリ直下に <code>jupyterlite/</code> ビルドを追加すると、ここに自動的に表示されます。"
+  },
+  "ui": {
+    "lang_close": "閉じる"
+  }
+}

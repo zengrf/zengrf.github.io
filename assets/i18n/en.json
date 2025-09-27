@@ -1,0 +1,14 @@
+{
+  "__lang": "en",
+  "home": {
+    "greeting": "Hi there!",
+    "intro_html": "I am a second-year Ph.D. student in mathematics at the University of Washington, Seattle. I work with <a href='https://math.washington.edu/people/jarod-alper'>Jarod Alper</a> and <a href='https://math.washington.edu/people/sara-billey'>Sara Billey</a>. I am interested in the intersection of algebraic geometry, homotopy theory, and combinatorics. Recently, I became interested in visualizing mathematics using 3D printing.",
+    "cta_notes": "Open Notes hub",
+    "cta_notes_desc": "Blog posts, PDF snippets, and interactive demos (Bruhat graph, Pyodide, JupyterLite).",
+    "ext_demo": "Sage/Macaulay2 tutorial",
+    "jl_html": "<strong>JupyterLite (optional)</strong><br>If you add a <code>jupyterlite/</code> build to the repo root, it appears below automatically."
+  },
+  "ui": {
+    "lang_close": "Close"
+  }
+}

@@ -4,10 +4,23 @@ layout: single
 author_profile: true
 ---
 
-Welcome! I’m a mathematics PhD student at UW Seattle. My interests include algebraic geometry (moduli of curves, enumerative geometry), and computational experiments (Sage, Macaulay2, Python).
+<div class="reveal">
+  <h1 data-i18n="home.greeting">Hi there!</h1>
+  <p class="dropcap" data-i18n="home.intro_html" data-i18n-html>
+    I am a Ph.D. student at UW Seattle ... (loading i18n)
+  </p>
 
-This site is a rebuild of my Google Sites presence, now with a blog and interactive demos.
+  <p>
+    <a class="btn" href="/notes/" data-i18n="home.cta_notes">Open Notes hub</a>
+    <span style="margin-left:.5rem;" data-i18n="home.cta_notes_desc">Blog posts, PDF snippets, and interactive demos.</span>
+  </p>
 
-- **Latest:** see the [Blog](/blog/) for updates.
-- **Interactive:** try the [S₄ Bruhat graph](/demos/bruhat/) and the [Pyodide playground](/demos/pyodide/).
-- **External:** my Sage/Macaulay2 tutorial: <https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html>.
+  <p>
+    <a href="https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html" data-i18n="home.ext_demo">Sage/Macaulay2 tutorial</a>
+  </p>
+
+  <div class="jl-tip" data-i18n="home.jl_html" data-i18n-html>
+    <strong>JupyterLite (optional)</strong><br>
+    If you add a <code>jupyterlite/</code> build to the repo root, it appears below automatically.
+  </div>
+</div>

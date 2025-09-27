@@ -1,0 +1,14 @@
+{
+  "__lang": "zh-Hans",
+  "home": {
+    "greeting": "你好！",
+    "intro_html": "我是在西雅图华盛顿大学数学系读博二的学生。我与 <a href='https://math.washington.edu/people/jarod-alper'>Jarod Alper</a> 和 <a href='https://math.washington.edu/people/sara-billey'>Sara Billey</a> 合作。我的兴趣在代数几何、同伦论与组合学的交叉地带。最近我也在尝试用 3D 打印来可视化数学。",
+    "cta_notes": "进入 Notes 中心",
+    "cta_notes_desc": "博客、PDF 片段嵌入、以及交互式演示（Bruhat 图、Pyodide、JupyterLite）。",
+    "ext_demo": "Sage/Macaulay2 教程",
+    "jl_html": "<strong>JupyterLite（可选）</strong><br>如果在仓库根目录添加 <code>jupyterlite/</code> 构建，它会自动显示在下面。"
+  },
+  "ui": {
+    "lang_close": "关闭"
+  }
+}

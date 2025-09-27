@@ -1,0 +1,14 @@
+{
+  "__lang": "de",
+  "home": {
+    "greeting": "Hallo!",
+    "intro_html": "Ich bin Doktorand im zweiten Jahr in Mathematik an der University of Washington (Seattle). Ich arbeite mit <a href='https://math.washington.edu/people/jarod-alper'>Jarod Alper</a> und <a href='https://math.washington.edu/people/sara-billey'>Sara Billey</a> zusammen. Meine Interessen liegen an der Schnittstelle von algebraischer Geometrie, Homotopietheorie und Kombinatorik. Kürzlich habe ich begonnen, Mathematik mit 3D-Druck zu visualisieren.",
+    "cta_notes": "Notes-Hub öffnen",
+    "cta_notes_desc": "Blog, PDF-Ausschnitte und interaktive Demos (Bruhat-Graph, Pyodide, JupyterLite).",
+    "ext_demo": "Sage/Macaulay2-Tutorial",
+    "jl_html": "<strong>JupyterLite (optional)</strong><br>Wenn du im Repository-Wurzelverzeichnis ein <code>jupyterlite/</code>-Build ablegst, erscheint es automatisch hier."
+  },
+  "ui": {
+    "lang_close": "Schließen"
+  }
+}

@@ -1,76 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pyodide Playground</title>
-  <style>
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 1rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; margin: 0 0 0.5rem; }
-    textarea { width: 100%; height: 260px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; border-radius: 8px; padding: 0.6rem; }
-    pre { background: #111; color: #e6e6e6; padding: 0.8rem; border-radius: 8px; min-height: 160px; overflow: auto; }
-    button { padding: 0.5rem 0.9rem; border-radius: 8px; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer; }
-    .row { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .col { flex: 1 1 420px; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Inter:wght@500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-</head>
-<body>
-  <h1>Pyodide Playground</h1>
-  <p>Run small Python snippets in your browser—no server needed.</p>
 
-  <div class="row">
-    <div class="col">
-      <textarea id="code">import sys
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyodide Playground</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@600&family=Cormorant+Garamond:wght@600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<style>
+body{font-family:"EB Garamond","Times New Roman",Times,serif;margin:0;padding:1rem;background:var(--bg);color:var(--ink)}
+h1{font-family:"Cormorant Garamond",serif;margin:0 0 .5rem;color:var(--primary)}
+textarea{width:100%;height:260px;font-family:"Courier Prime","Courier New",monospace;font-size:14px;border-radius:10px;padding:.6rem;background:color-mix(in oklab, var(--bg) 96%, white);border:1px solid rgba(0,0,0,.08);color:var(--ink)}
+pre{background:#1b1612;color:#faf7f0;padding:.8rem;border-radius:10px;min-height:160px;overflow:auto}
+button{font-family:inherit;border:1px solid var(--accent);background:linear-gradient(180deg, color-mix(in oklab, var(--bg) 98%, white), color-mix(in oklab, var(--bg) 90%, white));padding:.4rem .8rem;border-radius:999px;color:var(--primary);cursor:pointer}
+.row{display:flex;gap:1rem;flex-wrap:wrap}.col{flex:1 1 420px}
+</style></head><body>
+<h1>Pyodide Playground</h1>
+<p>Run small Python snippets in your browser—no server needed.</p>
+<div class="row">
+<div class="col">
+<textarea id="code">import sys, math
 print("Hello from Python", sys.version)
-# Try some math
-import math
 print("π ≈", math.pi)</textarea>
-      <div style="margin-top: 0.5rem;">
-        <button id="runBtn">Run (Shift+Enter)</button>
-        <button id="clearBtn">Clear Output</button>
-      </div>
-    </div>
-    <div class="col">
-      <pre id="output"></pre>
-    </div>
-  </div>
+<div style="margin-top:.5rem;">
+  <button id="runBtn">Run (Shift+Enter)</button>
+  <button id="clearBtn">Clear Output</button>
+</div>
+</div>
+<div class="col"><pre id="output"></pre></div>
+</div>
+<script>
+const out=document.getElementById('output');
+const code=document.getElementById('code');
+const runBtn=document.getElementById('runBtn');
+const clearBtn=document.getElementById('clearBtn');
 
-  <script>
-    const out = document.getElementById('output');
-    const code = document.getElementById('code');
+function appendOutput(text){
+  if(!text) return;
+  out.textContent += text.replace(/\r/g, '') + (text.endsWith('\n') ? '' : '\n');
+}
 
-    function printToOut(s){
-      out.textContent += s + "\n";
-    }
-
-    async function ensurePyodide(){
-      if (!window.pyodideReadyPromise) {
-        window.pyodideReadyPromise = loadPyodide();
-      }
-      return await window.pyodideReadyPromise;
-    }
-
-    async function run(){
-      const pyodide = await ensurePyodide();
-      out.textContent = "";
-      try {
-        const result = await pyodide.runPythonAsync(code.value);
-        if (result !== undefined) printToOut(String(result));
-      } catch (err) {
-        printToOut(String(err));
-      }
-    }
-
-    document.getElementById('runBtn').addEventListener('click', run);
-    document.getElementById('clearBtn').addEventListener('click', ()=> out.textContent="");
-    code.addEventListener('keydown', (e)=>{
-      if (e.key === 'Enter' && e.shiftKey) {
-        e.preventDefault();
-        run();
-      }
+let pyodideReadyPromise;
+async function ensurePyodide(){
+  if(!pyodideReadyPromise){
+    runBtn.disabled = true;
+    runBtn.textContent = 'Loading Pyodide…';
+    pyodideReadyPromise = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/' }).then(async (py)=>{
+      const bridge = { print_out: appendOutput };
+      py.registerJsModule('ui_bridge', bridge);
+      await py.runPythonAsync(`
+import sys
+from ui_bridge import print_out
+class _JsWriter:
+    def write(self, data):
+        if data:
+            print_out(data)
+    def flush(self):
+        pass
+sys.stdout = _JsWriter()
+sys.stderr = _JsWriter()
+`);
+      return py;
+    }).finally(()=>{
+      runBtn.disabled = false;
+      runBtn.textContent = 'Run (Shift+Enter)';
     });
-  </script>
-</body>
-</html>
+  }
+  return pyodideReadyPromise;
+}
+
+async function run(){
+  const py = await ensurePyodide();
+  out.textContent = '';
+  try {
+    const result = await py.runPythonAsync(code.value);
+    if(result !== undefined && String(result).trim()) appendOutput(String(result));
+  } catch (error) {
+    appendOutput(String(error));
+  }
+}
+
+runBtn.addEventListener('click', run);
+clearBtn.addEventListener('click', ()=> out.textContent = '');
+code.addEventListener('keydown', event=>{
+  if(event.key === 'Enter' && event.shiftKey){
+    event.preventDefault();
+    run();
+  }
+});
+
+ensurePyodide();
+</script>
+</body></html>
