@@ -1,12 +1,20 @@
 
 main:
-  - title: "Home"
+  - key: home
+    title: "Home"
     url: /
-  - title: "Research"
+  - key: research
+    title: "Research"
     url: /research/
-  - title: "Teaching"
+  - key: teaching
+    title: "Teaching"
     url: /teaching/
-  - title: "Notes"
+  - key: notes
+    title: "Notes"
     url: /notes/
-  - title: "小倉色紙"
+  - key: ogura
+    title: "小倉色紙"
     url: /ogura-shikishi/
+  - key: cv
+    title: "CV"
+    url: /cv/

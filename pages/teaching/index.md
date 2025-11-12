@@ -1,38 +1,56 @@
 ---
-title: "Teaching"
-layout: single
+title: Teaching
+layout: default
 permalink: /teaching/
-author_profile: true
 ---
 
-<div class="reveal">
-<h2>Current / Upcoming Courses</h2>
-<ul>
-  <li><strong>Math 308: Matrix Algebra</strong> — Spring 2025 (Instructor). Emphasis on conceptual understanding of linear transformations and numerical experiments in Sage.</li>
-  <li><strong>Math 126: Calculus with Several Variables</strong> — Winter 2025 (Teaching Assistant). Led twice-weekly quiz sections and problem-solving workshops.</li>
-</ul>
-</div>
+<section class="section">
+  <h2>Teaching &amp; seminars</h2>
+  <figure>
+    <img src="{{ '/assets/img/classroom.jpg' | relative_url }}" alt="Students collaborating during a reading seminar" />
+    <figcaption>Graduate reading seminars are my favorite way to learn together.</figcaption>
+  </figure>
+  <h3>Schubert Reading Seminar</h3>
+  <p>Go team Schubert!</p>
 
-<div class="reveal">
-<h2>Recent Teaching & TA Experience</h2>
-<ul>
-  <li><strong>Math 318: Advanced Linear Algebra</strong> — Autumn 2024 (TA). Designed worksheets on spectral theorems and symplectic geometry applications.</li>
-  <li><strong>Math 120: Precalculus</strong> — Summer 2024 (Instructor of record). Coordinated a fast-paced review of algebra and trigonometry with daily office hours.</li>
-  <li><strong>Math 327: Introduction to Real Analysis</strong> — Autumn 2023 (Grader). Prepared fully worked solution sets and held exam prep sessions.</li>
-</ul>
-<p>Full teaching CV available on request; send a note to <a href="mailto:zengrf@uw.edu">zengrf@uw.edu</a>.</p>
-</div>
+  <h3>Algebraic Curves</h3>
+  <p>In Winter 2025, I am organizing a graduate reading course on algebraic curves, supervised by <a href="https://math.washington.edu/people/giovanni-inchiostro">Prof. Giovanni Inchiostro</a>. Course materials live at <a href="https://sites.google.com/view/curves-seminar">Curves Seminar</a>.</p>
 
-<div class="reveal">
-<h2>Teaching Resources</h2>
-<ul>
-  <li>Lecture note drafts and seminar write-ups live on the <a href="{{ '/notes/' | relative_url }}">Notes hub</a>.</li>
-  <li>Interactive demos for the classroom: <a href="/demos/bruhat/">Bruhat graph explorer</a> and <a href="/demos/pyodide/">Pyodide playground</a>.</li>
-  <li>Office hours: Tuesdays 14:30–16:00 and Thursdays 12:00–13:00 in Padelford C-8xx (confirm via email each quarter).</li>
-</ul>
-</div>
+  <h3>MATH 583C &mdash; Intersection Theory</h3>
+  <p>In Spring 2024, I co-organized a graduate reading course on intersection theory together with Arkamouli Debnath, supervised by <a href="https://math.washington.edu/people/sandor-kovacs">Prof. Sándor Kovács</a>. Notes and schedule are archived at <a href="https://sites.google.com/view/uwmath583cintersectiontheory">MATH 583C</a>.</p>
+  <figure>
+    <img src="{{ '/assets/img/teaching-seminar.jpg' | relative_url }}" alt="Whiteboard notes from a seminar session" />
+    <figcaption>Notes from a joint lecture on the 3264 problem and enumerative geometry.</figcaption>
+  </figure>
+</section>
 
-<div class="reveal">
-<h2>Teaching Approach</h2>
-<p>I aim to build an inclusive and collaborative classroom by combining inquiry-based discussions with computation. Students work through exploratory problems first, then we formalize the ideas together and connect them to research-level examples drawn from algebraic geometry and topology.</p>
-</div>
+<section class="section">
+  <h2>Teaching at the UW</h2>
+  <figure>
+    <img src="{{ '/assets/img/intersection-seminar.jpg' | relative_url }}" alt="Intersection theory seminar discussion" />
+    <figcaption>Discussing intersection theory with the MATH 583C reading group.</figcaption>
+  </figure>
+  <h3>2024 &ndash; 2025</h3>
+  <ul>
+    <li>(WI25) MATH 111: Algebra with Applications</li>
+    <li>(AU24) MATH 126 CE / CF: Calculus with Analytic Geometry III</li>
+  </ul>
+
+  <h3>2023 &ndash; 2024</h3>
+  <ul>
+    <li>(SU24) MATH 300 A: Introduction to Mathematical Reasoning</li>
+    <li>(SP24) MATH 126 BA / BB: Calculus with Analytic Geometry III</li>
+    <li>(WI24) MATH 125 CC / CD: Calculus with Analytic Geometry II</li>
+    <li>(AU23) MATH 125 CE / CF: Calculus with Analytic Geometry II</li>
+  </ul>
+
+  <h3>Contact</h3>
+  <dl class="definition-list">
+    <dt>Office</dt>
+    <dd>Padelford C-20</dd>
+    <dt>Email</dt>
+    <dd><a href="mailto:zengrf@uw.edu">zengrf@uw.edu</a></dd>
+    <dt>Last updated</dt>
+    <dd>2024‑12‑30</dd>
+  </dl>
+</section>

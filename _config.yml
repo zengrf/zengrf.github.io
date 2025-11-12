@@ -7,8 +7,6 @@ repository: "zengrf/zengrf.github.io"
 
 markdown: kramdown
 theme: null
-remote_theme: "mmistakes/minimal-mistakes"
-minimal_mistakes_skin: "wabi"
 
 paginate: 10
 timezone: "America/Los_Angeles"
@@ -28,7 +26,6 @@ kramdown:
 
 include:
   - "pages"
-  - "assets/i18n"
 
 collections:
   posts:
@@ -38,12 +35,15 @@ collections:
 defaults:
   - scope: { path: "", type: posts }
     values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: false
-      share: true
-      tags: [notes]
+      layout: post
+      comments: true
+
+comments:
+  provider: utterances
+  utterances:
+    repo: "zengrf/zengrf.github.io"
+    issue_term: "title"
+    label: "comments"
 
 author:
   name: "Michael R. Zeng"
