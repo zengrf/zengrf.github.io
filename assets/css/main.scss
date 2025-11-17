@@ -1024,7 +1024,7 @@ html[lang='zh-Hans'] .back-link:focus {
 
 .note-card {
   height: 100%;
-  padding: 1.2rem;
+  padding: 0.9rem 1.2rem 1.2rem;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--surface);
@@ -1092,7 +1092,7 @@ html[lang='zh-Hans'] .note-card {
 
 .featured-card {
   position: relative;
-  padding: 1.3rem;
+  padding: 1rem 1.3rem 1.3rem;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--surface);
@@ -1186,10 +1186,11 @@ html[lang='zh-Hans'] .featured-card__decoration {
 }
 
 .featured-card__title {
-  font-size: 1.55rem;
-  margin: 0;
+  font-size: 1.55rem !important;
+  margin: 0 !important;
   line-height: 1.35;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.025em !important;
+  text-transform: none !important;
   font-weight: 600;
   position: relative;
   padding-bottom: 0.8rem;
@@ -1214,13 +1215,13 @@ html[lang='zh-Hans'] .featured-card__decoration {
 }
 
 html[lang='zh-Hans'] .featured-card__title {
-  font-size: 1.6rem;
-  letter-spacing: 0.07em;
+  font-size: 1.6rem !important;
+  letter-spacing: 0.07em !important;
   font-weight: 500;
 }
 
 html[lang='ja'] .featured-card__title {
-  letter-spacing: 0.06em;
+  letter-spacing: 0.06em !important;
 }
 
 .featured-card__title a {
@@ -1283,12 +1284,12 @@ html[lang='zh-Hans'] .featured-card:focus-within .featured-card__title a {
 }
 
 .note-card__title {
-  font-size: 1.05rem;
+  font-size: 1.15rem !important;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.015em !important;
+  text-transform: none !important;
   color: var(--accent-dark);
-  margin: 0;
+  margin: 0 !important;
   position: relative;
   padding-bottom: 0.5rem;
   
@@ -1312,13 +1313,13 @@ html[lang='zh-Hans'] .featured-card:focus-within .featured-card__title a {
 }
 
 html[lang='zh-Hans'] .note-card__title {
-  font-size: 1.08rem;
-  letter-spacing: 0.13em;
+  font-size: 1.18rem !important;
+  letter-spacing: 0.025em !important;
   font-weight: 500;
 }
 
 html[lang='ja'] .note-card__title {
-  letter-spacing: 0.14em;
+  letter-spacing: 0.02em !important;
 }
 
 .note-card p {
