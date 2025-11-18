@@ -124,7 +124,7 @@ em, i, cite, var, dfn {
 }
 
 html[lang='zh-Hans'] body.site-body {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR',  serif;
   background: var(--bg) url('../img/washi2.png');
   background-size: cover;
   background-attachment: fixed;
@@ -138,7 +138,7 @@ html[lang='zh-Hans'] body.site-body {
 }
 
 html[lang='ja'] body.site-body {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
   letter-spacing: 0.05em;
 }
 
@@ -354,7 +354,7 @@ html[lang='ja'] .brand__subtitle {
   list-style: none;
   margin: 0;
   padding: 0;
-  font-family: 'EB Garamond', 'Noto Serif JP', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Noto Serif SC', serif;
   font-size: 1.05rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -660,12 +660,12 @@ html[lang='zh-Hans'] .hero__text::before {
 }
 
 html[lang='zh-Hans'] .hero__text h1 {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
   letter-spacing: 0.08em;
 }
 
 html[lang='ja'] .hero__text h1 {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
   letter-spacing: 0.06em;
 }
 
@@ -677,12 +677,12 @@ html[lang='ja'] .hero__text h1 {
 }
 
 html[lang='zh-Hans'] .hero__text h1 span {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
   letter-spacing: 0.12em;
 }
 
 html[lang='ja'] .hero__text h1 span {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
   letter-spacing: 0.1em;
 }
 
@@ -693,13 +693,13 @@ html[lang='ja'] .hero__text h1 span {
 }
 
 html[lang='zh-Hans'] .hero__subtitle {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
   letter-spacing: 0.12em;
   font-size: 1.25rem;
 }
 
 html[lang='ja'] .hero__subtitle {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
   letter-spacing: 0.08em;
 }
 
@@ -713,13 +713,13 @@ html[lang='ja'] .hero__subtitle {
 }
 
 html[lang='zh-Hans'] .hero__note {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
+  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
   letter-spacing: 0.12em;
   text-transform: none;
 }
 
 html[lang='ja'] .hero__note {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
   letter-spacing: 0.1em;
   text-transform: none;
 }
@@ -1056,7 +1056,7 @@ html[lang='ja'] .toc__list a .toc__divider {
 
 html[lang='zh-Hans'] .toc__list a span[lang='zh-Hans'] {
   display: inline;
-  font-family: 'Noto Serif SC', serif;
+  font-family: 'Noto Serif SC', 'Noto Serif KR', serif;
 }
 
 html[lang='zh-Hans'] .toc__list a .toc__divider {
@@ -2134,7 +2134,7 @@ html[lang='zh-Hans'] .lang-toggle {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--accent-dark);
-  font-family: 'EB Garamond', 'Zen Old Mincho', serif;
+  font-family: 'EB Garamond', 'Zen Old Mincho', 'Noto Serif SC', serif;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.05em;

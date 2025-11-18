@@ -90,6 +90,6 @@ permalink: /teaching/
     <li>(WI24) Lie groups are not a lie: they are everywhere.</li>
   </ul>
 
-  I gave a talk at the Spring 2025 WDRP Seminar, where graduate students give intro-level talks related to their research. <a href="{{ '/notes/2025/04/23/WDRP-talk.html' | relative_url }}">View the slides here</a>.
+  I gave a talk at the Spring 2025 WDRP Seminar, where graduate students give intro-level talks related to their research. <a href="{{ '/notes/2025/04/23/WDRP-talk/' | relative_url }}">View the slides here</a>.
 
 </section>
