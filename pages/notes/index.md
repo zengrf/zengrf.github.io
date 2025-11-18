@@ -17,10 +17,13 @@ permalink: /notes/
 
 <section class="section section--grid" id="code-tools">
   {% assign code_posts = site.posts | where_exp: "post", "post.tags contains 'code'" | sort: 'date' | reverse %}
-  
+
   <details class="section-toc">
     <summary class="section-toc__summary">
       <h2>Code &amp; interactive tools</h2>
+
+      <br>
+      Coding stuff, and some tools I built as a vibe engineer. 🥸
     </summary>
     {% if code_posts.size > 0 %}
     <ul class="section-toc__list">
@@ -117,6 +120,9 @@ permalink: /notes/
   <details class="section-toc">
     <summary class="section-toc__summary">
       <h2>Notes &amp; translations</h2>
+
+      <br>
+      These are my notes and slides for various talks and seminars. Most have not been proof-read, and correctness is NOT guaranteed. 
     </summary>
     {% if note_posts.size > 0 %}
     <ul class="section-toc__list">

@@ -68,7 +68,7 @@ permalink: /teaching/
   I served as a mentor on the project "What mathematical functions can neural networks learn?" in the 2024-2025 iteration of the Math AI Lab. 
 
   <h3><a href="https://wxml.math.washington.edu/">Washington eXperimental Mathematics Lab - WXML</a></h3>
-  I served as a mentor on the Spring 2025 project <i>"Creating 3D Prints and Animations to Help Teach Calculus."</i> With <a href="https://sites.math.washington.edu/~aloveles/">Andy Loveless</a> and other group members, we created 3D prints of mathematical objects as teaching aids for the calculus sequence, and geometric thinking in general. Here is a <a href="https://sites.math.washington.edu/~aloveles/CalcVisuals/">ever-growing <i>Gallery of Shapes</i></a> that we've made so far. I like the following prints in particular:
+  I served as a mentor on the Spring 2025 project <i>"Creating 3D Prints and Animations to Help Teach Calculus."</i> With <a href="https://sites.math.washington.edu/~aloveles/">Andy Loveless</a> and other group members, we created 3D prints of mathematical objects as teaching aids for the calculus sequence, and geometric thinking in general. Here is an <a href="https://sites.math.washington.edu/~aloveles/CalcVisuals/">ever-growing <i>Gallery of Shapes</i></a> that we've made so far. I like the following prints in particular:
 
   <div style="display: flex; gap: 1.5rem; align-items: flex-start; justify-content: center; margin: 2rem 0;">
     <figure style="margin: 0; height: 150px; border-radius: 4px; box-shadow: var(--shadow); overflow: hidden;">

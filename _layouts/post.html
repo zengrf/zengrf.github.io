@@ -20,33 +20,16 @@ layout: default
     <iframe src="{{ page.embed_html | relative_url | replace: ' ', '%20' }}" title="{{ page.title }}" loading="lazy"></iframe>
   </div>
   {% endif %}
-  {% if page.comments %}
+  
   <section class="post__comments" aria-label="Comments">
     <h2 class="post__comments-title">Comments</h2>
-    {% capture comments_provider %}{{ site.comments.provider | default: 'utterances' }}{% endcapture %}
-    {% if comments_provider == 'utterances' %}
     <div id="utterances-thread"></div>
-    <script>
-      (function() {
-        var commentContainer = document.getElementById('utterances-thread');
-        if (!commentContainer) { return; }
-        var script = document.createElement('script');
-        script.src = 'https://utteranc.es/client.js';
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        script.setAttribute('repo', '{{ site.comments.utterances.repo | default: site.repository }}');
-        script.setAttribute('issue-term', '{{ site.comments.utterances.issue_term | default: "title" }}');
-        script.setAttribute('label', '{{ site.comments.utterances.label | default: "comments" }}');
-        script.setAttribute('theme', 'preferred-color-scheme');
-        commentContainer.appendChild(script);
-      })();
+    <script src="https://utteranc.es/client.js"
+            repo="zengrf/zengrf.github.io"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
     </script>
-    <noscript>
-      <p>Comments are powered by GitHub Issues. <a href="https://github.com/{{ site.comments.utterances.repo | default: site.repository }}/issues" target="_blank" rel="noopener">Open the discussion thread</a>.</p>
-    </noscript>
-    {% else %}
-    <p class="post__comments-help">Comments are disabled because the configured provider is not supported. Update <code>_config.yml</code> to use the <code>utterances</code> provider.</p>
-    {% endif %}
   </section>
-  {% endif %}
 </article>
