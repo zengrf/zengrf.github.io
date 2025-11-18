@@ -5,7 +5,7 @@ permalink: /teaching/
 ---
 
 <section class="section">
-  <h2>Teaching &amp; seminars</h2>
+  <h2>Seminars</h2>
   <figure>
     <img src="{{ '/assets/img/intersection-seminar.jpg' | relative_url }}" alt="Intersection theory seminar discussion" />
     <figcaption>A cover image for <a href="https://sites.google.com/view/uwmath583cintersectiontheory">MATH583 Intersection Theory</a>, made using various stock images.</figcaption>

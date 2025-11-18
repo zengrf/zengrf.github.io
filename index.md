@@ -10,11 +10,11 @@ author_profile: true
     <p data-i18n="hero.intro.2">I completed my B.A. studies at the University of Pennsylvania in 2023, double-majoring in mathematics and linguistics, and received an M.A. in Applied Math &amp; Computer Science. Outside of mathematics, you will often find me on the tennis or basketball court, or trying to learn a foreign language.</p>
     <dl class="definition-list">
       <dt data-i18n="hero.contact.email.label">Email</dt>
-      <dd data-i18n="hero.contact.email.value"><a href="mailto:zengrf@uw.edu">zengrf@uw.edu</a></dd>
+      <dd data-i18n="hero.contact.email.value">zengrf at uw dot edu</dd>
       <dt data-i18n="hero.contact.office.label">Office</dt>
       <dd data-i18n="hero.contact.office.value">Padelford C-20, UW Seattle</dd>
       <dt data-i18n="hero.contact.cv.label">CV</dt>
-      <dd data-i18n="hero.contact.cv.value"><a href="/Users/zengrf/Documents/GitHub/zengrf.github.io/assets/pdf/Michael%CV%Sep%2025.pdf">Download curriculum vitae</a></dd>
+      <dd data-i18n="hero.contact.cv.value"><a href="/assets/pdf/Michael CV Sep 2025.pdf">Download curriculum vitae (not up-to-date!)</a></dd>
     </dl>
   </div>
   <figure class="hero__image">
