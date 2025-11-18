@@ -129,6 +129,7 @@ permalink: /notes/
   
   {% assign featured_notes = note_posts | where: "featured", true %}
   {% assign regular_notes = note_posts | where_exp: "post", "post.featured != true" %}
+
   
   {% if featured_notes.size > 0 %}
   <div class="featured-grid">
@@ -190,6 +191,12 @@ permalink: /notes/
     {% endfor %}
   </ul>
   {% endif %}
+
+  <figure>
+      <img src="{{ '/assets/img/circles-of-apollonius-genus-4-curve.png' | relative_url }}" alt="Spanning lines" />
+      <figcaption>An illustration of the relationship between circles of apollonius and a singular genus 4 curve.</figcaption>
+  </figure>
+
 </section>
 
 
