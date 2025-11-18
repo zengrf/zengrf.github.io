@@ -3,7 +3,7 @@ title: "Gromov–Witten Invariants"
 date: 2024-09-15
 tags: [notes, talks]
 layout: post
-featured: true
+featured: false
 excerpt: "Expository talk given at eCHT Quadratic Curve Counting Seminar"
 downloads:
   - label: "Download slides (PDF)"

@@ -4,20 +4,33 @@ layout: default
 permalink: /notes/
 ---
 
-<section class="section">
-  <h2>Code &amp; interactive tools</h2>
-  <figure>
-    <img src="{{ '/assets/img/notes-gromov-witten.jpg' | relative_url }}" alt="Tropical curve visualization" />
-    <figcaption>Visual experiments with tropical curves and degenerations.</figcaption>
-  </figure>
+<nav class="toc">
+  <details class="toc__details">
+    <summary class="toc__summary"><span lang="ja">目次</span><span lang="zh-Hans">目录</span><span class="toc__divider"> · </span>Table of Contents</summary>
+    <ul class="toc__list">
+      <li><a href="#code-tools"><span lang="ja">コード</span><span lang="zh-Hans">代码</span><span class="toc__divider"> · </span>Code &amp; interactive tools</a></li>
+      <li><a href="#notes-translations"><span lang="ja">ノート</span><span lang="zh-Hans">笔记</span><span class="toc__divider"> · </span>Notes &amp; translations</a></li>
+      <li><a href="#blog-projects"><span lang="ja">ブログ</span><span lang="zh-Hans">博客</span><span class="toc__divider"> · </span>Blog &amp; ongoing projects</a></li>
+    </ul>
+  </details>
+</nav>
 
-  <article class="note-card note-card--embed">
-    <h3 class="note-card__title">InvariantRing^2 tutorial</h3>
-    <p>A PreTeXt tutorial on the Macaulay2 language featuring exercises from the <code>InvariantRing2</code> package. I first heard about the project from Francesca Gandini, and it doubles as a gentle on-ramp to computational invariant theory.</p>
-    <div class="embed-frame">
-      <iframe src="https://zengrf.github.io/macaulay2-invariantring-tutorial/" title="InvariantRing2 tutorial" loading="lazy"></iframe>
-    </div>
-  </article>
+<section class="section section--grid" id="code-tools">
+  {% assign code_posts = site.posts | where_exp: "post", "post.tags contains 'code'" | sort: 'date' | reverse %}
+  
+  <details class="section-toc">
+    <summary class="section-toc__summary">
+      <h2>Code &amp; interactive tools</h2>
+    </summary>
+    {% if code_posts.size > 0 %}
+    <ul class="section-toc__list">
+      {% for post in code_posts %}
+      <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </details>
+
 
   {% assign code_posts = site.posts | where_exp: "post", "post.tags contains 'code'" | sort: 'date' | reverse %}
   
@@ -38,13 +51,21 @@ permalink: /notes/
         {% else %}
         <p class="featured-card__excerpt">{{ post.content | strip_html | truncate: 300 }}</p>
         {% endif %}
-        {% if post.downloads %}
-        <ul class="download-list">
-          {% for item in post.downloads %}
-          {% assign download_url = item.file | relative_url | replace: ' ', '%20' %}
-          <li><a href="{{ download_url }}" target="_blank" rel="noopener">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
+        {% if post.embed_html %}
+        {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
+        <div class="featured-card__preview">
+          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
+        {% elsif post.embed_url %}
+        <div class="featured-card__preview">
+          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
+        {% elsif post.downloads %}
+        {% assign first_download = post.downloads | first %}
+        {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
+        <div class="featured-card__preview">
+          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
         {% endif %}
       </div>
       <div class="featured-card__decoration"></div>
@@ -87,15 +108,24 @@ permalink: /notes/
 -------
 
 
-<section class="section">
-  <h2>Notes &amp; translations</h2>
-  <figure>
-    <img src="{{ '/assets/img/notes-freudenthal.jpg' | relative_url }}" alt="Freudenthal's magic square diagram" />
-    <figcaption>Freudenthal's magic square session with Zachary Wallace-Wells, Zawad Chowdhury, and Bryan Lu.</figcaption>
-  </figure>
+<section class="section section--grid" id="notes-translations">
+
   {% assign notes_tagged = site.posts | where_exp: "post", "post.tags contains 'notes'" %}
   {% assign translations_tagged = site.posts | where_exp: "post", "post.tags contains 'translations'" %}
   {% assign note_posts = notes_tagged | concat: translations_tagged | uniq | sort: 'date' | reverse %}
+  
+  <details class="section-toc">
+    <summary class="section-toc__summary">
+      <h2>Notes &amp; translations</h2>
+    </summary>
+    {% if note_posts.size > 0 %}
+    <ul class="section-toc__list">
+      {% for post in note_posts %}
+      <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </details>
   
   {% assign featured_notes = note_posts | where: "featured", true %}
   {% assign regular_notes = note_posts | where_exp: "post", "post.featured != true" %}
@@ -112,13 +142,21 @@ permalink: /notes/
         {% if post.excerpt %}
         <p class="featured-card__excerpt">{{ post.excerpt | strip_html }}</p>
         {% endif %}
-        {% if post.downloads %}
-        <ul class="download-list">
-          {% for item in post.downloads %}
-          {% assign download_url = item.file | relative_url | replace: ' ', '%20' %}
-          <li><a href="{{ download_url }}" target="_blank" rel="noopener">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
+        {% if post.embed_html %}
+        {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
+        <div class="featured-card__preview">
+          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
+        {% elsif post.embed_url %}
+        <div class="featured-card__preview">
+          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
+        {% elsif post.downloads %}
+        {% assign first_download = post.downloads | first %}
+        {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
+        <div class="featured-card__preview">
+          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+        </div>
         {% endif %}
       </div>
       <div class="featured-card__decoration"></div>
@@ -155,13 +193,22 @@ permalink: /notes/
 </section>
 
 
-<section class="section">
-  <h2>Blog &amp; ongoing projects</h2>
-  <figure>
-    <img src="{{ '/assets/img/notes-pcmi.jpg' | relative_url }}" alt="PCMI 2024 lecture hall" />
-    <figcaption>PCMI 2024: motivic homotopy theory lectures in Park City, Utah.</figcaption>
-  </figure>
+<section class="section section--grid" id="blog-projects">
+
   {% assign project_posts = site.posts | where_exp: "post", "post.tags contains 'projects'" | sort: 'date' | reverse %}
+  
+  <details class="section-toc">
+    <summary class="section-toc__summary">
+      <h2>Blog</h2>
+    </summary>
+    {% if project_posts.size > 0 %}
+    <ul class="section-toc__list">
+      {% for post in project_posts %}
+      <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </details>
   
   {% assign featured_projects = project_posts | where: "featured", true %}
   {% assign regular_projects = project_posts | where_exp: "post", "post.featured != true" %}

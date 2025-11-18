@@ -15,6 +15,11 @@ layout: default
   <div class="post__content">
     {{ content }}
   </div>
+  {% if page.embed_html %}
+  <div class="post__embed">
+    <iframe src="{{ page.embed_html | relative_url | replace: ' ', '%20' }}" title="{{ page.title }}" loading="lazy"></iframe>
+  </div>
+  {% endif %}
   {% if page.comments %}
   <section class="post__comments" aria-label="Comments">
     <h2 class="post__comments-title">Comments</h2>

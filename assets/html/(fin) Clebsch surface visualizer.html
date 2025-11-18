@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Clebsch Cubic Explorer — single HTML file</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html, body { height: 100%; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    #app { position: fixed; inset: 0; background: #0b1020; }
+    canvas { display: block; }
+    .hud { position: fixed; left: 12px; bottom: 12px; color: #dbe2ff; font-size: 12px; line-height: 1.35; opacity: .9; }
+    .hud a { color: #a7c4ff; text-decoration: none; }
+    .legend { position: fixed; right: 12px; bottom: 12px; background: rgba(10,14,30,.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 8px 10px; color: #e6ecff; font-size: 12px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.15); margin: 3px; }
+    .swatch { width: 10px; height: 10px; border-radius: 10px; display: inline-block; }
+    .dock{position:fixed;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(10,14,30,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;color:#e6ecff;font-size:12px;z-index:5}
+    .dock .left,.dock .right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .chip.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);cursor:pointer;user-select:none}
+    .chip.btn.on{background:rgba(255,255,255,.1)}
+    .slider{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:10px;border:1px dashed rgba(255,255,255,.18)}
+    .slider input[type=range]{width:160px}
+    .switch{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 8px}
+    .switch input{accent-color:#4f46e5}
+    .info{position:fixed;inset:12px;background:rgba(10,14,30,.92);color:#e6ecff;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px 20px;overflow:auto;z-index:10}
+    .info.hidden{display:none}
+    .info h1{margin:0 0 8px}
+    .info h2{margin:16px 0 6px}
+    .info .close{position:sticky;top:0;float:right;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:transparent;color:inherit;padding:6px 10px;cursor:pointer}
+    .lil-gui{display:none}
+    /* Light theme */
+    body.light .dock{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.1);color:#1e2a44}
+    body.light .chip.btn{border-color:rgba(0,0,0,.12)}
+    body.light .chip.btn.on{background:rgba(0,0,0,.05)}
+    body.light .slider{border-color:rgba(0,0,0,.12)}
+    body.light .info{background:rgba(255,255,255,.96);border-color:rgba(0,0,0,.1);color:#1e2a44}
+      body.light .info{background:rgba(255,255,255,.96);border-color:rgba(0,0,0,.1);color:#1e2a44}
+    /* Graph window */
+    .graph{position:fixed;top:12px;right:12px;width:420px;background:rgba(10,14,30,.92);color:#e6ecff;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;z-index:9}
+    .graph.hidden{display:none}
+    .graph header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    .graph .title{font-weight:600}
+    .graph canvas{display:block;width:100%;height:260px;background:transparent}
+    body.light .graph{background:rgba(255,255,255,.96);color:#1e2a44;border-color:rgba(0,0,0,.1)}
+  </style>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="hud">
+    <div><strong>Clebsch Cubic Explorer</strong> — drag to orbit, scroll to zoom, right‑drag to pan.</div>
+    <div>Surface: <em>81(x³+y³+z³) − 189(x²(y+z)+y²(z+x)+z²(x+y)) + 54xyz + 126(xy+yz+zx) − 9(x²+y²+z²) − 9(x+y+z) + 1 = 0</em></div>
+    <div id="statusMath" class="math"></div>
+  </div>
+    <div>Surface: <em>81(x³+y³+z³) − 189(x²(y+z)+y²(z+x)+z²(x+y)) + 54xyz + 126(xy+yz+zx) − 9(x²+y²+z²) − 9(x+y+z) + 1 = 0</em></div>
+  </div>
+  <div class="legend">
+    <div class="chip"><span class="swatch" style="background:#4fd1c5"></span> All lines</div>
+    <div class="chip"><span class="swatch" style="background:#ff7ab6"></span> 12 of a double six</div>
+    <div class="chip"><span class="swatch" style="background:#ffd166"></span> 15 diagonal (hyperbolic) lines</div>
+  </div>
+  <!-- Bottom dock controls / legend -->
+  <div class="dock" id="dock">
+    <div class="left">
+      <div class="chip btn on" id="btnSurface">Surface</div>
+      <div class="chip btn on" id="btnDiag"><span class="swatch" style="background:#ffd166;width:10px;height:10px;border-radius:50%"></span>15 diagonals</div>
+      <div class="chip btn on" id="btnDouble"><span class="swatch" style="background:#ff7ab6;width:10px;height:10px;border-radius:50%"></span>double six</div>
+      <div class="chip btn on" id="btnEckardt"><span class="swatch" style="background:#80ffea;width:10px;height:10px;border-radius:50%"></span>Eckardt pts</div>
+      <div class="slider" title="Double six selector">
+        <span>DblSix</span>
+        <input type="range" id="dblSixSlider" min="0" max="36" value="1"/>
+        <span id="dblSixLabel">1</span>
+      </div>
+      <div class="slider" title="Single tritangent plane">
+        <span>Plane</span>
+        <input type="range" id="planeSlider" min="0" max="45" value="1"/>
+        <span id="planeLabel">1</span>
+      </div>
+      <div class="slider" title="Azygetic triple">
+        <label style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" id="azyToggle"/> triple</label>
+        <input type="range" id="azySlider" min="0" max="0" value="0"/>
+        <span id="azyLabel">0</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="chip btn" id="btnGraph">Graph</div>
+      <div class="chip btn" id="btnInfo">Info</div>
+      <label class="switch"><input type="checkbox" id="lightSwitch"/> Light</label>
+    </div>
+  </div>
+
+  <!-- Second screen with text & lists (MathJax will render dynamic items) -->
+  <div id="infoScreen" class="info hidden">
+    <button class="close" id="closeInfo">✕</button>
+    <h1>Clebsch Cubic — Equations & Incidence</h1>
+    <p><strong>Projective form:</strong> <span class="math">\(x^3+y^3+z^3+w^3=(x+y+z+w)^3\)</span></p>
+    <p><strong>Affine chart used in the renderer (\(w=1\)):</strong><br/><span class="math">\(81(x^3+y^3+z^3) - 189(x^2(y+z)+y^2(z+x)+z^2(x+y)) + 54xyz + 126(xy+yz+zx) - 9(x^2+y^2+z^2) - 9(x+y+z) + 1=0\)</span></p>
+    <h2>27 lines (parametrizations)</h2>
+    <ol id="linesList"></ol>
+    <h2>Tritangent planes</h2>
+    <p>Each item lists the triple of line indices <span class="math">\(\{\ell_i,\ell_j,\ell_k\}\)</span> lying in the plane.</p>
+    <ol id="planesList"></ol>
+  </div>
+
+  <div id="graphWin" class="graph hidden">
+    <header>
+      <span class="title">Schläfli graph (27 lines)</span>
+      <button class="close" id="closeGraph">✕</button>
+    </header>
+    <canvas id="graphCanvas" width="420" height="260"></canvas>
+    <div style="font-size:12px;opacity:.8;margin-top:6px">Edges connect <em>skew</em> lines. Colors follow the scene.</div>
+  </div>
+
+  <!-- Import map fixes module resolution for OrbitControls (and any other three/examples files) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+// ===================== CLEAN REBUILD (brace-checked) =====================
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Line2 } from 'three/examples/jsm/lines/Line2.js';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
+
+// ---- Scene ----
+const app = document.getElementById('app');
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x0b1020, 1);
+app.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.05, 100);
+camera.position.set(3.5,2.2,3.2);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+const hemi = new THREE.HemisphereLight(0xbcd7ff, 0x0b0f1f, 0.9); scene.add(hemi);
+const dir  = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(3,5,2); scene.add(dir);
+const grid = new THREE.GridHelper(10,10,0x1a2446,0x1a2446); grid.material.transparent=true; grid.material.opacity=0.35; grid.position.y=-1.5; scene.add(grid);
+const axes = new THREE.AxesHelper(1.6); axes.material.transparent=true; axes.material.opacity=0.55; scene.add(axes);
+
+// ---- Surface (ray-march quad) ----
+const R = { value: 1.35 };
+const surfaceUniforms = {
+  invProj: { value: new THREE.Matrix4() },
+  invView: { value: new THREE.Matrix4() },
+  camPos:  { value: new THREE.Vector3() },
+  boxR:    { value: R.value },
+  steps:   { value: 120 },
+  refine:  { value: 7 },
+  show:    { value: true },
+  opacity: { value: 0.22 },
+  baseColor:{ value: new THREE.Color(0x6ea8ff) },
+  lightDir:{ value: new THREE.Vector3(0.6,0.8,0.4).normalize() }
+};
+const bgScene = new THREE.Scene();
+const bgCam = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const quadGeo = new THREE.PlaneGeometry(2,2);
+const quadMat = new THREE.ShaderMaterial({
+  uniforms: surfaceUniforms,
+  vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }',
+  fragmentShader: `
+    precision highp float; varying vec2 vUv; uniform mat4 invProj, invView; uniform vec3 camPos; uniform float boxR; uniform int steps; uniform int refine; uniform bool show; uniform float opacity; uniform vec3 baseColor; uniform vec3 lightDir;
+    float F(vec3 p){ float x=p.x,y=p.y,z=p.z; float t1=81.0*(x*x*x+y*y*y+z*z*z); float t2=-189.0*(x*x*(y+z)+y*y*(z+x)+z*z*(x+y)); float t3=54.0*x*y*z; float t4=126.0*(x*y+y*z+z*x); float t5=-9.0*(x*x+y*y+z*z); float t6=-9.0*(x+y+z); return t1+t2+t3+t4+t5+t6+1.0; }
+    vec3 gradF(vec3 p){ float x=p.x,y=p.y,z=p.z; float dFx=243.0*x*x - 189.0*( 2.0*x*(y+z) + y*y + z*z ) + 54.0*y*z + 126.0*(y+z) - 18.0*x - 9.0; float dFy=243.0*y*y - 189.0*( 2.0*y*(z+x) + z*z + x*x ) + 54.0*z*x + 126.0*(z+x) - 18.0*y - 9.0; float dFz=243.0*z*z - 189.0*( 2.0*z*(x+y) + x*x + y*y ) + 54.0*x*y + 126.0*(x+y) - 18.0*z - 9.0; return vec3(dFx,dFy,dFz); }
+    bool intersectBox(vec3 ro, vec3 rd, float R, out float tmin, out float tmax){ vec3 inv=1.0/rd; vec3 t0=(-R-ro)*inv; vec3 t1=(R-ro)*inv; vec3 tsm=min(t0,t1); vec3 tbg=max(t0,t1); tmin=max(max(tsm.x,tsm.y),tsm.z); tmax=min(min(tbg.x,tbg.y),tbg.z); return tmax>=max(tmin,0.0); }
+    vec4 shade(vec3 p, vec3 ro){ vec3 N=normalize(gradF(p)); vec3 L=normalize(lightDir); vec3 V=normalize(ro-p); float diff=clamp(dot(N,L),0.0,1.0); float spec=pow(clamp(dot(reflect(-L,N),V),0.0,1.0),32.0)*0.35; vec3 col=baseColor*(0.25+0.75*diff)+spec; float fog=smoothstep(0.0,1.3,length(p)/(1.5*boxR)); col=mix(col, vec3(0.07,0.09,0.16), fog*0.6); return vec4(col, opacity); }
+    void main(){ if(!show) discard; vec2 ndc=vUv*2.0-1.0; vec4 clip=vec4(ndc,1.0,1.0); vec4 vpos=invProj*clip; vpos/=vpos.w; vec3 rd=normalize((invView*vec4(normalize(vpos.xyz),0.0)).xyz); vec3 ro=camPos; float t0,t1; if(!intersectBox(ro,rd,boxR,t0,t1)) discard; float t=t0; float lf=F(ro+rd*t); bool hit=false; vec3 p=vec3(0.0);
+      for(int i=0;i<600;i++){ if(i>=steps) break; float tn=mix(t0,t1,float(i+1)/float(steps)); vec3 q=ro+rd*tn; float f=F(q); if((lf<=0.0&&f>=0.0)||(lf>=0.0&&f<=0.0)){ float a=t,b=tn; for(int j=0;j<50;j++){ if(j>=refine) break; float m=0.5*(a+b); float fm=F(ro+rd*m); if((lf<=0.0&&fm>=0.0)||(lf>=0.0&&fm<=0.0)){ b=m; f=fm; } else { a=m; lf=fm; } } p=ro+rd*0.5*(a+b); hit=true; break; } t=tn; lf=f; }
+      if(!hit) discard; gl_FragColor=shade(p,ro); }
+  `,
+  depthWrite:false, transparent:true
+});
+const quad = new THREE.Mesh(quadGeo, quadMat); bgScene.add(quad);
+
+// ---- Lines (27) ----
+const SQ5 = Math.sqrt(5);
+const LINES = [
+  {a:1,b:-1,c:0,p:0,q:0,r:-1/3, tag:'diagonal'},
+  {a:1,b:0,c:-1,p:0,q:-1/3,r:0, tag:'diagonal'},
+  {a:0,b:1,c:-1,p:-1/3,q:0,r:0, tag:'diagonal'},
+  {a:1,b:-1,c:0,p:1/6,q:1/6,r:0, tag:'diagonal'},
+  {a:1,b:-1,c:0,p:1/3,q:1/3,r:1/3, tag:'diagonal'},
+  {a:1,b:0,c:-1,p:1/6,q:0,r:1/6, tag:'diagonal'},
+  {a:1,b:0,c:-1,p:1/3,q:1/3,r:1/3, tag:'diagonal'},
+  {a:0,b:1,c:-1,p:0,q:1/6,r:1/6, tag:'diagonal'},
+  {a:0,b:1,c:-1,p:1/3,q:1/3,r:1/3, tag:'diagonal'},
+  {a:3,b:0,c:1,p:1/6,q:0,r:1/6, tag:'diagonal'},
+  {a:3,b:1,c:0,p:1/6,q:1/6,r:0, tag:'diagonal'},
+  {a:0,b:3,c:1,p:0,q:1/6,r:1/6, tag:'diagonal'},
+  {a:1,b:3,c:0,p:1/6,q:1/6,r:0, tag:'diagonal'},
+  {a:0,b:1,c:3,p:0,q:1/6,r:1/6, tag:'diagonal'},
+  {a:1,b:0,c:3,p:1/6,q:0,r:1/6, tag:'diagonal'},
+  {a:1+3/SQ5,b:-1/SQ5,c:1,p:(5+SQ5)/30,q:(5+3*SQ5)/30,r:0, tag:'doubleSix'},
+  {a:-1/SQ5,b:1+3/SQ5,c:1,p:(5+3*SQ5)/30,q:(5+SQ5)/30,r:0, tag:'doubleSix'},
+  {a:-3-SQ5,b:-SQ5,c:1,p:(7+3*SQ5)/6,q:(3+SQ5)/6,r:0, tag:'doubleSix'},
+  {a:(-3+SQ5)/4,b:(-5+3*SQ5)/4,c:1,p:(3+SQ5)/12,q:(1-SQ5)/12,r:0, tag:'doubleSix'},
+  {a:(-5-3*SQ5)/4,b:(-3-SQ5)/4,c:1,p:(1+SQ5)/12,q:(3-SQ5)/12,r:0, tag:'doubleSix'},
+  {a:SQ5,b:-3+SQ5,c:1,p:(3-SQ5)/6,q:(7-3*SQ5)/6,r:0, tag:'doubleSix'},
+  {a:-SQ5,b:-3-SQ5,c:1,p:(3+SQ5)/6,q:(7+3*SQ5)/6,r:0, tag:'doubleSix'},
+  {a:(-5+3*SQ5)/4,b:(-3+SQ5)/4,c:1,p:(1-SQ5)/12,q:(3+SQ5)/12,r:0, tag:'doubleSix'},
+  {a:(-3-SQ5)/4,b:(-5-3*SQ5)/4,c:1,p:(3-SQ5)/12,q:(1+SQ5)/12,r:0, tag:'doubleSix'},
+  {a:-3+SQ5,b:SQ5,c:1,p:(7-3*SQ5)/6,q:(3-SQ5)/6,r:0, tag:'doubleSix'},
+  {a:1/SQ5,b:1-3/SQ5,c:1,p:(5-3*SQ5)/30,q:(5-SQ5)/30,r:0, tag:'doubleSix'},
+  {a:1-3/SQ5,b:1/SQ5,c:1,p:(5-SQ5)/30,q:(5-3*SQ5)/30,r:0, tag:'doubleSix'}
+];
+
+// ---- Helpers ----
+const vec=(a,b,c)=>new THREE.Vector3(a,b,c);
+const cross=(a,b)=>new THREE.Vector3().crossVectors(a,b);
+const dot=(a,b)=>a.dot(b);
+function clipLineToBox(a,b,c,p,q,r,Rb){
+  const INF=1e9, eps=1e-9;
+  const interval=(A,P)=>{ if(Math.abs(A)<eps){ if(P<-Rb||P>Rb) return null; return [-INF,INF]; } let t0=(-Rb-P)/A, t1=(Rb-P)/A; if(t0>t1){const tt=t0;t0=t1;t1=tt;} return [t0,t1]; };
+  const ix=interval(a,p); if(!ix) return null; const iy=interval(b,q); if(!iy) return null; const iz=interval(c,r); if(!iz) return null;
+  const tmin=Math.max(ix[0],iy[0],iz[0]); const tmax=Math.min(ix[1],iy[1],iz[1]); if(tmax<tmin) return null;
+  const P0=new THREE.Vector3(a*tmin+p,b*tmin+q,c*tmin+r); const P1=new THREE.Vector3(a*tmax+p,b*tmax+q,c*tmax+r); return [P0,P1];
+}
+
+// ---- Materials & groups ----
+const materials = {
+  diagonal:   new LineMaterial({ color: 0xffd166, linewidth: 3, transparent: true, opacity: 0.95 }),
+  doubleSixA: new LineMaterial({ color: 0xff7ab6, linewidth: 3, transparent: true, opacity: 0.95 }),
+  doubleSixB: new LineMaterial({ color: 0xc77dff, linewidth: 3, transparent: true, opacity: 0.95 }),
+  all:        new LineMaterial({ color: 0x4fd1c5, linewidth: 1, transparent: true, opacity: 0.25 }),
+  planeLine:  new LineMaterial({ color: 0xffffff, linewidth: 4, transparent: true, opacity: 0.95 })
+};
+const lineMaterials=[materials.diagonal,materials.doubleSixA,materials.doubleSixB,materials.all,materials.planeLine];
+lineMaterials.forEach(m=> m.resolution.set(window.innerWidth, window.innerHeight));
+
+const groupAll = new THREE.Group();
+const groupDiag = new THREE.Group();
+const groupDoubleSixA = new THREE.Group();
+const groupDoubleSixB = new THREE.Group();
+const groupEckardt = new THREE.Group();
+const groupPlanes = new THREE.Group();
+const groupPlaneLines = new THREE.Group();
+scene.add(groupAll, groupDiag, groupDoubleSixA, groupDoubleSixB, groupEckardt, groupPlanes, groupPlaneLines);
+
+function addSegment(P0,P1, mat, group){ const geo=new LineGeometry(); geo.setPositions([P0.x,P0.y,P0.z,P1.x,P1.y,P1.z]); const line=new Line2(geo,mat); line.computeLineDistances(); group.add(line); }
+function buildAllLines(boxR){
+  [groupAll, groupDiag, groupDoubleSixA, groupDoubleSixB].forEach(g=>{ while(g.children.length){ const c=g.children.pop(); if(c.geometry) c.geometry.dispose(); } });
+  LINES.forEach((L)=>{
+    const seg = clipLineToBox(L.a,L.b,L.c,L.p,L.q,L.r, boxR); if(!seg) return; const [P0,P1]=seg;
+    addSegment(P0,P1, materials.all, groupAll);
+    if(L.tag==='diagonal') addSegment(P0,P1, materials.diagonal, groupDiag);
+  });
+}
+buildAllLines(R.value);
+
+// ---- Planes & Eckardt ----
+const lineReps = LINES.map(L=>({ P: vec(L.p,L.q,L.r), V: vec(L.a,L.b,L.c), tag:L.tag }));
+function closestPointsOnLines(P1,V1,P2,V2){ const w0=new THREE.Vector3().subVectors(P1,P2); const a=dot(V1,V1), b=dot(V1,V2), c=dot(V2,V2); const d=dot(V1,w0), e=dot(V2,w0); const den=a*c-b*b; if(Math.abs(den)<1e-9) return null; const s=(b*e-c*d)/den; const t=(a*e-b*d)/den; const Q1=new THREE.Vector3().addVectors(P1, V1.clone().multiplyScalar(s)); const Q2=new THREE.Vector3().addVectors(P2, V2.clone().multiplyScalar(t)); return { Q1,Q2, dist: Q1.distanceTo(Q2) }; }
+function computeTritangentPlanes(){
+  const planesMap=new Map();
+  function tryPlane(i,j,k){
+    const A=lineReps[i],B=lineReps[j],C=lineReps[k];
+    let n=cross(A.V,B.V);
+    if(n.length()<1e-6){ n=cross(A.V, new THREE.Vector3().subVectors(B.P,A.P)); }
+    if(n.length()<1e-6){ n=cross(B.V, new THREE.Vector3().subVectors(A.P,B.P)); }
+    if(n.length()<1e-6) return null; n.normalize();
+    const s=(Math.abs(n.x)>=Math.abs(n.y)&&Math.abs(n.x)>=Math.abs(n.z))?Math.sign(n.x):((Math.abs(n.y)>=Math.abs(n.z))?Math.sign(n.y):Math.sign(n.z));
+    if(s<0) n.multiplyScalar(-1);
+    const d=-dot(n,A.P); const P0=n.clone().multiplyScalar(-d);
+    const ok=(L)=> Math.abs(dot(n,L.V))<2e-3 && Math.abs(dot(n, new THREE.Vector3().subVectors(L.P,P0)))<5e-3;
+    return ok(A)&&ok(B)&&ok(C)?{n,d}:null;
+  }
+  for(let i=0;i<lineReps.length;i++){
+    for(let j=i+1;j<lineReps.length;j++){
+      for(let k=j+1;k<lineReps.length;k++){
+        const pl=tryPlane(i,j,k);
+        if(pl){ const triple=[i,j,k].sort((a,b)=>a-b); const key=triple.join('|'); if(!planesMap.has(key)) planesMap.set(key,{plane:pl,lines:triple}); }
+      }
+    }
+  }
+  return Array.from(planesMap.values());
+}
+const TRITANGENT = computeTritangentPlanes();
+
+function buildTritangentPlaneMeshes(planes){
+  while(groupPlanes.children.length){ const c=groupPlanes.children.pop(); if(c.geometry) c.geometry.dispose(); }
+  const size=R.value*3.5; const geo=new THREE.PlaneGeometry(size,size);
+  planes.forEach((rec,idx)=>{
+    const n=rec.plane.n, d=rec.plane.d;
+    const mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color:0x8ec5ff, transparent:true, opacity:0.05, side:THREE.DoubleSide }));
+    const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), n);
+    mesh.quaternion.copy(q);
+    mesh.position.copy(n.clone().multiplyScalar(-d));
+    mesh.userData={idx:idx};
+    groupPlanes.add(mesh);
+  });
+}
+buildTritangentPlaneMeshes(TRITANGENT);
+
+function computeEckardtFromLinesStrict(){
+  while(groupEckardt.children.length){ const c=groupEckardt.children.pop(); if(c.geometry) c.geometry.dispose(); }
+  const sph=new THREE.SphereGeometry(0.035,20,14);
+  const mat=new THREE.MeshStandardMaterial({ color:0x80ffea, emissive:0x174a5b, roughness:0.2, metalness:0.0 });
+  const pts=[]; const n=lineReps.length;
+  const distPtoL=(P,L)=> cross(new THREE.Vector3().subVectors(P, L.P), L.V).length()/Math.max(1e-9,L.V.length());
+  function pass(pairTol, thirdTol){
+    for(let i=0;i<n;i++){
+      for(let j=i+1;j<n;j++){
+        const cp=closestPointsOnLines(lineReps[i].P,lineReps[i].V,lineReps[j].P,lineReps[j].V);
+        if(!cp || cp.dist>pairTol) continue;
+        const P=cp.Q1.clone().add(cp.Q2).multiplyScalar(0.5);
+        for(let k=j+1;k<n;k++){
+          if(distPtoL(P, lineReps[k])<=thirdTol) pts.push(P.clone());
+        }
+      }
+    }
+  }
+  pass(1e-3,1e-3);
+  if(pts.length<10) pass(2.5e-3,2.5e-3);
+  const uniq=[]; pts.forEach(p=>{ if(!uniq.some(q=> q.distanceTo(p)<1e-3)) uniq.push(p); });
+  uniq.forEach(p=>{ const m=new THREE.Mesh(sph,mat); m.position.copy(p); groupEckardt.add(m); });
+  return uniq;
+}
+const eckardtCenters = computeEckardtFromLinesStrict();
+
+// ---- Azygetic triples (from planes) ----
+function intersectionLineOfPlanes(p1,p2){ const d=cross(p1.n,p2.n); if(d.length()<1e-6) return null; const A=new THREE.Matrix3().set(p1.n.x,p1.n.y,p1.n.z, p2.n.x,p2.n.y,p2.n.z, d.x,d.y,d.z); const det=A.determinant(); if(Math.abs(det)<1e-10) return null; const Ai=new THREE.Matrix3().copy(A).invert(); const b=new THREE.Vector3(-p1.d,-p2.d,0).applyMatrix3(Ai); return { P:b, V:d.normalize() }; }
+function isSameLine(L1,L2){ if(cross(L1.V,L2.V).length()>1e-4) return false; const w=new THREE.Vector3().subVectors(L1.P,L2.P); return cross(w,L1.V).length()<1e-3; }
+function planesAzygetic(p1,p2){ const inter=intersectionLineOfPlanes(p1,p2); if(!inter) return false; for(const L of lineReps){ if(isSameLine(inter,L)) return false; } return true; }
+function computeAzygeticTriples(planes){ const n=planes.length; const adj=Array.from({length:n},()=>Array(n).fill(false)); for(let i=0;i<n;i++){ for(let j=i+1;j<n;j++){ adj[i][j]=adj[j][i]=planesAzygetic(planes[i].plane, planes[j].plane); } } const triples=[]; for(let i=0;i<n;i++){ for(let j=i+1;j<n;j++){ if(adj[i][j]){ for(let k=j+1;k<n;k++){ if(adj[i][k]&&adj[j][k]) triples.push([i,j,k]); } } } } return triples; }
+const AZYGETIC_TRIPLES = computeAzygeticTriples(TRITANGENT);
+
+// ---- Double six (principal only) ----
+// ---- Double sixes (all 36 via Schläfli incidence) ----
+function buildIncidence(){
+  const n=lineReps.length;
+  const SKW = Array.from({length:n},()=>Array(n).fill(false));
+  const INT = Array.from({length:n},()=>Array(n).fill(false));
+  const TOL_PAR=1e-8, TOL_INT=1e-3;
+  for(let i=0;i<n;i++){
+    for(let j=i+1;j<n;j++){
+      const V1=lineReps[i].V, V2=lineReps[j].V;
+      const parallel = cross(V1,V2).length()<TOL_PAR;
+      let intersectLike=false;
+      if(!parallel){
+        const cp=closestPointsOnLines(lineReps[i].P,V1,lineReps[j].P,V2);
+        intersectLike = !!cp && cp.dist < TOL_INT;
+      }
+      if(parallel || intersectLike){ INT[i][j]=INT[j][i]=true; }
+      else { SKW[i][j]=SKW[j][i]=true; }
+    }
+  }
+  return {SKW, INT};
+}
+const {SKW, INT} = buildIncidence();
+
+function bronKerboschK6(SKW){
+  const n=SKW.length;
+  const adj = Array.from({length:n},(_,i)=> new Set(Array.from({length:n},(_,j)=>j).filter(j=> SKW[i][j])));
+  const res = new Set();
+  function keyOf(S){ return Array.from(S).sort((a,b)=>a-b).join(','); }
+  function expand(R,P,X){
+    if(R.size===6){ res.add(keyOf(R)); return; }
+    if(P.size===0 && X.size===0) return;
+    let UX = new Set([...P,...X]); let u=null, max=-1;
+    for(let v of UX){ const d=[...P].filter(w=> adj[v].has(w)).length; if(d>max){max=d;u=v;} }
+    const candidates = new Set([...P].filter(v=> !adj[u]?.has(v)));
+    for(let v of candidates){
+      const R2=new Set(R); R2.add(v);
+      const P2=new Set([...P].filter(w=> adj[v].has(w)));
+      const X2=new Set([...X].filter(w=> adj[v].has(w)));
+      expand(R2,P2,X2);
+      P.delete(v); X.add(v);
+    }
+  }
+  expand(new Set(), new Set(Array.from({length:n},(_,i)=>i)), new Set());
+  return Array.from(res).map(s=> s.split(',').map(x=> parseInt(x,10)));
+}
+
+function isDoubleSix(A,B){
+  const SA=new Set(A);
+  if(B.some(b=> SA.has(b))) return false;
+  const usedB=new Set();
+  for(let a of A){
+    let hit=null;
+    for(let b of B){ if(SKW[a][b]){ hit=b; break; } }
+    if(hit===null) return false;
+    if(usedB.has(hit)) return false;
+    usedB.add(hit);
+    for(let b of B){ if(b===hit) continue; if(!INT[a][b]) return false; }
+  }
+  return true;
+}
+
+function enumerateDoubleSixes(){
+  const K6 = bronKerboschK6(SKW);
+  const out=[];
+  for(let i=0;i<K6.length;i++){
+    const A=K6[i];
+    for(let j=i+1;j<K6.length;j++){
+      const B=K6[j];
+      if(isDoubleSix(A,B)){
+        const As=[...A].sort((a,b)=>a-b), Bs=[...B].sort((a,b)=>a-b);
+        const k1=As.join(',')+'|'+Bs.join(','); const k2=Bs.join(',')+'|'+As.join(',');
+        const key = k1<k2? k1:k2;
+        if(!out.some(rec=> rec.key===key)){
+          out.push({A:As, B:Bs, key});
+        }
+      }
+    }
+  }
+  const nd = new Set(LINES.map((L,i)=> L.tag==='doubleSix'?i:null).filter(i=> i!==null));
+  const idx = out.findIndex(rec=> rec.A.every(x=> nd.has(x)) && rec.B.every(x=> nd.has(x)));
+  if(idx>0){ const rec=out.splice(idx,1)[0]; out.unshift(rec); }
+  return out;
+}
+const DOUBLE_SIXES = enumerateDoubleSixes();
+
+// ---- Schlafli graph adj ----
+function buildSchlafliAdjacency(){
+  const n=lineReps.length; const adj=Array.from({length:n},()=>Array(n).fill(false));
+  const TOL_PAR=1e-8, TOL_INT=1e-4;
+  for(let i=0;i<n;i++){
+    for(let j=i+1;j<n;j++){
+      const V1=lineReps[i].V, V2=lineReps[j].V;
+      const parallel = cross(V1,V2).length()<TOL_PAR;
+      let intersectLike=false;
+      if(!parallel){ const cp=closestPointsOnLines(lineReps[i].P,V1,lineReps[j].P,V2); intersectLike = !!cp && cp.dist < TOL_INT; }
+      const skew = !parallel && !intersectLike;
+      adj[i][j]=adj[j][i]=skew;
+    }
+  }
+  return adj;
+}
+const SCH_ADJ = buildSchlafliAdjacency();
+
+// ---- DOM refs ----
+const btnSurface = document.getElementById('btnSurface');
+const btnDiag = document.getElementById('btnDiag');
+const btnDouble = document.getElementById('btnDouble');
+const btnEckardt = document.getElementById('btnEckardt');
+const dblSixSlider = document.getElementById('dblSixSlider');
+const dblSixLabel = document.getElementById('dblSixLabel');
+const planeSlider = document.getElementById('planeSlider');
+const planeLabel = document.getElementById('planeLabel');
+const azyToggle = document.getElementById('azyToggle');
+const azySlider = document.getElementById('azySlider');
+const azyLabel = document.getElementById('azyLabel');
+const lightSwitch = document.getElementById('lightSwitch');
+const btnInfo = document.getElementById('btnInfo');
+const infoScreen = document.getElementById('infoScreen');
+const closeInfo = document.getElementById('closeInfo');
+const btnGraph = document.getElementById('btnGraph');
+const graphWin = document.getElementById('graphWin');
+const graphCanvas = document.getElementById('graphCanvas');
+const closeGraph = document.getElementById('closeGraph');
+const statusMath = document.getElementById('statusMath');
+let eckSlider = document.getElementById('eckSlider');
+let eckLabel = document.getElementById('eckLabel');
+
+// ---- Params ----
+const params = {
+  showSurface:true, showAllLinesGhost:true, showDiagonal15:true,
+  showDoubleSix:true, splitDoubleSix:true,
+  showEckardtPoints:true, showTritangentPlanes:true, planeIndex:1,
+  showAzygeticTriple:false, azygeticTripleIndex:0, lightMode:false,
+  doubleSixIndex:1, eckIndex:0
+};
+
+// ---- Builders ----
+function buildGroupFromIndices(idxArr, mat, group){
+  while(group.children.length){ const c=group.children.pop(); if(c.geometry) c.geometry.dispose(); }
+  idxArr.forEach(idx=>{ const L=LINES[idx]; const seg=clipLineToBox(L.a,L.b,L.c,L.p,L.q,L.r, surfaceUniforms.boxR.value); if(!seg) return; const [P0,P1]=seg; addSegment(P0,P1, mat, group); });
+}
+function buildPlaneLinesForIndices(indices){
+  groupPlaneLines.visible=true;
+  while(groupPlaneLines.children.length){ const c=groupPlaneLines.children.pop(); if(c.geometry) c.geometry.dispose(); }
+  const uniq=[...new Set(indices)];
+  uniq.forEach(idx=>{ const L=LINES[idx]; const seg=clipLineToBox(L.a,L.b,L.c,L.p,L.q,L.r,surfaceUniforms.boxR.value); if(!seg) return; const [P0,P1]=seg; addSegment(P0,P1, materials.planeLine, groupPlaneLines); });
+}
+
+// ---- Theme ----
+function setTheme(light){
+  document.body.classList.toggle('light', !!light);
+  if(light){
+    renderer.setClearColor(0xffffff,1);
+    hemi.color.set(0xffffff);
+    hemi.groundColor.set(0xf3f6ff);
+    grid.material.color.set(0xbed0ff);
+    grid.material.opacity=0.26;
+    axes.material.opacity=0.55;
+    surfaceUniforms.baseColor.value.set(0x1e90ff);
+    materials.diagonal.color.set(0xff9500);
+    materials.doubleSixA.color.set(0xff1493);
+    materials.doubleSixB.color.set(0x7c3aed);
+    materials.all.color.set(0x00e5d4);
+    materials.planeLine.color.set(0x000000);
+  }
+  if(!light){
+    renderer.setClearColor(0x0b1020,1);
+    hemi.color.set(0xbcd7ff);
+    hemi.groundColor.set(0x0b0f1f);
+    grid.material.color.set(0x1a2446);
+    grid.material.opacity=0.35;
+    axes.material.opacity=0.55;
+    surfaceUniforms.baseColor.value.set(0x6ea8ff);
+    materials.diagonal.color.set(0xffd166);
+    materials.doubleSixA.color.set(0xff7ab6);
+    materials.doubleSixB.color.set(0xc77dff);
+    materials.all.color.set(0x4fd1c5);
+    materials.planeLine.color.set(0xffffff);
+  }
+  updateGraphIfVisible();
+}
+
+// ---- Status MathJax ----
+function updateStatusMath(){
+  if(!statusMath) return;
+  var parts=[];
+  if(params.showDoubleSix && (params.doubleSixIndex|0)>0 && DOUBLE_SIXES.length){
+    var ds = DOUBLE_SIXES[Math.min(DOUBLE_SIXES.length, (params.doubleSixIndex|0)) - 1];
+    if(ds){
+      var A = ds.A.map(function(i){ return '\ell_{'+(i+1)+'}'; }).join(', ');
+      var B = ds.B.map(function(i){ return '\ell_{'+(i+1)+'}'; }).join(', ');
+      parts.push('\text{Double six }#'+(params.doubleSixIndex|0)+':\;\{'+A+'\}\mid\{'+B+'\}');
+    }
+  }
+  if(params.showTritangentPlanes && !params.showAzygeticTriple && (params.planeIndex|0)>0){
+    var rec = TRITANGENT[(params.planeIndex|0)-1];
+    if(rec){ var S = rec.lines.map(function(i){ return '\ell_{'+(i+1)+'}'; }).join(', '); parts.push('\Pi_{'+(params.planeIndex|0)+'}=\{'+S+'\}'); }
+  }
+  statusMath.innerHTML = parts.length ? ('\('+parts.join('\quad ')+'\)') : '';
+  if(window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([statusMath]);
+}
+
+// ---- Info panel (lines & planes) ----
+function fmt(n){ if(!isFinite(n)) return String(n); const v = Math.abs(n) < 1e-12 ? 0 : n; const r = Math.round(v*1e6)/1e6; return (''+r).replace(/-0(\.0+)?$/,'0'); }
+// function populateInfo(){
+//   const linesList=document.getElementById('linesList');
+//   const planesList=document.getElementById('planesList');
+//   if(linesList){
+//     const items = LINES.map((L,i)=>{
+//       const s = '\( \ell_{'+(i+1)+'}:\ (x,y,z)=( '+fmt(L.a)+'\,t+'+fmt(L.p)+',\ '+fmt(L.b)+'\,t+'+fmt(L.q)+',\ '+fmt(L.c)+'\,t+'+fmt(L.r)+' ) \)';
+//       return '<li><span class="math">'+s+'</span></li>';
+//     }).join('');
+//     linesList.innerHTML = items;
+//   }
+//   if(planesList){
+//     const items = TRITANGENT.map((rec,i)=>{
+//       const trip = rec.lines.map(k=>'\ell_{'+(k+1)+'}').join(',\ ');
+//       const s='\( \Pi_{'+(i+1)+'}=\{'+trip+'\} \)';
+//       return '<li><span class="math">'+s+'</span></li>';
+//     }).join('');
+//     planesList.innerHTML = items;
+//   }
+//   if(window.MathJax && MathJax.typesetPromise){ MathJax.typesetPromise([linesList, planesList]); }
+// }
+function populateInfo() {
+  const linesList = document.getElementById('linesList');
+  const planesList = document.getElementById('planesList');
+
+  // helper to print "a\,t + p" with a proper sign and MathJax spacing
+  const term = (coef, off) => {
+    const a = fmt(coef);
+    const b = fmt(off);
+    const bNum = parseFloat(b);
+    const sign = (isNaN(bNum) || bNum < 0) ? '' : '+';
+    return `${a}\\,t${sign}${b}`;
+  };
+
+  if (linesList) {
+    const items = LINES.map((L, i) => {
+      const s =
+        `\\( \\ell_{${i + 1}}:\\ (x,y,z)=\\bigl( ${term(L.a, L.p)},\\ ${term(L.b, L.q)},\\ ${term(L.c, L.r)} \\bigr) \\)`;
+      return `<li><span class="math">${s}</span></li>`;
+    }).join('');
+    linesList.innerHTML = items;
+  }
+
+  if (planesList) {
+    const items = TRITANGENT.map((rec, i) => {
+      const trip = rec.lines.map(k => `\\ell_{${k + 1}}`).join(',\\ ');
+      const s = `\\( \\Pi_{${i + 1}}=\\{${trip}\\} \\)`;
+      return `<li><span class="math">${s}</span></li>`;
+    }).join('');
+    planesList.innerHTML = items;
+  }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([linesList, planesList]);
+  }
+}
+
+
+// ---- Eckardt incidence for graph ----
+function computeEckardtIncidence(points){
+  const out = points.map(()=> new Set());
+  const tol = 1e-3;
+  for(let i=0;i<points.length;i++){
+    const P = points[i];
+    for(let li=0; li<lineReps.length; li++){
+      const L = lineReps[li];
+      const num = cross(new THREE.Vector3().subVectors(P, L.P), L.V).length();
+      const den = L.V.length();
+      const d = den>0 ? num/den : 1e9;
+      if(d < tol) out[i].add(li);
+    }
+  }
+  return out;
+}
+const ECK_LINES = computeEckardtIncidence(eckardtCenters);
+
+// ---- Selection handlers ----
+function updateDoubleSix(){
+  const idx0=(params.doubleSixIndex|0);
+  if(idx0<=0 || !params.showDoubleSix){
+    groupDoubleSixA.visible=false; groupDoubleSixB.visible=false;
+    groupDiag.visible = params.showDiagonal15;
+    updateStatusMath(); updateGraphIfVisible();
+    return;
+  }
+  const i=Math.max(1, Math.min(DOUBLE_SIXES.length, idx0))-1;
+  const ds=DOUBLE_SIXES[i];
+  if(!ds){ groupDoubleSixA.visible=false; groupDoubleSixB.visible=false; groupDiag.visible=false; return; }
+  buildGroupFromIndices(ds.A, materials.doubleSixA, groupDoubleSixA);
+  buildGroupFromIndices(ds.B, materials.doubleSixB, groupDoubleSixB);
+  groupDoubleSixA.visible=true; groupDoubleSixB.visible=params.splitDoubleSix;
+  const inSix=new Set([...ds.A,...ds.B]);
+  const diagIdx=LINES.map((_,j)=>j).filter(j=> !inSix.has(j));
+  buildGroupFromIndices(diagIdx, materials.diagonal, groupDiag);
+  groupDiag.visible=params.showDiagonal15;
+  updateStatusMath(); updateGraphIfVisible();
+}
+function updateSinglePlane(){
+  if(!params.showTritangentPlanes || params.showAzygeticTriple || params.planeIndex===0){
+    groupPlanes.children.forEach(m=> m.visible=false); groupPlaneLines.visible=false; updateGraphIfVisible(); updateStatusMath(); return;
+  }
+  const idx=Math.max(0, Math.min(TRITANGENT.length-1, (params.planeIndex|0)-1));
+  groupPlanes.children.forEach(m=> m.visible = (m.userData.idx === idx));
+  buildPlaneLinesForIndices(TRITANGENT[idx].lines);
+  updateGraphIfVisible(); updateStatusMath();
+}
+function applyAzygeticSelection(){
+  if(!params.showAzygeticTriple){
+    updateSinglePlane();
+    return;
+  }
+  var triple = AZYGETIC_TRIPLES[Math.max(0, Math.min(AZYGETIC_TRIPLES.length-1, params.azygeticTripleIndex))] || [];
+  groupPlanes.children.forEach(function(m){ m.visible=false; });
+  var lineIdxSet=new Set();
+  triple.forEach(function(pi){
+    var mesh=groupPlanes.children.find(function(m){ return m.userData.idx===pi; });
+    if(mesh) mesh.visible=true;
+    TRITANGENT[pi].lines.forEach(function(li){ lineIdxSet.add(li); });
+  });
+  buildPlaneLinesForIndices(Array.from(lineIdxSet));
+  updateGraphIfVisible();
+  updateStatusMath();
+}
+
+// ---- Graph window ----
+function colorForLineInGraph(i,sets){ if(sets.plane.has(i)||sets.triple.has(i)) return '#ffffff'; if(sets.eck.has(i)) return '#80ffea'; if(sets.diag.has(i)) return '#ffd166'; if(sets.A.has(i)) return '#ff7ab6'; if(sets.B.has(i)) return '#c77dff'; return 'rgba(120,130,170,0.7)'; }
+function getHighlightSets(){
+  const sets={ plane:new Set(), triple:new Set(), diag:new Set(), A:new Set(), B:new Set(), eck:new Set() };
+  if(params.showDiagonal15){ for(let i=0;i<15;i++) sets.diag.add(i); }
+  if(params.showDoubleSix && params.doubleSixIndex>0){ const ds=DOUBLE_SIXES[Math.min(DOUBLE_SIXES.length, params.doubleSixIndex)-1]; if(ds){ ds.A.forEach(i=>sets.A.add(i)); ds.B.forEach(i=>sets.B.add(i)); } }
+  if(params.showAzygeticTriple){ const t=AZYGETIC_TRIPLES[Math.max(0, Math.min(AZYGETIC_TRIPLES.length-1, params.azygeticTripleIndex))]||[]; t.forEach(pi=>{ TRITANGENT[pi].lines.forEach(i=> sets.triple.add(i)); }); }
+  else if(params.showTritangentPlanes && params.planeIndex>0){ const idx=Math.max(0, Math.min(TRITANGENT.length-1, (params.planeIndex|0)-1)); TRITANGENT[idx]?.lines.forEach(i=> sets.plane.add(i)); }
+  if(params.showEckardtPoints && ECK_LINES && ECK_LINES.length){ if((params.eckIndex|0)===0){ ECK_LINES.forEach(S=> S.forEach(i=> sets.eck.add(i))); } else { const S = ECK_LINES[(params.eckIndex|0)-1]; if(S) S.forEach(i=> sets.eck.add(i)); } }
+  return sets;
+}
+function drawSchlafli(){
+  if(!graphCanvas) return;
+  const dpr=Math.min(2, window.devicePixelRatio||1);
+  const w=graphCanvas.clientWidth||420, h=graphCanvas.clientHeight||260;
+  graphCanvas.width=Math.round(w*dpr); graphCanvas.height=Math.round(h*dpr);
+  const ctx=graphCanvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+  const isLight = document.body.classList.contains('light');
+  const baseEdge = isLight ? 'rgba(0,0,0,0.10)' : 'rgba(200,210,240,0.10)';
+  const hiEdge   = isLight ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.45)';
+  const nodeFill = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(90,110,160,0.35)';
+  const labelCol = isLight ? '#1e2a44' : '#e6ecff';
+  const cx=w*0.5, cy=h*0.52, Rg=Math.min(w,h)*0.38;
+  const pos=(function(){ const a=new Array(LINES.length); for(let i=0;i<LINES.length;i++){ const th=(i/27)*Math.PI*2 - Math.PI/2; a[i]={x:cx+Rg*Math.cos(th), y:cy+Rg*Math.sin(th)}; } return a; })();
+  const sets=getHighlightSets();
+  ctx.lineWidth=1; ctx.strokeStyle=baseEdge;
+  for(let i=0;i<27;i++){ for(let j=i+1;j<27;j++){ if(SCH_ADJ[i][j]){ ctx.beginPath(); ctx.moveTo(pos[i].x,pos[i].y); ctx.lineTo(pos[j].x,pos[j].y); ctx.stroke(); } } }
+  const H=new Set([...sets.plane, ...sets.triple, ...sets.diag, ...sets.A, ...sets.B, ...sets.eck]);
+  ctx.lineWidth=1.5; ctx.strokeStyle=hiEdge;
+  for(let i=0;i<27;i++){ for(let j=i+1;j<27;j++){ if(H.has(i)&&H.has(j)&&SCH_ADJ[i][j]){ ctx.beginPath(); ctx.moveTo(pos[i].x,pos[i].y); ctx.lineTo(pos[j].x,pos[j].y); ctx.stroke(); } } }
+  for(let i=0;i<27;i++){
+    const p=pos[i]; const r=7; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fillStyle=nodeFill; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle=colorForLineInGraph(i,sets); ctx.stroke(); ctx.fillStyle=labelCol; ctx.font='10px system-ui, -apple-system, Segoe UI, Roboto'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(String(i+1), p.x, p.y);
+  }
+}
+function updateGraphIfVisible(){ if(!graphWin || graphWin.classList.contains('hidden')) return; drawSchlafli(); }
+
+// ---- Events ----
+function setBtn(el,on){ if(el) el.classList.toggle('on', !!on); }
+setBtn(btnSurface, true); setBtn(btnDiag, true); setBtn(btnDouble, true); setBtn(btnEckardt, true);
+
+btnSurface?.addEventListener('click', ()=>{ params.showSurface=!params.showSurface; surfaceUniforms.show.value=params.showSurface; setBtn(btnSurface, params.showSurface); updateGraphIfVisible(); });
+btnDiag?.addEventListener('click', ()=>{ params.showDiagonal15 = !params.showDiagonal15; groupDiag.visible = params.showDiagonal15; setBtn(btnDiag, params.showDiagonal15); updateGraphIfVisible(); });
+btnDouble?.addEventListener('click', ()=>{ params.showDoubleSix = !params.showDoubleSix; setBtn(btnDouble, params.showDoubleSix); updateDoubleSix(); });
+btnEckardt?.addEventListener('click', ()=>{ params.showEckardtPoints = !params.showEckardtPoints; groupEckardt.visible = params.showEckardtPoints; setBtn(btnEckardt, params.showEckardtPoints); updateGraphIfVisible(); });
+
+if(planeSlider){ planeSlider.max = String(Math.max(0, TRITANGENT.length)); planeSlider.value=String(params.planeIndex); planeLabel.textContent=planeSlider.value; planeSlider.addEventListener('input', ()=>{ params.planeIndex=parseInt(planeSlider.value,10); planeLabel.textContent=planeSlider.value; params.showTritangentPlanes = params.planeIndex>0; updateSinglePlane(); }); }
+
+if(dblSixSlider){ dblSixSlider.max = String(Math.max(0, DOUBLE_SIXES.length)); if((params.doubleSixIndex|0)===0 && DOUBLE_SIXES.length>0) params.doubleSixIndex=1; dblSixSlider.value = String(Math.min(Math.max(0, params.doubleSixIndex|0), Math.max(0, DOUBLE_SIXES.length))); dblSixLabel.textContent = dblSixSlider.value; dblSixSlider.addEventListener('input', ()=>{ params.doubleSixIndex = parseInt(dblSixSlider.value,10); dblSixLabel.textContent = dblSixSlider.value; updateDoubleSix(); }); }
+
+(function ensureEckUI(){
+  if(!document.getElementById('eckSlider')){
+    var wrap = document.createElement('div');
+    wrap.id='eckUI';
+    wrap.style.cssText='position:absolute; right:14px; bottom:160px; background:rgba(10,14,28,.72); color:#e6ecff; padding:8px 10px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,.25); backdrop-filter: blur(6px); font:12px system-ui, -apple-system, Segoe UI, Roboto; z-index:4;';
+    var inner = '';
+    inner += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">Eckardt # ';
+    inner += '<span id="eckLabel">0</span><span style="opacity:.7;font-size:11px">(0 = all)</span></div>';
+    inner += '<input type="range" id="eckSlider" min="0" max="'+ String(eckardtCenters.length) +'" value="0" style="width:220px">';
+    wrap.innerHTML = inner;
+    document.body.appendChild(wrap);
+  }
+  eckSlider = document.getElementById('eckSlider');
+  eckLabel = document.getElementById('eckLabel');
+})();
+
+if(eckSlider){ eckSlider.max=String(Math.max(0, eckardtCenters.length)); eckSlider.value=String(params.eckIndex||0); eckLabel.textContent=eckSlider.value; eckSlider.addEventListener('input', ()=>{ params.eckIndex=parseInt(eckSlider.value,10); eckLabel.textContent=eckSlider.value; if(params.showEckardtPoints){ if((params.eckIndex|0)===0){ groupEckardt.children.forEach(m=> m.visible=true); } else { groupEckardt.children.forEach((m,idx)=> m.visible = (idx+1 === (params.eckIndex|0))); } } updateGraphIfVisible(); }); }
+
+if(azySlider){
+  azySlider.max=String(Math.max(0,AZYGETIC_TRIPLES.length-1));
+  azySlider.value=String(params.azygeticTripleIndex);
+  azyLabel.textContent=azySlider.value;
+  azySlider.addEventListener('input', ()=>{
+    params.azygeticTripleIndex=parseInt(azySlider.value,10);
+    azyLabel.textContent=azySlider.value;
+    applyAzygeticSelection();
+  });
+}
+if(azyToggle){
+  azyToggle.checked=params.showAzygeticTriple;
+  azyToggle.addEventListener('change', ()=>{
+    params.showAzygeticTriple=!!azyToggle.checked;
+    applyAzygeticSelection();
+  });
+}
+if(lightSwitch){
+  lightSwitch.checked=!!params.lightMode;
+  lightSwitch.addEventListener('change', ()=>{
+    params.lightMode=!!lightSwitch.checked;
+    setTheme(params.lightMode);
+    drawSchlafli();
+  });
+}
+btnGraph?.addEventListener('click', ()=>{ graphWin.classList.remove('hidden'); drawSchlafli(); });
+closeGraph?.addEventListener('click', ()=> graphWin.classList.add('hidden'));
+btnInfo?.addEventListener('click', ()=>{ infoScreen.classList.remove('hidden'); if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise(); });
+closeInfo?.addEventListener('click', ()=> infoScreen.classList.add('hidden'));
+
+function onResize(){ const w=window.innerWidth,h=window.innerHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); lineMaterials.forEach(m=>m.resolution.set(w,h)); updateSinglePlane(); updateGraphIfVisible(); }
+window.addEventListener('resize', onResize);
+function animate(){ requestAnimationFrame(animate); controls.update(); surfaceUniforms.invProj.value.copy(camera.projectionMatrix).invert(); surfaceUniforms.invView.value.copy(camera.matrixWorld); surfaceUniforms.camPos.value.copy(camera.position); renderer.autoClear=true; renderer.render(bgScene,bgCam); renderer.autoClear=false; renderer.render(scene,camera); renderer.autoClear=true; }
+animate();
+setTheme(!!params.lightMode);
+groupEckardt.visible=params.showEckardtPoints;
+updateDoubleSix();
+updateSinglePlane();
+updateStatusMath();
+populateInfo();
+drawSchlafli();
+</script>
+</body>
+</html>

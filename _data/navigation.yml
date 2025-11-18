@@ -15,6 +15,3 @@ main:
   - key: ogura
     title: "小倉色紙"
     url: /ogura-shikishi/
-  - key: cv
-    title: "CV"
-    url: /cv/

@@ -1,0 +1,2681 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bruhat Graph for Sₙ</title>
+  
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  
+  <style>
+    /* ========== CSS VARIABLES & RESET ========== */
+    :root {
+      --bg-primary: #f5f7fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e9ecef;
+      --text-primary: #1a202c;
+      --text-secondary: #4a5568;
+      --text-tertiary: #718096;
+      --accent-primary: #3182ce;
+      --accent-hover: #2c5282;
+      --accent-light: #ebf8ff;
+      --border-color: #cbd5e0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+      --node-bg: #ffffff;
+      --node-border: #3182ce;
+      --node-highlight: #f6ad55;
+      --edge-color: #a0aec0;
+      --edge-highlight: #f6ad55;
+      --canvas-bg: #fafbfc;
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(255, 255, 255, 0.18);
+    }
+    
+    [data-theme="dark"] {
+      --bg-primary: #1a202c;
+      --bg-secondary: #2d3748;
+      --bg-tertiary: #4a5568;
+      --text-primary: #f7fafc;
+      --text-secondary: #e2e8f0;
+      --text-tertiary: #cbd5e0;
+      --accent-primary: #63b3ed;
+      --accent-hover: #4299e1;
+      --accent-light: #2c5282;
+      --border-color: #4a5568;
+      --node-bg: #2d3748;
+      --node-border: #63b3ed;
+      --node-highlight: #f6ad55;
+      --edge-color: #718096;
+      --edge-highlight: #f6ad55;
+      --canvas-bg: #171923;
+      --glass-bg: rgba(45, 55, 72, 0.9);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+    
+    /* ========== LAYOUT ========== */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    /* Top Bar */
+    #topBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    #topBar h1 {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .input-group label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    
+    input[type="number"], select {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      width: 70px;
+    }
+    
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--accent-primary);
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button.secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    
+    button.secondary:hover {
+      background: var(--border-color);
+    }
+    
+    /* Main Content */
+    #mainContent {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    /* Left Panel */
+    #leftPanel {
+      width: 280px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #leftPanel.collapsed {
+      transform: translateX(-100%);
+      position: absolute;
+      z-index: 50;
+    }
+    
+    .panel-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .panel-section h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      font-weight: 700;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+    
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    
+    .control-item label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--bg-tertiary);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+      border: none;
+    }
+    
+    input[type="text"] {
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    /* Canvas Container */
+    #canvasContainer {
+      flex: 1;
+      position: relative;
+      background: var(--canvas-bg);
+      overflow: hidden;
+      background-image: 
+        linear-gradient(rgba(49, 130, 206, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(49, 130, 206, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    
+    #graphCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: grab;
+    }
+    
+    #graphCanvas:active {
+      cursor: grabbing;
+    }
+    
+    #nodeLayer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    
+    .node {
+      position: absolute;
+      background: var(--node-bg);
+      border: 2px solid var(--node-border);
+      border-radius: 10px;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      pointer-events: all;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      user-select: none;
+      backdrop-filter: blur(10px);
+    }
+    
+    .node:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 8px 20px rgba(49, 130, 206, 0.3);
+      z-index: 10;
+      border-width: 2.5px;
+    }
+    
+    .node.selected {
+      border-color: var(--node-highlight);
+      border-width: 3px;
+      box-shadow: 0 0 0 4px rgba(246, 173, 85, 0.25), 0 8px 24px rgba(246, 173, 85, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 4px rgba(246, 173, 85, 0.25), 0 8px 24px rgba(246, 173, 85, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(246, 173, 85, 0.15), 0 8px 24px rgba(246, 173, 85, 0.5);
+      }
+    }
+    
+    .node.dimmed {
+      opacity: 0.15;
+    }
+    
+    .node.highlighted {
+      border-color: var(--node-highlight);
+      box-shadow: 0 0 12px rgba(246, 173, 85, 0.5);
+    }
+    
+    /* Minimap */
+    #minimap {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 180px;
+      height: 120px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 2px solid var(--glass-border);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    
+    #minimap:hover {
+      opacity: 1;
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      pointer-events: none;
+      max-width: 380px;
+      font-size: 0.85rem;
+      display: none;
+      animation: tooltipFadeIn 0.2s ease;
+    }
+    
+    @keyframes tooltipFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .tooltip.visible {
+      display: block;
+    }
+    
+    .tooltip h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent-light);
+    }
+    
+    .tooltip .stat-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.4rem 1rem;
+      align-items: baseline;
+    }
+    
+    .tooltip .stat-label {
+      color: var(--text-tertiary);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .tooltip .stat-value {
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2000;
+      pointer-events: none;
+    }
+    
+    .modal.visible {
+      display: block;
+      pointer-events: none;
+    }
+    
+    .modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: all;
+    }
+    
+    .modal.visible .modal-backdrop {
+      opacity: 0;
+    }
+    
+    /* Show backdrop only for the not-comparable modal */
+    #notComparableModal.visible .modal-backdrop {
+      opacity: 1;
+    }
+    
+    .modal-content {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 90vw;
+      max-height: 85vh;
+      overflow: auto;
+      padding: 0;
+      position: absolute;
+      cursor: default;
+      border: 1px solid var(--border-color);
+      animation: modalSlideIn 0.3s ease;
+      pointer-events: all;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
+      border-radius: 16px 16px 0 0;
+      cursor: move;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    
+    .modal-header h2 {
+      font-size: 1.3rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .modal-header h2::before {
+      content: '⋮⋮';
+      opacity: 0.5;
+      font-size: 1rem;
+    }
+    
+    .modal-close {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1.5rem;
+      padding: 0.25rem 0.6rem;
+      width: auto;
+      border-radius: 8px;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+    
+    .modal-body-wrapper {
+      padding: 2rem;
+    }
+    
+    .modal-body {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    
+    .modal-footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      background: var(--bg-tertiary);
+      padding: 1rem 2rem;
+      border-radius: 0 0 16px 16px;
+      margin: 0;
+    }
+    
+    /* Modal positioning */
+    #notComparableModal .modal-content {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 400px;
+      z-index: 2100;
+    }
+    
+    #intervalModal .modal-content {
+      left: 5%;
+      top: 10%;
+      max-width: 900px;
+      width: 60vw;
+      z-index: 2050;
+    }
+    
+    #klModal .modal-content {
+      right: 5%;
+      top: 10%;
+      max-width: 700px;
+      width: 35vw;
+      left: auto;
+      z-index: 2050;
+    }
+    
+    /* Enhanced button styles */
+    button.icon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    button.icon-btn::before {
+      font-size: 1.1em;
+    }
+    
+    #buildBtn::before {
+      content: '⚡';
+    }
+    
+    #clearBtn::before {
+      content: '✕';
+    }
+    
+    #themeBtn::before {
+      content: '🌙';
+    }
+    
+    [data-theme="dark"] #themeBtn::before {
+      content: '☀️';
+    }
+    
+    #exportBtn::before {
+      content: '📸';
+    }
+    
+    #fitBtn::before {
+      content: '⊡';
+    }
+    
+    #searchBtn::before {
+      content: '🔍';
+    }
+    
+    /* Status Bar */
+    #statusBar {
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    #statusText {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    #statusText::before {
+      content: '●';
+      color: var(--accent-primary);
+      animation: statusPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    #statsText {
+      font-weight: 600;
+      color: var(--accent-primary);
+    }
+    
+    /* Loading Overlay */
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    #loadingOverlay.visible {
+      display: flex;
+    }
+    
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(49, 130, 206, 0.2);
+      border-top-color: var(--accent-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 20px rgba(49, 130, 206, 0.5);
+    }
+    
+    #loadingOverlay::after {
+      content: 'Building graph...';
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 500;
+      animation: loadingPulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes loadingPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      #topBar {
+        padding: 0.5rem 1rem;
+      }
+      
+      #leftPanel {
+        position: absolute;
+        z-index: 50;
+        height: 100%;
+        transform: translateX(-100%);
+      }
+      
+      #leftPanel.visible {
+        transform: translateX(0);
+      }
+      
+      .top-controls {
+        font-size: 0.85rem;
+      }
+      
+      button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar -->
+    <div id="topBar">
+      <h1>Bruhat Graph for \(S_n\)</h1>
+      <div class="top-controls">
+        <div class="input-group">
+          <label for="nInput">\(n =\)</label>
+          <input type="number" id="nInput" min="2" max="7" value="4" />
+        </div>
+        <button id="buildBtn" class="icon-btn">Build Graph</button>
+        <button id="clearBtn" class="secondary icon-btn">Clear</button>
+        <button id="themeBtn" class="secondary icon-btn">Theme</button>
+        <button id="togglePanelBtn" class="secondary">☰</button>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="mainContent">
+      <!-- Left Panel -->
+      <div id="leftPanel">
+        <div class="panel-section">
+          <h3>Display</h3>
+          <div class="control-item">
+            <label>Node Size: <span id="nodeSizeVal">1.0</span></label>
+            <input type="range" id="nodeSizeSlider" min="0.5" max="2" step="0.1" value="1.0" />
+          </div>
+          <div class="control-item">
+            <label>Edge Width: <span id="edgeWidthVal">1.5</span></label>
+            <input type="range" id="edgeWidthSlider" min="0.5" max="4" step="0.5" value="1.5" />
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="showEdgeLabels" />
+            <label for="showEdgeLabels">Show Edge Labels</label>
+          </div>
+          <div class="control-item">
+            <label>Label Type:</label>
+            <select id="labelType">
+              <option value="right">Right (t_{i,j})</option>
+              <option value="left">Left (t_{p,q})</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <h3>Search</h3>
+          <div class="control-item">
+            <label>Permutation (one-line):</label>
+            <input type="text" id="searchInput" placeholder="e.g., 3142" />
+            <button id="searchBtn" class="icon-btn">Jump To</button>
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <h3>Filter by Rank</h3>
+          <div class="control-item">
+            <label>Min: <span id="rankMinVal">0</span></label>
+            <input type="range" id="rankMinSlider" min="0" max="0" value="0" />
+          </div>
+          <div class="control-item">
+            <label>Max: <span id="rankMaxVal">0</span></label>
+            <input type="range" id="rankMaxSlider" min="0" max="0" value="0" />
+          </div>
+        </div>
+        
+        <div class="panel-section">
+          <h3>Actions</h3>
+          <button id="exportBtn" class="icon-btn" style="width: 100%;">Export PNG</button>
+          <button id="fitBtn" class="secondary icon-btn" style="width: 100%;">Fit to View</button>
+        </div>
+      </div>
+      
+      <!-- Canvas Container -->
+      <div id="canvasContainer">
+        <canvas id="graphCanvas"></canvas>
+        <div id="nodeLayer"></div>
+        <div id="minimap"></div>
+      </div>
+    </div>
+    
+    <!-- Status Bar -->
+    <div id="statusBar">
+      <span id="statusText">Ready. Select n and build graph.</span>
+      <span id="statsText"></span>
+    </div>
+  </div>
+  
+  <!-- Tooltip -->
+  <div id="tooltip" class="tooltip"></div>
+  
+  <!-- Modal: Not Comparable -->
+  <div id="notComparableModal" class="modal" data-backdrop-close="true">
+    <div class="modal-backdrop" onclick="closeModal('notComparableModal')"></div>
+    <div class="modal-content" style="max-width: 450px;">
+      <div class="modal-header">
+        <h2>Not Comparable</h2>
+        <button class="modal-close" onclick="closeModal('notComparableModal')">×</button>
+      </div>
+      <div class="modal-body-wrapper">
+        <div class="modal-body" style="text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+          <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">The selected permutations are <strong>not comparable</strong> in Bruhat order.</p>
+          <p style="color: var(--text-tertiary); font-size: 0.9rem;">Neither \(u \le v\) nor \(v \le u\) holds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal: Interval Hasse -->
+  <div id="intervalModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2>Interval Hasse Diagram</h2>
+        <button class="modal-close" onclick="closeModal('intervalModal')">×</button>
+      </div>
+      <div class="modal-body-wrapper">
+        <div class="modal-body">
+          <div style="margin-bottom: 1rem;">
+            <strong>Interval:</strong> <span id="intervalRange"></span>
+          </div>
+          <canvas id="intervalCanvas" style="width: 100%; height: 400px; background: var(--canvas-bg); border-radius: 12px; border: 1px solid var(--border-color);"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer" id="intervalFooter"></div>
+    </div>
+  </div>
+  
+  <!-- Modal: KL Polynomial -->
+  <div id="klModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <h2>Kazhdan–Lusztig Polynomial</h2>
+        <button class="modal-close" onclick="closeModal('klModal')">×</button>
+      </div>
+      <div class="modal-body-wrapper">
+        <div class="modal-body">
+          <div id="klContent"></div>
+          <div style="margin-top: 1rem;">
+            <button id="toggleTraceBtn" class="secondary">Show Recursion Trace</button>
+          </div>
+          <div id="klTrace" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; font-family: monospace; font-size: 0.8rem; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+  
+  <script>
+    // ========== GLOBAL STATE ==========
+    const STATE = {
+      n: 4,
+      permutations: [],
+      edges: [],
+      graph: null,
+      selectedNodes: [],
+      highlightedNodes: new Set(),
+      dimmedNodes: new Set(),
+      theme: 'light',
+      transform: { x: 0, y: 0, scale: 1 },
+      nodeSize: 1.0,
+      edgeWidth: 1.5,
+      showEdgeLabels: false,
+      labelType: 'right',
+      rankMin: 0,
+      rankMax: 0,
+      isDragging: false,
+      lastMouse: { x: 0, y: 0 }
+    };
+    
+    // Memoization caches
+    const CACHE = {
+      rankMatrices: new Map(),
+      comparability: new Map(),
+      rPolynomials: new Map(),
+      pPolynomials: new Map(),
+      traces: []
+    };
+
+    const BASE_MODAL_Z = 2000;
+    
+    // ========== PERMUTATION UTILITIES ==========
+    
+    // Generate all permutations of {1, 2, ..., n} using Heap's algorithm
+    function generatePermutations(n) {
+      const result = [];
+      const arr = Array.from({ length: n }, (_, i) => i + 1);
+      
+      function heap(k) {
+        if (k === 1) {
+          result.push([...arr]);
+          return;
+        }
+        
+        heap(k - 1);
+        for (let i = 0; i < k - 1; i++) {
+          if (k % 2 === 0) {
+            [arr[i], arr[k - 1]] = [arr[k - 1], arr[i]];
+          } else {
+            [arr[0], arr[k - 1]] = [arr[k - 1], arr[0]];
+          }
+          heap(k - 1);
+        }
+      }
+      
+      heap(n);
+      return result;
+    }
+    
+    // Compute inversion length (number of inversions)
+    function inversionLength(perm) {
+      let count = 0;
+      const n = perm.length;
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          if (perm[i] > perm[j]) count++;
+        }
+      }
+      return count;
+    }
+    
+    // Compute rank matrix r_w(a,b) = #{i <= a | w(i) <= b}
+    function computeRankMatrix(perm) {
+      const key = perm.join(',');
+      if (CACHE.rankMatrices.has(key)) {
+        return CACHE.rankMatrices.get(key);
+      }
+      
+      const n = perm.length;
+      const R = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));
+      
+      for (let a = 1; a <= n; a++) {
+        for (let b = 1; b <= n; b++) {
+          let count = 0;
+          for (let i = 0; i < a; i++) {
+            if (perm[i] <= b) count++;
+          }
+          R[a][b] = count;
+        }
+      }
+      
+      CACHE.rankMatrices.set(key, R);
+      return R;
+    }
+    
+    // Check if w <= v in Bruhat order using rank matrix criterion
+    function bruhatLeq(w, v) {
+      const key = `${w.join(',')}<=${v.join(',')}`;
+      if (CACHE.comparability.has(key)) {
+        return CACHE.comparability.get(key);
+      }
+      
+      const Rw = computeRankMatrix(w);
+      const Rv = computeRankMatrix(v);
+      const n = w.length;
+      
+      for (let a = 1; a <= n; a++) {
+        for (let b = 1; b <= n; b++) {
+          if (Rw[a][b] < Rv[a][b]) {
+            CACHE.comparability.set(key, false);
+            return false;
+          }
+        }
+      }
+      
+      CACHE.comparability.set(key, true);
+      return true;
+    }
+    
+    // Compute inverse permutation
+    function inversePermutation(perm) {
+      const inv = Array(perm.length);
+      for (let i = 0; i < perm.length; i++) {
+        inv[perm[i] - 1] = i + 1;
+      }
+      return inv;
+    }
+    
+    // Compute descent set {i | w(i) > w(i+1)}
+    function descentSet(perm) {
+      const descents = [];
+      for (let i = 0; i < perm.length - 1; i++) {
+        if (perm[i] > perm[i + 1]) {
+          descents.push(i + 1); // 1-indexed
+        }
+      }
+      return descents;
+    }
+    
+    // Compute major index (sum of descent positions)
+    function majorIndex(perm) {
+      return descentSet(perm).reduce((sum, i) => sum + i, 0);
+    }
+    
+    // Compute excedance set {i | w(i) > i}
+    function excedanceSet(perm) {
+      const excedances = [];
+      for (let i = 0; i < perm.length; i++) {
+        if (perm[i] > i + 1) {
+          excedances.push(i + 1); // 1-indexed
+        }
+      }
+      return excedances;
+    }
+    
+    // Compute Lehmer code
+    function lehmerCode(perm) {
+      const code = [];
+      const n = perm.length;
+      for (let i = 0; i < n; i++) {
+        let count = 0;
+        for (let j = i + 1; j < n; j++) {
+          if (perm[i] > perm[j]) count++;
+        }
+        code.push(count);
+      }
+      return code;
+    }
+    
+    // Compute inversion set as pairs (i, j)
+    function inversionSet(perm) {
+      const inversions = [];
+      const n = perm.length;
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          if (perm[i] > perm[j]) {
+            inversions.push([i + 1, j + 1]); // 1-indexed
+          }
+        }
+      }
+      return inversions;
+    }
+    
+    // Compute sign (parity)
+    function sign(perm) {
+      return inversionLength(perm) % 2 === 0 ? 1 : -1;
+    }
+    
+    // Compute statistics for a permutation
+    function computeStats(perm) {
+      const inv = inversePermutation(perm);
+      const len = inversionLength(perm);
+      const desc = descentSet(perm);
+      const maj = majorIndex(perm);
+      const exc = excedanceSet(perm);
+      const lehmer = lehmerCode(perm);
+      const inversions = inversionSet(perm);
+      const sgn = sign(perm);
+      
+      return {
+        oneLine: perm,
+        inverse: inv,
+        length: len,
+        descentSet: desc,
+        majorIndex: maj,
+        excedanceSet: exc,
+        lehmerCode: lehmer,
+        inversionSet: inversions,
+        sign: sgn
+      };
+    }
+    
+    // ========== COVER RELATIONS ==========
+    
+    // Find all cover relations w ⋖ wt_{i,j} in strong Bruhat order
+    function findCovers(perm) {
+      const covers = [];
+      const n = perm.length;
+      const lenW = inversionLength(perm);
+      
+      for (let i = 0; i < n - 1; i++) {
+        for (let j = i + 1; j < n; j++) {
+          // Check if perm[i] < perm[j]
+          if (perm[i] >= perm[j]) continue;
+          
+          // Check if no k in (i, j) with perm[i] < perm[k] < perm[j]
+          let hasIntermediate = false;
+          for (let k = i + 1; k < j; k++) {
+            if (perm[i] < perm[k] && perm[k] < perm[j]) {
+              hasIntermediate = true;
+              break;
+            }
+          }
+          
+          if (hasIntermediate) continue;
+          
+          // Apply transposition t_{i,j}
+          const u = [...perm];
+          [u[i], u[j]] = [u[j], u[i]];
+          
+          // Verify length increases by 1
+          if (inversionLength(u) === lenW + 1) {
+            const p = perm[i];
+            const q = perm[j];
+            covers.push({
+              target: u,
+              right: [i + 1, j + 1], // 1-indexed positions
+              left: [p, q]            // values
+            });
+          }
+        }
+      }
+      
+      return covers;
+    }
+    
+    // Build full Bruhat graph
+    function buildBruhatGraph(n) {
+      showLoading(true);
+      updateStatus('Generating permutations...');
+      
+      setTimeout(() => {
+        const perms = generatePermutations(n);
+        const nodes = [];
+        const edges = [];
+        const nodeMap = new Map();
+        
+        updateStatus('Computing statistics...');
+        
+        // Create nodes
+        for (const perm of perms) {
+          const id = perm.join('');
+          const stats = computeStats(perm);
+          const node = {
+            id,
+            perm,
+            stats,
+            x: 0,
+            y: 0
+          };
+          nodes.push(node);
+          nodeMap.set(id, node);
+        }
+        
+        updateStatus('Finding cover relations...');
+        
+        // Create edges
+        for (const node of nodes) {
+          const covers = findCovers(node.perm);
+          for (const cover of covers) {
+            const targetId = cover.target.join('');
+            if (nodeMap.has(targetId)) {
+              edges.push({
+                from: node.id,
+                to: targetId,
+                right: cover.right,
+                left: cover.left
+              });
+            }
+          }
+        }
+        
+        STATE.permutations = nodes;
+        STATE.edges = edges;
+        
+        // Set rank range
+        const maxRank = Math.floor((n * (n - 1)) / 2);
+        STATE.rankMax = maxRank;
+        document.getElementById('rankMinSlider').max = maxRank;
+        document.getElementById('rankMaxSlider').max = maxRank;
+        document.getElementById('rankMaxSlider').value = maxRank;
+        document.getElementById('rankMaxVal').textContent = maxRank;
+        
+        updateStatus('Laying out graph...');
+        layoutGraph();
+        renderGraph();
+        
+        updateStatus(`Built graph for S${n}: ${nodes.length} nodes, ${edges.length} edges`);
+        document.getElementById('statsText').textContent = `|S${n}| = ${nodes.length}`;
+        showLoading(false);
+      }, 100);
+    }
+    
+    // ========== LAYOUT ==========
+    
+    // Lay out graph by rank (inversion length)
+    function layoutGraph() {
+      const n = STATE.n;
+      const maxRank = Math.floor((n * (n - 1)) / 2);
+      
+      // Group by rank
+      const byRank = Array.from({ length: maxRank + 1 }, () => []);
+      for (const node of STATE.permutations) {
+        byRank[node.stats.length].push(node);
+      }
+      
+      // Layout parameters
+      const layerHeight = 120;
+      const nodeSpacing = 100;
+      const startY = 50;
+      
+      // Position nodes
+      for (let rank = 0; rank <= maxRank; rank++) {
+        const layer = byRank[rank];
+        const layerWidth = layer.length * nodeSpacing;
+        const startX = -layerWidth / 2;
+        const invertedRank = maxRank - rank;
+        const yPosition = startY + invertedRank * layerHeight;
+        
+        for (let i = 0; i < layer.length; i++) {
+          layer[i].x = startX + i * nodeSpacing + nodeSpacing / 2;
+          layer[i].y = yPosition;
+        }
+      }
+    }
+    
+    // ========== RENDERING ==========
+    
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+    const nodeLayer = document.getElementById('nodeLayer');
+    
+    // Set canvas size
+    function resizeCanvas() {
+      const container = document.getElementById('canvasContainer');
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      renderGraph();
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Transform screen coordinates to world coordinates
+    function screenToWorld(sx, sy) {
+      return {
+        x: (sx - STATE.transform.x) / STATE.transform.scale,
+        y: (sy - STATE.transform.y) / STATE.transform.scale
+      };
+    }
+    
+    // Transform world coordinates to screen coordinates
+    function worldToScreen(wx, wy) {
+      return {
+        x: wx * STATE.transform.scale + STATE.transform.x,
+        y: wy * STATE.transform.scale + STATE.transform.y
+      };
+    }
+    
+    // Render the graph
+    function renderGraph() {
+      if (!STATE.permutations.length) return;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Save context
+      ctx.save();
+      
+      // Apply transform
+      ctx.translate(STATE.transform.x, STATE.transform.y);
+      ctx.scale(STATE.transform.scale, STATE.transform.scale);
+      
+      // Render edges
+      renderEdges();
+      
+      // Restore context
+      ctx.restore();
+      
+      // Render nodes (DOM elements)
+      renderNodes();
+    }
+    
+    // Render edges on canvas
+    function renderEdges() {
+      const edgeWidth = STATE.edgeWidth;
+      const showLabels = STATE.showEdgeLabels;
+      const labelType = STATE.labelType;
+      const nodeMap = new Map(STATE.permutations.map(n => [n.id, n]));
+      
+      for (const edge of STATE.edges) {
+        const fromNode = nodeMap.get(edge.from);
+        const toNode = nodeMap.get(edge.to);
+        if (!fromNode || !toNode) continue;
+        
+        // Check rank filter
+        const fromRank = fromNode.stats.length;
+        const toRank = toNode.stats.length;
+        if (fromRank < STATE.rankMin || fromRank > STATE.rankMax ||
+            toRank < STATE.rankMin || toRank > STATE.rankMax) continue;
+        
+        // Determine edge style
+        const isHighlighted = STATE.highlightedNodes.has(edge.from) && 
+                              STATE.highlightedNodes.has(edge.to);
+        const isDimmed = (STATE.dimmedNodes.has(edge.from) || 
+                         STATE.dimmedNodes.has(edge.to)) &&
+                         !isHighlighted;
+        
+        ctx.beginPath();
+        ctx.moveTo(fromNode.x, fromNode.y);
+        ctx.lineTo(toNode.x, toNode.y);
+        
+        if (isHighlighted) {
+          ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--edge-highlight');
+          ctx.lineWidth = edgeWidth * 2;
+        } else if (isDimmed) {
+          ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--edge-color');
+          ctx.globalAlpha = 0.1;
+          ctx.lineWidth = edgeWidth;
+        } else {
+          ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--edge-color');
+          ctx.lineWidth = edgeWidth;
+        }
+        
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+        
+        // Draw labels if enabled
+        if (showLabels && !isDimmed) {
+          const midX = (fromNode.x + toNode.x) / 2;
+          const midY = (fromNode.y + toNode.y) / 2;
+          
+          ctx.fillStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--text-primary');
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'center';
+          
+          let label = '';
+          if (labelType === 'right' || labelType === 'both') {
+            label = `(${edge.right[0]} ${edge.right[1]})`;
+          }
+          if (labelType === 'left') {
+            label = `(${edge.left[0]} ${edge.left[1]})`;
+          }
+          if (labelType === 'both' && label) {
+            label += ` / (${edge.left[0]} ${edge.left[1]})`;
+          }
+          
+          ctx.fillText(label, midX, midY - 5);
+        }
+      }
+    }
+    
+    // Render nodes as DOM elements
+    function renderNodes() {
+      // Clear existing nodes
+      nodeLayer.innerHTML = '';
+      
+      const nodeMap = new Map(STATE.permutations.map(n => [n.id, n]));
+      
+      for (const node of STATE.permutations) {
+        // Check rank filter
+        if (node.stats.length < STATE.rankMin || 
+            node.stats.length > STATE.rankMax) continue;
+        
+        const screenPos = worldToScreen(node.x, node.y);
+        
+        const div = document.createElement('div');
+        div.className = 'node';
+        div.dataset.id = node.id;
+        
+        // Apply state classes
+        if (STATE.selectedNodes.includes(node.id)) {
+          div.classList.add('selected');
+        }
+        if (STATE.highlightedNodes.has(node.id)) {
+          div.classList.add('highlighted');
+        }
+        if (STATE.dimmedNodes.has(node.id)) {
+          div.classList.add('dimmed');
+        }
+        
+        // Format permutation for display
+        const permStr = node.perm.map(d => `${d}`).join('\\,');
+        div.innerHTML = `\\([\\,${permStr}\\,]\\)`;
+        
+        // Position (center the node)
+        div.style.left = `${screenPos.x}px`;
+        div.style.top = `${screenPos.y}px`;
+        div.style.transform = `translate(-50%, -50%) scale(${STATE.nodeSize})`;
+        
+        // Event listeners
+        div.addEventListener('click', (e) => handleNodeClick(node.id, e));
+        div.addEventListener('mouseenter', (e) => showTooltip(node, e));
+        div.addEventListener('mouseleave', hideTooltip);
+        
+        nodeLayer.appendChild(div);
+      }
+      
+      // Typeset MathJax
+      if (window.MathJax) {
+        MathJax.typesetPromise([nodeLayer]).catch(err => console.error(err));
+      }
+    }
+    
+    // ========== PAN & ZOOM ==========
+    
+    // Initialize transform to center
+    function fitToView() {
+      if (!STATE.permutations.length) return;
+      
+      // Calculate bounds
+      let minX = Infinity, maxX = -Infinity;
+      let minY = Infinity, maxY = -Infinity;
+      
+      for (const node of STATE.permutations) {
+        if (node.stats.length < STATE.rankMin || 
+            node.stats.length > STATE.rankMax) continue;
+        minX = Math.min(minX, node.x);
+        maxX = Math.max(maxX, node.x);
+        minY = Math.min(minY, node.y);
+        maxY = Math.max(maxY, node.y);
+      }
+      
+      const worldWidth = maxX - minX + 200;
+      const worldHeight = maxY - minY + 200;
+      const worldCenterX = (minX + maxX) / 2;
+      const worldCenterY = (minY + maxY) / 2;
+      
+      const scaleX = canvas.width / worldWidth;
+      const scaleY = canvas.height / worldHeight;
+      const scale = Math.min(scaleX, scaleY, 1.5);
+      
+      STATE.transform.scale = scale;
+      STATE.transform.x = canvas.width / 2 - worldCenterX * scale;
+      STATE.transform.y = canvas.height / 2 - worldCenterY * scale;
+      
+      renderGraph();
+    }
+    
+    // Mouse wheel zoom
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const worldBefore = screenToWorld(mouseX, mouseY);
+      
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      STATE.transform.scale *= zoomFactor;
+      STATE.transform.scale = Math.max(0.1, Math.min(5, STATE.transform.scale));
+      
+      const worldAfter = screenToWorld(mouseX, mouseY);
+      
+      STATE.transform.x += (worldAfter.x - worldBefore.x) * STATE.transform.scale;
+      STATE.transform.y += (worldAfter.y - worldBefore.y) * STATE.transform.scale;
+      
+      renderGraph();
+    });
+    
+    // Mouse drag pan
+    canvas.addEventListener('mousedown', (e) => {
+      STATE.isDragging = true;
+      STATE.lastMouse = { x: e.clientX, y: e.clientY };
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      if (!STATE.isDragging) return;
+      
+      const dx = e.clientX - STATE.lastMouse.x;
+      const dy = e.clientY - STATE.lastMouse.y;
+      
+      STATE.transform.x += dx;
+      STATE.transform.y += dy;
+      
+      STATE.lastMouse = { x: e.clientX, y: e.clientY };
+      
+      renderGraph();
+    });
+    
+    window.addEventListener('mouseup', () => {
+      STATE.isDragging = false;
+    });
+    
+    // Touch support
+    let touchStartDist = 0;
+    let touchStartScale = 1;
+    
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        STATE.isDragging = true;
+        STATE.lastMouse = { 
+          x: e.touches[0].clientX, 
+          y: e.touches[0].clientY 
+        };
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchStartDist = Math.sqrt(dx * dx + dy * dy);
+        touchStartScale = STATE.transform.scale;
+      }
+    });
+    
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      
+      if (e.touches.length === 1 && STATE.isDragging) {
+        const dx = e.touches[0].clientX - STATE.lastMouse.x;
+        const dy = e.touches[0].clientY - STATE.lastMouse.y;
+        
+        STATE.transform.x += dx;
+        STATE.transform.y += dy;
+        
+        STATE.lastMouse = { 
+          x: e.touches[0].clientX, 
+          y: e.touches[0].clientY 
+        };
+        
+        renderGraph();
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        STATE.transform.scale = touchStartScale * (dist / touchStartDist);
+        STATE.transform.scale = Math.max(0.1, Math.min(5, STATE.transform.scale));
+        
+        renderGraph();
+      }
+    });
+    
+    canvas.addEventListener('touchend', () => {
+      STATE.isDragging = false;
+    });
+    
+    // ========== NODE INTERACTIONS ==========
+    
+    const tooltip = document.getElementById('tooltip');
+    
+    // Show tooltip with permutation statistics
+    function showTooltip(node, event) {
+      const stats = node.stats;
+      
+      const html = `
+        <h4>\\([\\,${node.perm.join('\\,')}\\,]\\)</h4>
+        <div class="stat-grid">
+          <span class="stat-label">Inverse:</span>
+          <span class="stat-value">[${stats.inverse.join(', ')}]</span>
+          
+          <span class="stat-label">Length ℓ(w):</span>
+          <span class="stat-value">${stats.length}</span>
+          
+          <span class="stat-label">Sign:</span>
+          <span class="stat-value">${stats.sign > 0 ? '+1' : '-1'}</span>
+          
+          <span class="stat-label">Descent set:</span>
+          <span class="stat-value">{${stats.descentSet.join(', ')}}</span>
+          
+          <span class="stat-label">Major index:</span>
+          <span class="stat-value">${stats.majorIndex}</span>
+          
+          <span class="stat-label">Excedances:</span>
+          <span class="stat-value">{${stats.excedanceSet.join(', ')}}</span>
+          
+          <span class="stat-label">Lehmer code:</span>
+          <span class="stat-value">[${stats.lehmerCode.join(', ')}]</span>
+          
+          <span class="stat-label">Inversions:</span>
+          <span class="stat-value">${stats.inversionSet.length > 0 ? 
+            stats.inversionSet.map(([i,j]) => `(${i},${j})`).join(' ') : 
+            '∅'}</span>
+        </div>
+      `;
+      
+      tooltip.innerHTML = html;
+      tooltip.classList.add('visible');
+      
+      // Position tooltip
+      const rect = event.target.getBoundingClientRect();
+      tooltip.style.left = `${rect.right + 10}px`;
+      tooltip.style.top = `${rect.top}px`;
+      
+      // Keep tooltip on screen
+      setTimeout(() => {
+        const tooltipRect = tooltip.getBoundingClientRect();
+        if (tooltipRect.right > window.innerWidth) {
+          tooltip.style.left = `${rect.left - tooltipRect.width - 10}px`;
+        }
+        if (tooltipRect.bottom > window.innerHeight) {
+          tooltip.style.top = `${window.innerHeight - tooltipRect.height - 10}px`;
+        }
+      }, 0);
+      
+      // Typeset MathJax
+      if (window.MathJax) {
+        MathJax.typesetPromise([tooltip]).catch(err => console.error(err));
+      }
+    }
+    
+    function hideTooltip() {
+      tooltip.classList.remove('visible');
+    }
+    
+    // Handle node click (comparability and interval selection)
+    function handleNodeClick(nodeId, event) {
+      event.stopPropagation();
+      
+      if (STATE.selectedNodes.length === 0) {
+        // First selection
+        STATE.selectedNodes = [nodeId];
+        highlightComparable(nodeId);
+        updateStatus(`Selected node. Click another to view interval or click again to deselect.`);
+      } else if (STATE.selectedNodes.length === 1) {
+        if (STATE.selectedNodes[0] === nodeId) {
+          // Deselect
+          clearSelection();
+        } else {
+          // Second selection - check comparability and show interval
+          STATE.selectedNodes.push(nodeId);
+          showInterval(STATE.selectedNodes[0], nodeId);
+        }
+      } else {
+        // Reset to first selection
+        STATE.selectedNodes = [nodeId];
+        highlightComparable(nodeId);
+      }
+      
+      renderGraph();
+    }
+    
+    // Highlight all nodes comparable with the given node
+    function highlightComparable(nodeId) {
+      const node = STATE.permutations.find(n => n.id === nodeId);
+      if (!node) return;
+      
+      STATE.highlightedNodes.clear();
+      STATE.dimmedNodes.clear();
+      
+      const comparable = new Set([nodeId]);
+      
+      for (const other of STATE.permutations) {
+        if (other.id === nodeId) continue;
+        
+        if (bruhatLeq(node.perm, other.perm) || bruhatLeq(other.perm, node.perm)) {
+          comparable.add(other.id);
+        }
+      }
+      
+      STATE.highlightedNodes = comparable;
+      
+      // Dim non-comparable
+      for (const other of STATE.permutations) {
+        if (!comparable.has(other.id)) {
+          STATE.dimmedNodes.add(other.id);
+        }
+      }
+    }
+    
+    // Clear selection
+    function clearSelection() {
+      STATE.selectedNodes = [];
+      STATE.highlightedNodes.clear();
+      STATE.dimmedNodes.clear();
+      updateStatus('Selection cleared.');
+      renderGraph();
+    }
+    
+    // Show interval between two nodes
+    function showInterval(id1, id2) {
+      const node1 = STATE.permutations.find(n => n.id === id1);
+      const node2 = STATE.permutations.find(n => n.id === id2);
+      
+      if (!node1 || !node2) return;
+      
+      let u, v, uNode, vNode;
+      
+      // Determine order
+      if (bruhatLeq(node1.perm, node2.perm)) {
+        u = node1.perm;
+        v = node2.perm;
+        uNode = node1;
+        vNode = node2;
+      } else if (bruhatLeq(node2.perm, node1.perm)) {
+        u = node2.perm;
+        v = node1.perm;
+        uNode = node2;
+        vNode = node1;
+      } else {
+        // Not comparable
+        showModal('notComparableModal');
+        updateStatus(`Nodes are not comparable.`);
+        return;
+      }
+      
+      // Extract interval [u, v]
+      const interval = [];
+      for (const node of STATE.permutations) {
+        if (bruhatLeq(u, node.perm) && bruhatLeq(node.perm, v)) {
+          interval.push(node);
+        }
+      }
+      
+      // Highlight interval
+      STATE.highlightedNodes = new Set(interval.map(n => n.id));
+      STATE.dimmedNodes.clear();
+      for (const node of STATE.permutations) {
+        if (!STATE.highlightedNodes.has(node.id)) {
+          STATE.dimmedNodes.add(node.id);
+        }
+      }
+      renderGraph();
+      
+      // Show interval modal
+      displayIntervalModal(uNode, vNode, interval);
+      
+      // Compute and show KL polynomial
+      computeAndShowKL(u, v, uNode, vNode);
+      
+      updateStatus(`Interval [u, v]: ${interval.length} nodes`);
+    }
+    
+    // Display interval Hasse diagram in modal
+    function displayIntervalModal(uNode, vNode, interval) {
+      const modal = document.getElementById('intervalModal');
+      const rangeSpan = document.getElementById('intervalRange');
+      const canvas = document.getElementById('intervalCanvas');
+      const footer = document.getElementById('intervalFooter');
+      
+      rangeSpan.innerHTML = `\\([\\,${uNode.perm.join('\\,')}\\,] \\le [\\,${vNode.perm.join('\\,')}\\,]\\)`;
+      
+      // Count edges in interval
+      const intervalIds = new Set(interval.map(n => n.id));
+      const intervalEdges = STATE.edges.filter(e => 
+        intervalIds.has(e.from) && intervalIds.has(e.to)
+      );
+      
+      footer.innerHTML = `<strong>Nodes:</strong> ${interval.length} | <strong>Edges:</strong> ${intervalEdges.length} | <strong>Degree bound:</strong> \\(\\deg P_{u,v} \\le \\lfloor(${vNode.stats.length - uNode.stats.length}-1)/2\\rfloor = ${Math.floor((vNode.stats.length - uNode.stats.length - 1) / 2)}\\)`;
+      
+      // Layout and render interval
+      setTimeout(() => {
+        renderIntervalHasse(canvas, interval, intervalEdges);
+        if (window.MathJax) {
+          MathJax.typesetPromise([modal]).catch(err => console.error(err));
+        }
+      }, 0);
+      
+      showModal('intervalModal');
+    }
+    
+    // Render interval Hasse diagram on separate canvas
+    function renderIntervalHasse(canvas, nodes, edges) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (nodes.length === 0) return;
+      
+      // Find rank range
+      const minRank = Math.min(...nodes.map(n => n.stats.length));
+      const maxRank = Math.max(...nodes.map(n => n.stats.length));
+      const rankRange = maxRank - minRank;
+      
+      // Group by rank
+      const byRank = {};
+      for (const node of nodes) {
+        const rank = node.stats.length;
+        if (!byRank[rank]) byRank[rank] = [];
+        byRank[rank].push(node);
+      }
+      
+      // Layout
+      const positions = new Map();
+      const layerHeight = canvas.height / (rankRange + 2);
+      const padding = 50;
+      
+      for (let rank = minRank; rank <= maxRank; rank++) {
+        const layer = byRank[rank] || [];
+        const layerWidth = canvas.width - 2 * padding;
+        const spacing = layer.length > 1 ? layerWidth / (layer.length - 1) : 0;
+        
+        for (let i = 0; i < layer.length; i++) {
+          const x = layer.length === 1 ? 
+            canvas.width / 2 : 
+            padding + i * spacing;
+          const y = padding + (maxRank - rank) * layerHeight;
+          positions.set(layer[i].id, { x, y });
+        }
+      }
+      
+      // Draw edges
+      ctx.strokeStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--edge-color');
+      ctx.lineWidth = 1.5;
+      
+      for (const edge of edges) {
+        const from = positions.get(edge.from);
+        const to = positions.get(edge.to);
+        if (!from || !to) continue;
+        
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+      }
+      
+      // Draw nodes
+      ctx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--node-bg');
+      ctx.strokeStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--node-border');
+      ctx.lineWidth = 2;
+      ctx.font = '11px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      const nodeRadius = 20;
+      for (const node of nodes) {
+        const pos = positions.get(node.id);
+        if (!pos) continue;
+        
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, nodeRadius, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.fillStyle = getComputedStyle(document.documentElement)
+          .getPropertyValue('--text-primary');
+        ctx.fillText(node.perm.join(''), pos.x, pos.y);
+        ctx.fillStyle = getComputedStyle(document.documentElement)
+          .getPropertyValue('--node-bg');
+      }
+    }
+    
+    // ========== KAZHDAN-LUSZTIG POLYNOMIALS ==========
+    
+    // Polynomial utilities (represented as Map: degree -> coefficient)
+    class Polynomial {
+      constructor(coeffs = {}) {
+        this.coeffs = new Map();
+        for (const [deg, coeff] of Object.entries(coeffs)) {
+          if (coeff !== 0) {
+            this.coeffs.set(parseInt(deg), coeff);
+          }
+        }
+      }
+      
+      static zero() {
+        return new Polynomial();
+      }
+      
+      static one() {
+        return new Polynomial({ 0: 1 });
+      }
+      
+      static q() {
+        return new Polynomial({ 1: 1 });
+      }
+      
+      add(other) {
+        const result = new Polynomial();
+        const allDegs = new Set([...this.coeffs.keys(), ...other.coeffs.keys()]);
+        for (const deg of allDegs) {
+          const sum = (this.coeffs.get(deg) || 0) + (other.coeffs.get(deg) || 0);
+          if (sum !== 0) result.coeffs.set(deg, sum);
+        }
+        return result;
+      }
+      
+      subtract(other) {
+        const result = new Polynomial();
+        const allDegs = new Set([...this.coeffs.keys(), ...other.coeffs.keys()]);
+        for (const deg of allDegs) {
+          const diff = (this.coeffs.get(deg) || 0) - (other.coeffs.get(deg) || 0);
+          if (diff !== 0) result.coeffs.set(deg, diff);
+        }
+        return result;
+      }
+      
+      multiply(other) {
+        const result = new Polynomial();
+        for (const [d1, c1] of this.coeffs) {
+          for (const [d2, c2] of other.coeffs) {
+            const deg = d1 + d2;
+            const coeff = (result.coeffs.get(deg) || 0) + c1 * c2;
+            if (coeff !== 0) {
+              result.coeffs.set(deg, coeff);
+            } else {
+              result.coeffs.delete(deg);
+            }
+          }
+        }
+        return result;
+      }
+      
+      scale(scalar) {
+        const result = new Polynomial();
+        for (const [deg, coeff] of this.coeffs) {
+          result.coeffs.set(deg, coeff * scalar);
+        }
+        return result;
+      }
+      
+      degree() {
+        if (this.coeffs.size === 0) return -Infinity;
+        return Math.max(...this.coeffs.keys());
+      }
+      
+      toString() {
+        if (this.coeffs.size === 0) return '0';
+        
+        const terms = [];
+        const degrees = Array.from(this.coeffs.keys()).sort((a, b) => a - b);
+        
+        for (const deg of degrees) {
+          const coeff = this.coeffs.get(deg);
+          if (coeff === 0) continue;
+          
+          let term = '';
+          if (deg === 0) {
+            term = `${coeff}`;
+          } else if (deg === 1) {
+            if (coeff === 1) term = 'q';
+            else if (coeff === -1) term = '-q';
+            else term = `${coeff}q`;
+          } else {
+            if (coeff === 1) term = `q^${deg}`;
+            else if (coeff === -1) term = `-q^${deg}`;
+            else term = `${coeff}q^${deg}`;
+          }
+          
+          if (terms.length > 0 && coeff > 0) {
+            term = '+' + term;
+          }
+          terms.push(term);
+        }
+        
+        return terms.join('');
+      }
+      
+      toTeX() {
+        if (this.coeffs.size === 0) return '0';
+        
+        const terms = [];
+        const degrees = Array.from(this.coeffs.keys()).sort((a, b) => b - a); // descending
+        
+        for (const deg of degrees) {
+          const coeff = this.coeffs.get(deg);
+          if (coeff === 0) continue;
+          
+          let term = '';
+          const absCoeff = Math.abs(coeff);
+          const sign = coeff > 0 ? '+' : '-';
+          
+          if (deg === 0) {
+            term = absCoeff.toString();
+          } else if (deg === 1) {
+            term = absCoeff === 1 ? 'q' : `${absCoeff}q`;
+          } else {
+            term = absCoeff === 1 ? `q^{${deg}}` : `${absCoeff}q^{${deg}}`;
+          }
+          
+          if (terms.length === 0) {
+            terms.push(coeff < 0 ? `-${term}` : term);
+          } else {
+            terms.push(`${sign}${term}`);
+          }
+        }
+        
+        return terms.join('');
+      }
+    }
+    
+    // Apply simple reflection s_i to permutation
+    function applySimpleReflection(perm, i) {
+      const result = [...perm];
+      [result[i - 1], result[i]] = [result[i], result[i - 1]];
+      return result;
+    }
+    
+    // Find left descent set (simple reflections s with sw < w)
+    function leftDescentSet(perm) {
+      const descents = [];
+      const n = perm.length;
+      for (let i = 1; i < n; i++) {
+        const sperm = applySimpleReflection(perm, i);
+        if (inversionLength(sperm) < inversionLength(perm)) {
+          descents.push(i);
+        }
+      }
+      return descents;
+    }
+    
+    // R-polynomial recursion
+    function computeR(x, y) {
+      const xKey = x.join(',');
+      const yKey = y.join(',');
+      const key = `${xKey}|${yKey}`;
+      
+      if (CACHE.rPolynomials.has(key)) {
+        return CACHE.rPolynomials.get(key);
+      }
+      
+      // Base cases
+      if (xKey === yKey) {
+        const result = Polynomial.one();
+        CACHE.rPolynomials.set(key, result);
+        return result;
+      }
+      
+      if (!bruhatLeq(x, y)) {
+        const result = Polynomial.zero();
+        CACHE.rPolynomials.set(key, result);
+        return result;
+      }
+      
+      // Choose simple reflection s with sy < y
+      const yDescents = leftDescentSet(y);
+      if (yDescents.length === 0) {
+        const result = Polynomial.zero();
+        CACHE.rPolynomials.set(key, result);
+        return result;
+      }
+      
+      const s = yDescents[0]; // Pick first for determinism
+      const sy = applySimpleReflection(y, s);
+      const sx = applySimpleReflection(x, s);
+      
+      const lenX = inversionLength(x);
+      const lenSX = inversionLength(sx);
+      
+      let result;
+      if (lenSX > lenX) {
+        // sx > x
+        result = computeR(sx, sy);
+      } else {
+        // sx < x
+        const q = Polynomial.q();
+        const qMinus1 = q.subtract(Polynomial.one());
+        result = computeR(sx, sy).add(qMinus1.multiply(computeR(x, sy)));
+      }
+      
+      CACHE.rPolynomials.set(key, result);
+      return result;
+    }
+    
+    // KL-polynomial computation (via R-polynomial triangular system)
+    function computeP(x, y) {
+      const xKey = x.join(',');
+      const yKey = y.join(',');
+      const key = `${xKey}|${yKey}`;
+      
+      if (CACHE.pPolynomials.has(key)) {
+        return CACHE.pPolynomials.get(key);
+      }
+      
+      // Base cases
+      if (xKey === yKey) {
+        const result = Polynomial.one();
+        CACHE.pPolynomials.set(key, result);
+        return result;
+      }
+      
+      if (!bruhatLeq(x, y)) {
+        const result = Polynomial.zero();
+        CACHE.pPolynomials.set(key, result);
+        return result;
+      }
+      
+      const lenX = inversionLength(x);
+      const lenY = inversionLength(y);
+      
+      // Degree bound
+      const maxDeg = Math.floor((lenY - lenX - 1) / 2);
+      if (maxDeg < 0) {
+        const result = Polynomial.zero();
+        CACHE.pPolynomials.set(key, result);
+        return result;
+      }
+      
+      // Choose simple reflection s with sy < y
+      const yDescents = leftDescentSet(y);
+      if (yDescents.length === 0) {
+        const result = Polynomial.zero();
+        CACHE.pPolynomials.set(key, result);
+        return result;
+      }
+      
+      const s = yDescents[0];
+      const sy = applySimpleReflection(y, s);
+      const sx = applySimpleReflection(x, s);
+      
+      const lenSX = inversionLength(sx);
+      
+      let result;
+      if (lenSX < lenX) {
+        // sx < x: P_{x,y} = P_{sx,sy}
+        result = computeP(sx, sy);
+      } else {
+        // sx > x: Use triangular relation
+        // q^{ℓ(y)-ℓ(x)} \bar{P}_{x,y} = Σ_{x≤z≤y} R_{x,z} P_{z,y}
+        // For simplicity, use direct recursion with corrections
+        
+        // Direct recursion: P_{x,y} = q*P_{x,sy} + corrections
+        const q = Polynomial.q();
+        result = q.multiply(computeP(x, sy));
+        
+        // Add correction terms from intermediate elements
+        // (Simplified version - full implementation would track μ coefficients)
+        const interval = [];
+        for (const node of STATE.permutations) {
+          if (bruhatLeq(x, node.perm) && bruhatLeq(node.perm, sy)) {
+            const lenZ = inversionLength(node.perm);
+            const sz = applySimpleReflection(node.perm, s);
+            const lenSZ = inversionLength(sz);
+            
+            if (lenSZ < lenZ) {
+              // This z contributes to the sum
+              const Rxz = computeR(x, node.perm);
+              const Pzy = computeP(node.perm, sy);
+              // Extract μ coefficient (degree lenSY - lenZ - 1 of R_{z,sy})
+              const Rzsy = computeR(node.perm, sy);
+              const deg = inversionLength(sy) - lenZ - 1;
+              const mu = deg >= 0 ? (Rzsy.coeffs.get(deg) || 0) : 0;
+              
+              if (mu !== 0) {
+                const term = computeP(x, node.perm).scale(mu);
+                result = result.add(q.subtract(Polynomial.one()).multiply(term));
+              }
+            }
+          }
+        }
+      }
+      
+      CACHE.pPolynomials.set(key, result);
+      return result;
+    }
+    
+    // Compute and display KL polynomial
+    function computeAndShowKL(u, v, uNode, vNode) {
+      CACHE.traces = [];
+      
+      const P = computeP(u, v);
+      
+      const modal = document.getElementById('klModal');
+      const content = document.getElementById('klContent');
+      
+      const lenDiff = vNode.stats.length - uNode.stats.length;
+      const degBound = Math.floor((lenDiff - 1) / 2);
+      
+      content.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.75rem 1rem; margin-bottom: 1rem;">
+            <span style="font-weight: 600; color: var(--text-tertiary);">Interval:</span>
+            <span>\\(u = [\\,${uNode.perm.join('\\,')}\\,]\\) to \\(v = [\\,${vNode.perm.join('\\,')}\\,]\\)</span>
+            
+            <span style="font-weight: 600; color: var(--text-tertiary);">Length diff:</span>
+            <span>\\(\\ell(v) - \\ell(u) = ${lenDiff}\\)</span>
+            
+            <span style="font-weight: 600; color: var(--text-tertiary);">Degree bound:</span>
+            <span>\\(\\deg P_{u,v} \\le \\lfloor(${lenDiff}-1)/2\\rfloor = ${degBound}\\)</span>
+          </div>
+        </div>
+        <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--accent-light), var(--bg-tertiary)); border-radius: 12px; border: 2px solid var(--accent-primary); box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);">
+          <div style="font-size: 1.4rem; text-align: center; color: var(--text-primary); font-weight: 600;">
+            \\(P_{u,v}(q) = ${P.toTeX()}\\)
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; border-left: 4px solid var(--accent-primary);">
+          <p style="margin: 0.25rem 0;"><strong>Verification:</strong></p>
+          <p style="margin: 0.25rem 0; margin-left: 1rem;">\\(P_{u,v}(0) = ${P.coeffs.get(0) || 0}\\) <span style="color: var(--text-tertiary);">(should be \\(\\delta_{u,v} = ${uNode.id === vNode.id ? '1' : '0'}\\))</span></p>
+          <p style="margin: 0.25rem 0; margin-left: 1rem;">Actual degree: \\(${P.degree() === -Infinity ? '-\\infty' : P.degree()}\\) <span style="color: var(--text-tertiary);">(bound: \\(${degBound}\\))</span></p>
+        </div>
+      `;
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise([modal]).catch(err => console.error(err));
+      }
+      
+      showModal('klModal');
+    }
+    
+    // Toggle recursion trace
+    document.getElementById('toggleTraceBtn').addEventListener('click', () => {
+      const trace = document.getElementById('klTrace');
+      const btn = document.getElementById('toggleTraceBtn');
+      if (trace.style.display === 'none') {
+        trace.style.display = 'block';
+        btn.textContent = 'Hide Recursion Trace';
+        trace.textContent = 'Recursion trace not implemented in this version.\nUse browser console to see memoization cache.';
+      } else {
+        trace.style.display = 'none';
+        btn.textContent = 'Show Recursion Trace';
+      }
+    });
+    
+    // ========== UI CONTROLS & EVENT HANDLERS ==========
+    
+    // Modal utilities
+    function getModalZ(element) {
+      const raw = parseInt(element.style.zIndex || getComputedStyle(element).zIndex, 10);
+      return Number.isFinite(raw) ? raw : BASE_MODAL_Z;
+    }
+
+    function bringModalToFront(modal) {
+      if (!modal) return;
+
+      const visibleWithZ = Array.from(document.querySelectorAll('.modal.visible')).map(m => ({
+        element: m,
+        z: getModalZ(m)
+      }));
+
+      const currentEntry = visibleWithZ.find(item => item.element === modal);
+      const currentZ = currentEntry ? currentEntry.z : getModalZ(modal);
+      const peakZ = visibleWithZ.reduce((max, item) => Math.max(max, item.z), BASE_MODAL_Z);
+
+      const hasSiblingAtPeak = visibleWithZ.some(item => item.element !== modal && item.z === peakZ);
+      let targetZ = currentZ;
+
+      if (currentZ < peakZ || (currentZ === peakZ && hasSiblingAtPeak)) {
+        targetZ = peakZ + 1;
+      }
+
+      modal.style.zIndex = targetZ;
+
+      const backdrop = modal.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.style.zIndex = targetZ;
+      }
+
+      const modalContent = modal.querySelector('.modal-content');
+      if (modalContent) {
+        modalContent.style.zIndex = targetZ + 1;
+      }
+    }
+
+    function showModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('visible');
+
+      bringModalToFront(modal);
+    }
+    
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('visible');
+      modal.style.zIndex = '';
+
+      const backdrop = modal.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.style.zIndex = '';
+      }
+
+      const modalContent = modal.querySelector('.modal-content');
+      if (modalContent) {
+        modalContent.style.zIndex = '';
+      }
+    }
+    
+    window.closeModal = closeModal;
+    
+    // Make modals draggable
+    function makeDraggable(modalId) {
+      const modal = document.getElementById(modalId);
+      const modalContent = modal.querySelector('.modal-content');
+      const header = modal.querySelector('.modal-header');
+      
+      if (!header || !modalContent) return;
+      
+      let isDragging = false;
+      let currentX, currentY, initialX, initialY;
+      
+      header.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+        
+        isDragging = true;
+        
+        // Get initial position
+        const rect = modalContent.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+        currentX = e.clientX;
+        currentY = e.clientY;
+        
+        header.style.cursor = 'grabbing';
+        
+        // Bring to front
+        bringModalToFront(modal);
+      });
+      
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        e.preventDefault();
+        
+        const dx = e.clientX - currentX;
+        const dy = e.clientY - currentY;
+        
+        const newX = initialX + dx;
+        const newY = initialY + dy;
+        
+        // Keep modal on screen
+        const maxX = window.innerWidth - modalContent.offsetWidth;
+        const maxY = window.innerHeight - modalContent.offsetHeight;
+        
+        const clampedX = Math.max(0, Math.min(newX, maxX));
+        const clampedY = Math.max(0, Math.min(newY, maxY));
+        
+        modalContent.style.left = `${clampedX}px`;
+        modalContent.style.top = `${clampedY}px`;
+        modalContent.style.right = 'auto';
+        modalContent.style.transform = 'none';
+      });
+      
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          header.style.cursor = 'move';
+        }
+      });
+      
+      // Click modal to bring to front
+      modalContent.addEventListener('mousedown', (e) => {
+        // Only bring to front, don't trigger showModal which might affect other modals
+        bringModalToFront(modal);
+      });
+    }
+    
+    // Initialize draggable modals
+    makeDraggable('intervalModal');
+    makeDraggable('klModal');
+    makeDraggable('notComparableModal');
+    
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', (e) => {
+        const modal = e.target.closest('.modal');
+        if (modal && modal.dataset.backdropClose === 'true') {
+          closeModal(modal.id);
+        }
+      });
+    });
+    
+    // Loading overlay
+    function showLoading(show) {
+      document.getElementById('loadingOverlay').classList.toggle('visible', show);
+    }
+    
+    // Status bar
+    function updateStatus(text) {
+      document.getElementById('statusText').textContent = text;
+    }
+    
+    // Build button
+    document.getElementById('buildBtn').addEventListener('click', () => {
+      const n = parseInt(document.getElementById('nInput').value);
+      if (n < 2 || n > 7) {
+        updateStatus('Please enter n between 2 and 7.');
+        return;
+      }
+      
+      STATE.n = n;
+      clearSelection();
+      CACHE.rankMatrices.clear();
+      CACHE.comparability.clear();
+      CACHE.rPolynomials.clear();
+      CACHE.pPolynomials.clear();
+      
+      buildBruhatGraph(n);
+      
+      // Reset transform after layout
+      setTimeout(() => {
+        fitToView();
+      }, 500);
+    });
+    
+    // Clear button
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      clearSelection();
+      updateStatus('Selection cleared.');
+    });
+    
+    // Theme toggle
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      STATE.theme = STATE.theme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', STATE.theme);
+      renderGraph();
+    });
+    
+    // Panel toggle (mobile)
+    document.getElementById('togglePanelBtn').addEventListener('click', () => {
+      const panel = document.getElementById('leftPanel');
+      panel.classList.toggle('visible');
+    });
+    
+    // Node size slider
+    document.getElementById('nodeSizeSlider').addEventListener('input', (e) => {
+      STATE.nodeSize = parseFloat(e.target.value);
+      document.getElementById('nodeSizeVal').textContent = STATE.nodeSize.toFixed(1);
+      renderGraph();
+    });
+    
+    // Edge width slider
+    document.getElementById('edgeWidthSlider').addEventListener('input', (e) => {
+      STATE.edgeWidth = parseFloat(e.target.value);
+      document.getElementById('edgeWidthVal').textContent = STATE.edgeWidth.toFixed(1);
+      renderGraph();
+    });
+    
+    // Show edge labels checkbox
+    document.getElementById('showEdgeLabels').addEventListener('change', (e) => {
+      STATE.showEdgeLabels = e.target.checked;
+      renderGraph();
+    });
+    
+    // Label type select
+    document.getElementById('labelType').addEventListener('change', (e) => {
+      STATE.labelType = e.target.value;
+      renderGraph();
+    });
+    
+    // Rank sliders
+    document.getElementById('rankMinSlider').addEventListener('input', (e) => {
+      STATE.rankMin = parseInt(e.target.value);
+      document.getElementById('rankMinVal').textContent = STATE.rankMin;
+      if (STATE.rankMin > STATE.rankMax) {
+        STATE.rankMax = STATE.rankMin;
+        document.getElementById('rankMaxSlider').value = STATE.rankMax;
+        document.getElementById('rankMaxVal').textContent = STATE.rankMax;
+      }
+      renderGraph();
+    });
+    
+    document.getElementById('rankMaxSlider').addEventListener('input', (e) => {
+      STATE.rankMax = parseInt(e.target.value);
+      document.getElementById('rankMaxVal').textContent = STATE.rankMax;
+      if (STATE.rankMax < STATE.rankMin) {
+        STATE.rankMin = STATE.rankMax;
+        document.getElementById('rankMinSlider').value = STATE.rankMin;
+        document.getElementById('rankMinVal').textContent = STATE.rankMin;
+      }
+      renderGraph();
+    });
+    
+    // Search
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      
+      // Parse as one-line notation (remove spaces, brackets, commas)
+      const cleaned = query.replace(/[\[\],\s]/g, '');
+      const perm = cleaned.split('').map(d => parseInt(d));
+      
+      // Validate
+      if (perm.length !== STATE.n || perm.some(isNaN)) {
+        updateStatus(`Invalid permutation. Expected ${STATE.n} digits.`);
+        return;
+      }
+      
+      const id = perm.join('');
+      const node = STATE.permutations.find(n => n.id === id);
+      
+      if (node) {
+        // Pan to node
+        const screenPos = worldToScreen(node.x, node.y);
+        STATE.transform.x = canvas.width / 2 - node.x * STATE.transform.scale;
+        STATE.transform.y = canvas.height / 2 - node.y * STATE.transform.scale;
+        
+        // Select node
+        STATE.selectedNodes = [id];
+        highlightComparable(id);
+        renderGraph();
+        
+        updateStatus(`Found and selected permutation [${perm.join(' ')}]`);
+      } else {
+        updateStatus(`Permutation [${perm.join(' ')}] not found.`);
+      }
+    });
+    
+    // Search on Enter key
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('searchBtn').click();
+      }
+    });
+    
+    // Fit to view button
+    document.getElementById('fitBtn').addEventListener('click', () => {
+      fitToView();
+    });
+    
+    // Export PNG
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      // Create a temporary canvas with nodes rendered on it
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // Fill background
+      tempCtx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--canvas-bg');
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Copy edge layer
+      tempCtx.drawImage(canvas, 0, 0);
+      
+      // Draw nodes as text (simplified - no MathJax)
+      tempCtx.save();
+      tempCtx.translate(STATE.transform.x, STATE.transform.y);
+      tempCtx.scale(STATE.transform.scale, STATE.transform.scale);
+      
+      tempCtx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--node-bg');
+      tempCtx.strokeStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--node-border');
+      tempCtx.lineWidth = 2;
+      tempCtx.font = '12px monospace';
+      tempCtx.textAlign = 'center';
+      tempCtx.textBaseline = 'middle';
+      
+      for (const node of STATE.permutations) {
+        if (node.stats.length < STATE.rankMin || 
+            node.stats.length > STATE.rankMax) continue;
+        
+        const padding = 8;
+        const text = node.perm.join('');
+        const textWidth = tempCtx.measureText(text).width;
+        const width = textWidth + padding * 2;
+        const height = 20;
+        
+        tempCtx.fillRect(node.x - width / 2, node.y - height / 2, width, height);
+        tempCtx.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
+        
+        tempCtx.fillStyle = getComputedStyle(document.documentElement)
+          .getPropertyValue('--text-primary');
+        tempCtx.fillText(text, node.x, node.y);
+        tempCtx.fillStyle = getComputedStyle(document.documentElement)
+          .getPropertyValue('--node-bg');
+      }
+      
+      tempCtx.restore();
+      
+      // Download
+      tempCanvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bruhat_graph_S${STATE.n}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        updateStatus('Exported graph as PNG');
+      });
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        clearSelection();
+      }
+      
+      // Arrow keys to navigate (if a node is selected)
+      if (STATE.selectedNodes.length === 1 && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        
+        const currentId = STATE.selectedNodes[0];
+        const current = STATE.permutations.find(n => n.id === currentId);
+        if (!current) return;
+        
+        let candidates = [];
+        
+        if (e.key === 'ArrowUp') {
+          // Move to covering elements (higher rank)
+          candidates = STATE.edges
+            .filter(edge => edge.from === currentId)
+            .map(edge => STATE.permutations.find(n => n.id === edge.to))
+            .filter(n => n);
+        } else if (e.key === 'ArrowDown') {
+          // Move to covered elements (lower rank)
+          candidates = STATE.edges
+            .filter(edge => edge.to === currentId)
+            .map(edge => STATE.permutations.find(n => n.id === edge.from))
+            .filter(n => n);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          // Move within same rank
+          const sameRank = STATE.permutations
+            .filter(n => n.stats.length === current.stats.length && n.id !== currentId)
+            .sort((a, b) => a.x - b.x);
+          
+          if (e.key === 'ArrowLeft') {
+            candidates = sameRank.filter(n => n.x < current.x);
+            candidates = candidates.length ? [candidates[candidates.length - 1]] : [];
+          } else {
+            candidates = sameRank.filter(n => n.x > current.x);
+            candidates = candidates.length ? [candidates[0]] : [];
+          }
+        }
+        
+        if (candidates.length > 0) {
+          const next = candidates[0];
+          STATE.selectedNodes = [next.id];
+          highlightComparable(next.id);
+          
+          // Pan to node
+          STATE.transform.x = canvas.width / 2 - next.x * STATE.transform.scale;
+          STATE.transform.y = canvas.height / 2 - next.y * STATE.transform.scale;
+          
+          renderGraph();
+        }
+      }
+    });
+    
+    // ========== INITIALIZATION ==========
+    
+    // Build default graph on load
+    window.addEventListener('load', () => {
+      updateStatus('Building default graph for S₄...');
+      setTimeout(() => {
+        buildBruhatGraph(4);
+        setTimeout(() => {
+          fitToView();
+        }, 500);
+      }, 100);
+    });
+  </script>
+</body>
+</html>

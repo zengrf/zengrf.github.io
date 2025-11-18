@@ -1,0 +1,17 @@
+{% comment %}
+  Usage: {% include gif-embed.html %}
+  
+  Automatically embeds the first GIF/image from page.downloads with responsive sizing.
+  Requires page.downloads[0].file to be set in frontmatter.
+{% endcomment %}
+
+{% if page.downloads and page.downloads[0].file %}
+  {% assign gif_file = page.downloads[0].file %}
+  
+  <div class="gif-frame">
+    <img src="{{ gif_file }}" alt="{{ page.title }}" loading="lazy">
+  </div>
+  <p class="gif-download"><a href="{{ gif_file }}" target="_blank" rel="noopener">{{ page.downloads[0].label | default: "Download Image" }}</a></p>
+{% else %}
+  <p class="error">No image file specified in downloads.</p>
+{% endif %}
