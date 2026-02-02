@@ -46,6 +46,89 @@
     enhanceExternalLinks();
   }
 
+  const setupFullscreenEmbeds = function() {
+    const embedNodes = document.querySelectorAll('.post__embed, .featured-card__preview');
+    if (!embedNodes.length) {
+      return;
+    }
+
+    const supportsFullscreen = Boolean(
+      document.fullscreenEnabled ||
+      document.webkitFullscreenEnabled ||
+      document.msFullscreenEnabled
+    );
+
+    const embedEntries = [];
+    embedNodes.forEach(function(embed) {
+      const button = embed.querySelector('.embed-fullscreen');
+      const iframe = embed.querySelector('iframe');
+      if (!button || !iframe) {
+        return;
+      }
+
+      embedEntries.push({ embed, button, iframe });
+
+      if (!supportsFullscreen) {
+        button.addEventListener('click', function() {
+          window.open(iframe.src, '_blank', 'noopener');
+        });
+        button.setAttribute('aria-label', 'Open interactive demo in new tab');
+        return;
+      }
+
+      button.addEventListener('click', function() {
+        const activeElement = document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.msFullscreenElement;
+
+        if (activeElement === embed) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+          return;
+        }
+
+        if (embed.requestFullscreen) {
+          embed.requestFullscreen();
+        } else if (embed.webkitRequestFullscreen) {
+          embed.webkitRequestFullscreen();
+        } else if (embed.msRequestFullscreen) {
+          embed.msRequestFullscreen();
+        }
+      });
+    });
+
+    if (!supportsFullscreen || !embedEntries.length) {
+      return;
+    }
+
+    const updateButtons = function() {
+      const activeElement = document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement;
+
+      embedEntries.forEach(function(entry) {
+        const isFullscreen = activeElement === entry.embed;
+        entry.button.classList.toggle('is-fullscreen', isFullscreen);
+        entry.button.setAttribute(
+          'aria-label',
+          isFullscreen ? 'Exit fullscreen' : 'View interactive demo fullscreen'
+        );
+      });
+    };
+
+    document.addEventListener('fullscreenchange', updateButtons);
+    document.addEventListener('webkitfullscreenchange', updateButtons);
+    document.addEventListener('MSFullscreenChange', updateButtons);
+    updateButtons();
+  };
+
+  setupFullscreenEmbeds();
+
   // Add scrolled class to header on scroll
   let lastScroll = 0;
   const header = document.querySelector('.site-header');

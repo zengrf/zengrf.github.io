@@ -57,17 +57,59 @@ permalink: /notes/
         {% if post.embed_html %}
         {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
         <div class="featured-card__preview">
-          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% elsif post.embed_url %}
         <div class="featured-card__preview">
-          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% elsif post.downloads %}
         {% assign first_download = post.downloads | first %}
         {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
         <div class="featured-card__preview">
-          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% endif %}
       </div>
@@ -152,17 +194,59 @@ permalink: /notes/
         {% if post.embed_html %}
         {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
         <div class="featured-card__preview">
-          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% elsif post.embed_url %}
         <div class="featured-card__preview">
-          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% elsif post.downloads %}
         {% assign first_download = post.downloads | first %}
         {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
         <div class="featured-card__preview">
-          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy"></iframe>
+          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 3h6v6"/>
+              <path d="M9 21H3v-6"/>
+              <path d="M21 3l-7 7"/>
+              <path d="M3 21l7-7"/>
+            </svg>
+            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 14h6v6"/>
+              <path d="M20 10h-6V4"/>
+              <path d="M14 10l7-7"/>
+              <path d="M10 14l-7 7"/>
+            </svg>
+          </button>
+          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
         </div>
         {% endif %}
       </div>
