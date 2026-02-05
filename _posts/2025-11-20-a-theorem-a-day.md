@@ -111,3 +111,5 @@ $$
 
 
 But this number has the same parity as $\frac{s(s+1)}{2}$. This proves the first formula. The second formula is proved using the double cover $c: \tilde{G}_2(V) \rightarrow G_2(V)$, the functoriality of the Euler class (formula (1)), and the obvious equality $c^\ast\left(\left[G_2(V)\right]^{\prime}\right)= 2\left[\tilde{G}_2(V)\right]^{\prime}$ where $\left[G_2(V)\right]^{\prime},\left[\tilde{G}_2(V)\right]^{\prime}$ are the canonical generators of the cyclic groups $H^{2(n-2)}\left(G_2(V), \mathcal{O}_{S^k(U)}\right), H^{2(n-2)}\left(\tilde{G}_2(V), \mathbb{Z}\right)$.
+
+
