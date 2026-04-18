@@ -63,11 +63,16 @@ permalink: /teaching/
 
   <h3><a href="https://sites.math.washington.edu/ai/">UW Math AI Lab</a></h3>
 
-  I am mentor on the project <a href="https://sites.math.washington.edu/ai/fall2025.html">Reinforcement Learning for Polynomials</a>. Together with <a href="https://sites.math.washington.edu//~jarod/">Jarod Alper</a> and other group members, we try to train a AlphaZero-style reinforcement learning agent to efficiently compute polynomial circuits. This can be viewed as an extremely simplified version of auto-prove generation.
+  I am a mentor on the project <a href="https://github.com/uw-math-ai/PolyArithmeticCircuitsRL/tree/rohan-new-branch">Reinforcement Learning for Polynomials</a>. Together with <a href="https://sites.math.washington.edu//~jarod/">Jarod Alper</a> and other group members, we try to train a AlphaZero-style reinforcement learning agent to efficiently compute polynomial circuits. This can be viewed as an extremely simplified version of auto-proof generation. This project has produced an ICLR workshop paper titled <a href="https://arxiv.org/abs/2603.17075">CircuitBuilder: From Polynomials to Circuits via Reinforcement Learning</a>. 
+
+  I am a mentor on the project <a href="https://github.com/uw-math-ai/cayley-py">CayleyPy: Advancing Group Theory with AI</a>. 
 
   I served as a mentor on the project "What mathematical functions can neural networks learn?" in the 2024-2025 iteration of the Math AI Lab. 
 
   <h3><a href="https://wxml.math.washington.edu/">Washington eXperimental Mathematics Lab - WXML</a></h3>
+  
+  I am a mentor on the Spring 2026 project <i>"Calculus Visuals – Interactive modeling with Desmos, 3D prints, and other tools"</i>. 
+  
   I served as a mentor on the Spring 2025 project <i>"Creating 3D Prints and Animations to Help Teach Calculus."</i> With <a href="https://sites.math.washington.edu/~aloveles/">Andy Loveless</a> and other group members, we created 3D prints of mathematical objects as teaching aids for the calculus sequence, and geometric thinking in general. Here is an <a href="https://sites.math.washington.edu/~aloveles/CalcVisuals/">ever-growing <i>Gallery of Shapes</i></a> that we've made so far. I like the following prints in particular:
 
   <div style="display: flex; gap: 1.5rem; align-items: flex-start; justify-content: center; margin: 2rem 0;">
