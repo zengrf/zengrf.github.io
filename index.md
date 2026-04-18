@@ -8,6 +8,7 @@ author_profile: true
   <div class="hero__text">
     <p data-i18n="hero.intro.1">Hi there! I am a third-year Ph.D. student in mathematics at the University of Washington, Seattle. I am jointly advised by Jarod Alper and Sara Billey. I am interested in Schubert calculus, equivariant intersection theory, and moduli theory. I am also passionate about formalization of mathematics and using machine learning to aid mathematical discoveries. </p>
     <p data-i18n="hero.intro.2">I completed my B.A. studies at the University of Pennsylvania in 2023, double-majoring in mathematics and linguistics, and received an M.A. in Applied Math &amp; Computer Science. Outside of mathematics, you will often find me on the tennis or basketball court, or trying to learn a foreign language.</p>
+    <p>I am on the organizing team of the <a href="https://uw2026leanhackathon.github.io/">UW 2026 Lean Hackathon.</a></p>
     <dl class="definition-list">
       <dt data-i18n="hero.contact.email.label">Email</dt>
       <dd data-i18n="hero.contact.email.value">zengrf at uw dot edu</dd>
@@ -41,12 +42,19 @@ author_profile: true
 <section class="list-card" data-collapsible="true">
   <h2 data-i18n="hero.activity.title">Recent activity</h2>
   <ul>
-    <li>ICERM Workshop: Webs in Algebraic Combinatorics, Providence, RI.</li>
-    <li data-i18n="hero.activity.item1">Western Algebraic Geometry Symposium (Fall 2025), University of Oregon.</li>
-    <li data-i18n="hero.activity.item1">Japanese Association for Digital Humanities (JADH), University of Osaka. </li>
-    <li data-i18n="hero.activity.item2">Summer Research Institute in Algebraic Geometry, Colorado State University.</li>
-    <li data-i18n="hero.activity.item4">Macaulay2 Workshop, University of Wisconsin - Madison.</li>
-    <li data-i18n="hero.activity.item5">CMND Thematic Program in Discrete Groups in Topology and Algebraic Geometry, University of Notre Dame.</li>
+    <li>ICARM Summer School on Formalization in Lean. ICARM, Carnegie Mellon University, July 2026.</li>
+    <li>CMND 2026 Thematic Program: Algebraic Combinatorics and Applications. University of Notre Dame, June 2026.</li>
+    <li>ICARM Workshop on Algebraic Geometry and Machine Learning. ICARM, Carnegie Mellon University, June 2026.</li>
+    <li>M0,ntréal ISM Discovery School: Combinatorics of Moduli of Curves. UQAM, May 2026.</li>
+    <li>Graduate Student Topology and Geometry Conference. Rutgers University, April 2026.</li>
+    <li>Graduate Student Combinatorics Conference, University of Illinois-Chicago, March 2026.</li>
+    <li>Western Algebraic Geometry Symposium. UCSD, March 2026.</li>
+    <!-- <li>ICERM Workshop: Webs in Algebraic Combinatorics, Providence, RI.</li>
+    <li>Western Algebraic Geometry Symposium (Fall 2025), University of Oregon.</li>
+    <li>Japanese Association for Digital Humanities (JADH), University of Osaka.</li>
+    <li>Summer Research Institute in Algebraic Geometry, Colorado State University.</li>
+    <li>Macaulay2 Workshop, University of Wisconsin - Madison.</li>
+    <li>CMND Thematic Program in Discrete Groups in Topology and Algebraic Geometry, University of Notre Dame.</li> -->
   </ul>
-  <p class="hero__note" data-i18n="hero.activity.note">Last updated 2025‑11‑08.</p>
+  <p class="hero__note" data-i18n="hero.activity.note">Last updated 2026‑04‑18.</p>
 </section>

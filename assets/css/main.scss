@@ -598,6 +598,10 @@ html[lang='zh-Hans'] .section h3 {
   margin-top: 0.8rem;
 }
 
+.section ol li + li {
+  margin-top: 0.8em;
+}
+
 /* Add more space after feature block content before next feature block */
 .section h3 ~ h3 {
   margin-top: 1.5rem;
