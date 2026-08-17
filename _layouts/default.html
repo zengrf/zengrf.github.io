@@ -3,8 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4c3520" />
+    <script>
+      (function () {
+        var KEY = 'site.time-theme', m;
+        try { m = localStorage.getItem(KEY); } catch (e) {}
+        if (['day','dusk','night'].indexOf(m) < 0) {
+          var h = new Date().getHours() + new Date().getMinutes() / 60;
+          m = (h >= 7 && h < 16) ? 'day' : ((h >= 16 && h < 19.5) || (h >= 5 && h < 7)) ? 'dusk' : 'night';
+        }
+        document.documentElement.setAttribute('data-time', m);
+      })();
+    </script>
     <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Zen+Old+Mincho:wght@400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:wght@600;700&family=Zen+Old+Mincho:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}" />
     {% seo %}
     <script>
@@ -22,7 +34,6 @@
     <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   </head>
   <body class="site-body">
-    {% include patterns.svg %}
     <header class="site-header">
       <div class="container">
         <a class="brand" href="{{ '/' | relative_url }}">
@@ -51,6 +62,9 @@
 
     <footer class="site-footer">
       <div class="container">
+        <button class="time-toggle" type="button" aria-label="Theme: auto. Click to change.">
+          <span class="time-icon" aria-hidden="true">✽</span><span class="time-label">auto</span>
+        </button>
         <div class="lang-overlay" id="lang-overlay" aria-hidden="true">
           <button class="lang-toggle" aria-controls="lang-overlay" aria-expanded="false" aria-label="Change language">
             <span class="lang-current">English</span>
@@ -76,6 +90,7 @@
         });
       }
     </script>
+    <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/lang.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/enhancements.js' | relative_url }}"></script>
   </body>

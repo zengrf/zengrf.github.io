@@ -6,7 +6,7 @@ author_profile: true
 
 <section class="hero">
   <div class="hero__text">
-    <p data-i18n="hero.intro.1">Hi there! I am a third-year Ph.D. student in mathematics at the University of Washington, Seattle. I am jointly advised by Jarod Alper and Sara Billey. I am interested in Schubert calculus, equivariant intersection theory, and moduli theory. I am also passionate about formalization of mathematics and using machine learning to aid mathematical discoveries. </p>
+    <p data-i18n="hero.intro.1">Hi there! I am a fourth-year Ph.D. student in mathematics at the University of Washington, Seattle. I am jointly advised by Jarod Alper and Sara Billey. I am interested in Schubert calculus, equivariant intersection theory, and moduli theory. I am also passionate about formalization of mathematics and using machine learning to aid mathematical discoveries. </p>
     <p>As of June 2026, I am the Acting Director of the <a href="https://ai.math.uw.edu">UW Math AI Lab</a>. Starting summer 2026, I am a <a href="https://www.simonsfoundation.org/grant/simons-dissertation-fellowship-in-mathematics/">Simons Dissertation Fellow</a>. I am visiting the University of California, Berkeley during the Fall 2026 semester.</p>
     <p data-i18n="hero.intro.2">I completed my B.A. studies at the University of Pennsylvania in 2023, double-majoring in mathematics and linguistics, and received an M.A. in Applied Math &amp; Computer Science. Outside of mathematics, you will often find me on the tennis or basketball court, or trying to learn a foreign language.</p>
     <p>I am on the organizing team of the <a href="https://uw2026leanhackathon.github.io/">UW 2026 Lean Hackathon.</a></p>
@@ -16,7 +16,7 @@ author_profile: true
       <dt data-i18n="hero.contact.office.label">Office</dt>
       <dd data-i18n="hero.contact.office.value">Padelford C-20, UW Seattle</dd>
       <dt data-i18n="hero.contact.cv.label">CV</dt>
-      <dd data-i18n="hero.contact.cv.value"><a href="/assets/pdf/Michael CV Sep 2025.pdf">Download curriculum vitae (not up-to-date!)</a></dd>
+      <dd data-i18n="hero.contact.cv.value"><a href="/assets/pdf/Michael CV Aug 2026.pdf">Download curriculum vitae (August 2026)</a></dd>
     </dl>
   </div>
   <figure class="hero__image">

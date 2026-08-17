@@ -24,7 +24,7 @@
       'nav.ogura': '小仓色纸',
       'home.greeting': '你好！',
       'hero.subtitle': '数学专业博士生',
-      'hero.intro.1': '你好！我是曾若凡，目前是西雅图华盛顿大学数学博士三年级的学生。我的导师是Jarod Alper和Sara Billey。我的研究方向是代数几何，代数组合，和叠理论。',
+      'hero.intro.1': '你好！我是曾若凡，目前是西雅图华盛顿大学数学博士四年级的学生。我的导师是Jarod Alper和Sara Billey。我的研究方向是代数几何，代数组合，和叠理论。',
       'hero.intro.2': '我于 2023 年毕业于宾夕法尼亚大学，本科的专业是数学和语言学。我同时也获得了应用数学与计算机科学硕士学位。我喜欢打网球，打篮球，和学语言。',
       'hero.contact.email.label': '邮箱',
       'hero.contact.email.value': 'zengrf at uw dot edu',
@@ -53,8 +53,8 @@
       'nav.notes': 'ノート',
       'nav.ogura': '小倉色紙',
       'home.greeting': 'こんにちは！',
-      'hero.subtitle': '数学科博士課程三年生',
-      'hero.intro.1': 'こんにちは！曽・マイケルと申します。ワシントン大学シアトル校で数学の博士課程３年生として学んでおります。ジャロッド・アルパー先生とサラ・ビリー先生と共に、代数幾何学、代数的組み合わせ論とスタック論を中心に研究しております。',
+      'hero.subtitle': '数学科博士課程四年生',
+      'hero.intro.1': 'こんにちは！曽・マイケルと申します。ワシントン大学シアトル校で数学の博士課程４年生として学んでおります。ジャロッド・アルパー先生とサラ・ビリー先生と共に、代数幾何学、代数的組み合わせ論とスタック論を中心に研究しております。',
       'hero.intro.2': '2023年にペンシルベニア大学を卒業し、学士号は数学と言語学を専攻、修士号は応用数学とコンピュータサイエンスでした。趣味はテニス、バスケットボールと言語の勉強です。',
       'hero.contact.email.label': 'メール',
       'hero.contact.email.value': 'zengrf at uw dot edu',
@@ -112,94 +112,12 @@
     
     // Update which option is current (hidden)
     languageButtons.forEach(btn => {
-      const li = btn.parentElement;
-      if (btn.dataset.lang === code) {
-        li.classList.add('current');
-      } else {
-        li.classList.remove('current');
-      }
-    });
-    
-    document.documentElement.setAttribute('lang', code);
-    try {
-      localStorage.setItem(STORAGE_KEY, code);
-    } catch (err) {
-      console.warn('Unable to persist language selection', err);
-    }
-    applyTranslations(code);
-  }
-
-  function openOverlay() {
-    if (!overlay) return;
-    overlay.classList.add('open');
-    overlay.setAttribute('aria-hidden', 'false');
-    if (toggle) toggle.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeOverlay() {
-    if (!overlay) return;
-    overlay.classList.remove('open');
-    overlay.setAttribute('aria-hidden', 'true');
-    if (toggle) {
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.focus();
-    }
-  }
-
-  // Only set up UI event listeners if elements exist
-  if (toggle && overlay) {
-    toggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (overlay.classList.contains('open')) closeOverlay();
-      else openOverlay();
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', (event) => {
-      if (overlay.classList.contains('open') && 
-          !overlay.contains(event.target)) {
-        closeOverlay();
-      }
-    });
-
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && overlay.classList.contains('open')) {
-        closeOverlay();
-      }
-    });
-
-    languageButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const newLang = btn.dataset.lang;
-        
-        // Don't trigger transition if same language
-        if (newLang === document.documentElement.getAttribute('lang')) {
-          closeOverlay();
-          return;
-        }
-        
-        // Get or create koushi overlay
-        let koushiOverlay = document.querySelector('.koushi-transition-overlay');
-        if (!koushiOverlay) {
-          // If overlay doesn't exist yet (enhancements.js might not have loaded), skip transition
+        if (newLang !== document.documentElement.getAttribute('lang')) {
           setActive(newLang);
-          closeOverlay();
-          return;
         }
-        
-        // Close language panel
         closeOverlay();
-        
-        // Trigger door closing
-        koushiOverlay.classList.remove('opening');
-        koushiOverlay.classList.add('closing');
-        
-        // Wait for doors to close, then switch language and reopen
-        setTimeout(() => {
-          setActive(newLang);
-          koushiOverlay.classList.remove('closing');
-          koushiOverlay.classList.add('opening');
-        }, 800);
       });
     });
   }

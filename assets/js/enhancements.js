@@ -247,419 +247,79 @@
   });
 
   // ==========================================================================
-  // Koushi Sliding Door Page Transition
+  // Collapsible panels — accessible (button semantics, reduced-motion aware)
   // ==========================================================================
-  
-  // Create sliding door overlay
-  const createSlidingDoorOverlay = function() {
-    const overlay = document.createElement('div');
-    overlay.className = 'koushi-transition-overlay';
-    overlay.innerHTML = `
-      <div class="koushi-door koushi-door--left">
-        <div class="koushi-lattice"></div>
-      </div>
-      <div class="koushi-door koushi-door--right">
-        <div class="koushi-lattice"></div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    return overlay;
-  };
-  
-  // Add CSS for sliding doors
-  const washi1Texture = assetUrl('/assets/img/washi1.png');
-  const washi2Texture = assetUrl('/assets/img/washi2.png');
-  const transitionStyles = document.createElement('style');
-  transitionStyles.textContent = `
-    .koushi-transition-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      pointer-events: none;
-      display: flex;
-    }
-    
-    .koushi-door {
-      flex: 1;
-      height: 100%;
-      background: #8b4513;
-      transform: translateX(0);
-      transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 
-        inset 0 0 60px rgba(0, 0, 0, 0.5),
-        inset 6px 0 16px rgba(255, 255, 255, 0.2),
-        inset -6px 0 16px rgba(0, 0, 0, 0.4);
-    }
-    
-    .koushi-door--left {
-      transform-origin: left center;
-      border-right: 8px solid rgba(74, 47, 26, 0.95);
-    }
-    
-    .koushi-door--right {
-      transform-origin: right center;
-      border-left: 8px solid rgba(74, 47, 26, 0.95);
-    }
-    
-    .koushi-lattice {
-      position: absolute;
-      inset: 0;
-      background-color: #fffef9;
-      background-image: 
-        /* Horizontal brown grid lines */
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #4a2f1a 0px,
-          #4a2f1a 5px,
-          transparent 5px,
-          transparent 100px
-    ),
-    /* Washi paper texture */
-    url('${washi1Texture}');
-      background-size: auto, cover;
-      background-blend-mode: normal, multiply;
-      opacity: 0.95;
-    }
-    
-    /* Right-justify grid on left door - vertical lines from right edge */
-    .koushi-door--left .koushi-lattice {
-      background-image: 
-        /* Horizontal brown grid lines */
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #4a2f1a 0px,
-          #4a2f1a 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        /* Vertical brown grid lines from RIGHT */
-        repeating-linear-gradient(270deg,
-          transparent 0px,
-          transparent 0px,
-          #4a2f1a 0px,
-          #4a2f1a 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        /* Wood grain highlight - from RIGHT */
-        repeating-linear-gradient(270deg,
-          transparent 0px,
-          transparent 97px,
-          rgba(255, 255, 255, 0.3) 97px,
-          rgba(255, 255, 255, 0.3) 98px,
-          transparent 98px,
-          transparent 100px
-        ),
-        /* Washi paper texture */
-        url('${washi1Texture}');
-      background-size: auto, auto, auto, cover;
-    }
-    
-    /* Left-justify grid on right door - vertical lines from left edge */
-    .koushi-door--right .koushi-lattice {
-      background-image: 
-        /* Horizontal brown grid lines */
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #4a2f1a 0px,
-          #4a2f1a 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        /* Vertical brown grid lines from LEFT */
-        repeating-linear-gradient(90deg,
-          transparent 0px,
-          transparent 0px,
-          #4a2f1a 0px,
-          #4a2f1a 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        /* Wood grain highlight */
-        repeating-linear-gradient(90deg,
-          transparent 0px,
-          transparent 97px,
-          rgba(255, 255, 255, 0.3) 97px,
-          rgba(255, 255, 255, 0.3) 98px,
-          transparent 98px,
-          transparent 100px
-        ),
-        /* Washi paper texture */
-        url('${washi1Texture}');
-      background-size: auto, auto, auto, cover;
-    }
-    
-    .koushi-transition-overlay.closing .koushi-door--left {
-      transform: translateX(0);
-      pointer-events: auto;
-    }
-    
-    .koushi-transition-overlay.closing .koushi-door--right {
-      transform: translateX(0);
-      pointer-events: auto;
-    }
-    
-    .koushi-transition-overlay.opening .koushi-door--left {
-      transform: translateX(-100%);
-    }
-    
-    .koushi-transition-overlay.opening .koushi-door--right {
-      transform: translateX(100%);
-    }
-    
-    /* Initial hidden state */
-    .koushi-transition-overlay:not(.closing):not(.opening) .koushi-door--left {
-      transform: translateX(-100%);
-    }
-    
-    .koushi-transition-overlay:not(.closing):not(.opening) .koushi-door--right {
-      transform: translateX(100%);
-    }
-    
-    /* Premium wood grain texture on door frames */
-    .koushi-door::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: 
-        repeating-linear-gradient(90deg,
-          rgba(0, 0, 0, 0.15) 0px,
-          rgba(0, 0, 0, 0.08) 2px,
-          transparent 2px,
-          transparent 6px
-        );
-      opacity: 0.5;
-    }
-    
-    /* Tang Dynasty vermillion style for Chinese language */
-    html[lang='zh-Hans'] .koushi-door {
-      background: #c41e3a;
-    }
-    
-    html[lang='zh-Hans'] .koushi-lattice {
-      background-color: #fffef9;
-      background-image: 
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #8b0000 0px,
-          #8b0000 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        url('${washi2Texture}');
-      background-size: auto, cover;
-    }
-    
-    html[lang='zh-Hans'] .koushi-door--left .koushi-lattice {
-      background-image: 
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #8b0000 0px,
-          #8b0000 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        repeating-linear-gradient(270deg,
-          transparent 0px,
-          transparent 0px,
-          #8b0000 0px,
-          #8b0000 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        repeating-linear-gradient(270deg,
-          transparent 0px,
-          transparent 97px,
-          rgba(255, 215, 0, 0.4) 97px,
-          rgba(255, 215, 0, 0.4) 98px,
-          transparent 98px,
-          transparent 100px
-        ),
-        url('${washi2Texture}');
-      background-size: auto, auto, auto, cover;
-    }
-    
-    html[lang='zh-Hans'] .koushi-door--right .koushi-lattice {
-      background-image: 
-        repeating-linear-gradient(0deg,
-          transparent 0px,
-          transparent 0px,
-          #8b0000 0px,
-          #8b0000 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        repeating-linear-gradient(90deg,
-          transparent 0px,
-          transparent 0px,
-          #8b0000 0px,
-          #8b0000 5px,
-          transparent 5px,
-          transparent 100px
-        ),
-        repeating-linear-gradient(90deg,
-          transparent 0px,
-          transparent 97px,
-          rgba(255, 215, 0, 0.4) 97px,
-          rgba(255, 215, 0, 0.4) 98px,
-          transparent 98px,
-          transparent 100px
-        ),
-        url('${washi2Texture}');
-      background-size: auto, auto, auto, cover;
-    }
-  `;
-  document.head.appendChild(transitionStyles);
-  
-  // Create overlay on page load
-  const overlay = createSlidingDoorOverlay();
-  
-  // Check if we're arriving from a transition
-  const fromTransition = sessionStorage.getItem('koushi-transition') === 'true';
-  
-  if (fromTransition) {
-    // Start with doors closed, then open them
-    sessionStorage.removeItem('koushi-transition');
-    overlay.classList.add('closing');
-    
-    setTimeout(function() {
-      overlay.classList.remove('closing');
-      overlay.classList.add('opening');
-    }, 50);
-  } else {
-    // First visit - doors start open
-    overlay.classList.add('opening');
-  }
-  
-  // Handle page transitions for internal links
-  document.addEventListener('click', function(e) {
-    const link = e.target.closest('a');
-    if (!link) return;
-    
-    const href = link.getAttribute('href');
-    
-    // Check if it's an internal link
-    if (href && 
-        (href.startsWith('/') || href.startsWith(window.location.origin)) &&
-        !href.includes('#') && 
-        href !== window.location.pathname &&
-        href !== window.location.href) {
-      
-      e.preventDefault();
-      
-      // Set transition flag
-      sessionStorage.setItem('koushi-transition', 'true');
-      
-      // Remove opening class and add closing
-      overlay.classList.remove('opening');
-      overlay.classList.add('closing');
-      
-      // Navigate after doors close
-      setTimeout(function() {
-        window.location.href = href;
-      }, 800);
-    }
-  });
-  
-  // ==========================================================================
-  // Collapsible Blocks with Koushi Transition
-  // ==========================================================================
-  
-  // Add collapsible functionality
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const collapsibleSections = document.querySelectorAll('.section[data-collapsible="true"], .list-card[data-collapsible="true"]');
-  
-  collapsibleSections.forEach(function(section) {
-    // Create toggle button
+
+  collapsibleSections.forEach(function(section, idx) {
     const header = section.querySelector('h2, h3, h4');
     if (!header) return;
-    
-    // Make header clickable
-    header.style.cursor = 'pointer';
-    header.style.userSelect = 'none';
-    header.style.position = 'relative';
-    
-    // Add toggle indicator
-    const indicator = document.createElement('span');
-    indicator.className = 'collapse-indicator';
-    indicator.innerHTML = '▼';
-    indicator.style.cssText = `
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      font-size: 0.8em;
-      color: var(--accent);
-    `;
-    header.style.position = 'relative';
-    header.appendChild(indicator);
-    
-    // Get content to collapse
+
+    // move everything after the header into a wrapper we can hide
     const content = document.createElement('div');
     content.className = 'collapsible-content';
-    const children = Array.from(section.children).filter(child => child !== header);
-    children.forEach(child => content.appendChild(child));
+    content.id = 'collapsible-' + idx;
+    Array.from(section.children).filter(function(c) { return c !== header; })
+      .forEach(function(c) { content.appendChild(c); });
     section.appendChild(content);
-    
-    // Set initial state (collapsed by default)
+
+    // real button semantics on the header
+    header.setAttribute('role', 'button');
+    header.setAttribute('tabindex', '0');
+    header.setAttribute('aria-controls', content.id);
+
+    const indicator = document.createElement('span');
+    indicator.className = 'collapse-indicator';
+    indicator.setAttribute('aria-hidden', 'true');
+    indicator.textContent = '▾';
+    indicator.style.cssText = 'margin-left:auto;font-size:0.8em;transition:transform 0.3s ease;';
+    header.appendChild(indicator);
+
     let isCollapsed = !section.hasAttribute('data-expanded');
-    
-    function setCollapsedState(collapsed, animate = true) {
+
+    function setCollapsedState(collapsed, animate) {
       isCollapsed = collapsed;
-      
+      header.setAttribute('aria-expanded', String(!collapsed));
+      indicator.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+      const doAnimate = animate && !prefersReducedMotion;
       if (collapsed) {
-        indicator.style.transform = 'translateY(-50%) rotate(-90deg)';
-        if (animate) {
-          // Koushi lattice collapse animation
-          content.style.transition = 'max-height 0.6s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.4s ease, transform 0.6s ease';
+        if (doAnimate) {
+          content.style.transition = 'max-height 0.35s ease, opacity 0.25s ease';
           content.style.maxHeight = content.scrollHeight + 'px';
           requestAnimationFrame(function() {
             content.style.maxHeight = '0';
             content.style.opacity = '0';
-            content.style.transform = 'scaleY(0.95)';
           });
+          setTimeout(function() { content.hidden = true; }, 360);
         } else {
           content.style.maxHeight = '0';
           content.style.opacity = '0';
-          content.style.transform = 'scaleY(0.95)';
+          content.hidden = true;
         }
       } else {
-        indicator.style.transform = 'translateY(-50%) rotate(0deg)';
-        if (animate) {
-          content.style.transition = 'max-height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease 0.1s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        content.hidden = false;
+        if (doAnimate) {
+          content.style.transition = 'max-height 0.35s ease, opacity 0.3s ease';
           content.style.maxHeight = content.scrollHeight + 'px';
           content.style.opacity = '1';
-          content.style.transform = 'scaleY(1)';
-          
-          // Remove max-height after animation
-          setTimeout(function() {
-            content.style.maxHeight = 'none';
-          }, 600);
+          setTimeout(function() { content.style.maxHeight = 'none'; }, 360);
         } else {
           content.style.maxHeight = 'none';
           content.style.opacity = '1';
-          content.style.transform = 'scaleY(1)';
         }
       }
     }
-    
-    // Initialize state
-    content.style.transformOrigin = 'top center';
+
     content.style.overflow = 'hidden';
     setCollapsedState(isCollapsed, false);
-    
-    // Toggle on header click
-    header.addEventListener('click', function() {
-      setCollapsedState(!isCollapsed, true);
+
+    function toggle() { setCollapsedState(!isCollapsed, true); }
+    header.addEventListener('click', toggle);
+    header.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
     });
   });
 
-  console.log('✨ UI enhancements loaded with koushi sliding door transitions and collapsible blocks');
 })();

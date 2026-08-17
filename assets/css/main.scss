@@ -1,2475 +1,806 @@
 ---
 ---
 
-/* ===== TRADITIONAL ARCHITECTURE THEME ===== */
-/* Inspired by Japanese temples (Byōdō-in, Kinkaku-ji) and Tang Dynasty palaces */
+/* ==========================================================================
+   MIYABI (雅) — a temple across the day
+   Theme for zengrf.github.io — 清潔感と高級感
+   --------------------------------------------------------------------------
+   One material system — washi paper, cedar & keyaki beams, a kawara eave,
+   kumiko lattice, byōbu gold — rendered at three times of day:
+
+     html[data-time="day"]    asa/hiru : ivory washi, sumi ink, hinoki bark
+     html[data-time="dusk"]   yūgure   : incense-gold paper, chestnut beams
+     html[data-time="night"]  yoru     : lacquer black, ebony panels, gold
+
+   Colors are Japanese traditional colors (和色) taken from the
+   和色大辞典 (colordic.org/w) — named in comments; shades marked "derived"
+   are tints/shades of those. Time is set by assets/js/theme.js.
+   All textures are inline SVG data-URIs: no image files, no requests.
+   Motif budget: washi ground + wood beams + ONE lattice accent per view;
+   gold lives in the hero; seigaiha only inside figures. Restraint is the
+   design.  Plain flat CSS (valid SCSS), portable to any stack.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Design tokens
+   -------------------------------------------------------------------------- */
 
 :root {
-  /* Japanese Temple Theme - Wabi-sabi aesthetic */
-  /* Based on: white plaster walls, dark cedar wood, natural materials */
-  --bg: #f9f7f4;               /* Lighter shikkui plaster white */
-  --surface: #fdfcfa;          /* Washi paper white */
-  --ink: #2d1f15;              /* Sumi ink black-brown */
-  --muted: #5a4d44;            /* Darker weathered wood */
-  --accent: #8b4513;           /* Sugi cedar brown */
-  --accent-dark: #4a2f1a;      /* Dark hinoki wood */
-  --accent-light: #a0714f;     /* Light cedar */
-  --border: rgba(45, 31, 21, 0.12);
-  --shadow: 0 8px 24px rgba(45, 31, 21, 0.08);
-  --shadow-lg: 0 16px 40px rgba(45, 31, 21, 0.12);
-  --shadow-xl: 0 24px 56px rgba(45, 31, 21, 0.16);
-  
-  /* Temple architectural colors */
-  --wood-dark: #3d2817;        /* Keyaki zelkova */
-  --wood-light: #8b7355;       /* Hinoki cypress */
-  --tatami: #c9b896;           /* Tatami mat */
-  --shoji: rgba(253, 252, 250, 0.95); /* Shoji paper */
-  
-  /* Gradient patterns */
-  --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-  --gradient-wood: linear-gradient(180deg, #4a3425 0%, #3d2817 50%, #4a3425 100%);
-  --gradient-accent: linear-gradient(135deg, rgba(139, 69, 19, 0.08) 0%, rgba(74, 47, 26, 0.04) 100%);
-  
-  /* Texture overlays - using SVG patterns */
-  --texture-koushi: url(#koushi-pattern);
-  --texture-seigaiha: url(#seigaiha-pattern);
+  --font-serif: "EB Garamond", "Zen Old Mincho", "Noto Serif JP", Georgia, serif;
+  --font-display: "Cormorant Garamond", "Zen Old Mincho", "Noto Serif JP", serif;
+
+  --radius: 3px;
+  --radius-lg: 6px;
+  --container: 1060px;
+  --beam-h: 4.4rem;
+
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --t-fast: 160ms;
+  --t-theme: 900ms;
 }
 
-html[lang='zh-Hans'] {
-  /* Tang Dynasty Palace Theme - Imperial elegance */
-  /* Based on: white walls, vermillion pillars, golden accents */
-  --bg: #faf8f5;               /* Palace wall white */
-  --surface: #fffefa;          /* Silk white */
-  --ink: #1a0f0a;              /* Ink black */
-  --muted: #6b2020;            /* Dark vermillion red for text */
-  --accent: #c41e3a;           /* Shu-iro vermillion */
-  --accent-dark: #8b0000;      /* Deep vermillion */
-  --accent-light: #dc143c;     /* Bright vermillion */
-  --border: rgba(196, 30, 58, 0.15);
-  --shadow: 0 8px 28px rgba(139, 0, 0, 0.12);
-  --shadow-lg: 0 18px 44px rgba(139, 0, 0, 0.16);
-  --shadow-xl: 0 26px 60px rgba(139, 0, 0, 0.20);
-  
-  /* Palace architectural colors */
-  --wood-dark: #5c3317;        /* Dark lacquer */
-  --wood-light: #d4af37;       /* Gold accent */
-  --pillar: #c41e3a;           /* Vermillion pillar */
-  --tile: #4169e1;             /* Glazed tile blue */
-  
-  /* Gradient patterns */
-  --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-  --gradient-wood: linear-gradient(180deg, #5c3317 0%, #3d1f0f 50%, #5c3317 100%);
-  --gradient-accent: linear-gradient(135deg, rgba(196, 30, 58, 0.08) 0%, rgba(139, 0, 0, 0.04) 100%);
-  
-  /* Texture overlays - using SVG patterns */
-  --texture-koushi: url(#tang-cloud-pattern);
-  --texture-seigaiha: url(#dougong-pattern);
+/* per-language book faces (loaded weights only; see default.html) */
+:lang(ja) { font-family: "Zen Old Mincho", "Noto Serif JP", serif; }
+:lang(zh-Hans), :lang(zh) { font-family: "Noto Serif SC", "Zen Old Mincho", serif; }
+
+/* ---- DAY — 象牙 ivory, 黒檀 ink, 檜皮 hinoki bark, 弁柄 shrine red ---- */
+:root,
+html[data-time="day"] {
+  --bg: #f8f4e6;                 /* 象牙色 zōge, ivory */
+  --bg-deep: #eee8d5;            /* derived shade of 象牙 */
+  --surface: #fbfaf5;            /* 生成り色 kinari */
+  --surface-2: #f3efe0;          /* derived */
+  --ink: #250d00;                /* 黒檀 kokutan, ebony */
+  --muted: #544a47;              /* 黒橡 kurotsurubami */
+  --faint: #6a5d44;              /* derived shade of 媚茶 kobicha */
+  --accent: #965036;             /* 檜皮色 hiwada, hinoki bark */
+  --accent-2: #8f2e14;           /* 弁柄色 bengara, shrine iron-red */
+  --gold: #d9a62e;               /* 櫨染 hajizome */
+  --gold-soft: rgba(217, 166, 46, 0.32);
+  --gold-on-wood: #efcd9a;       /* 香色 kō-iro, incense */
+  --beam: #59392a;               /* derived shade of 焦茶 kogecha */
+  --beam-hi: #6f4b3e;            /* 焦茶 kogecha */
+  --beam-ink: #fbfaf5;           /* 生成り */
+  --line: rgba(37, 13, 0, 0.14);
+  --line-strong: rgba(37, 13, 0, 0.30);
+  --lattice: rgba(89, 57, 42, 0.50);
+  --panel-glow: 0 0 0 0 transparent;
+  --shadow-1: 0 1px 2px rgba(37, 13, 0, 0.05), 0 6px 18px rgba(37, 13, 0, 0.07);
+  --shadow-2: 0 2px 6px rgba(37, 13, 0, 0.07), 0 14px 34px rgba(37, 13, 0, 0.10);
+  --img-filter: none;
+  color-scheme: light;
 }
 
-html[lang='ja'] {
-  /* Japanese Temple Theme - Same as default but can be customized */
-  --bg: #f9f7f4;               /* Lighter washi paper background */
-  --surface: #fdfcfa;
-  --ink: #2d1f15;
-  --muted: #5a4d44;            /* Darker weathered wood */
-  --accent: #8b4513;
-  --accent-dark: #4a2f1a;
-  --accent-light: #a0714f;
+/* ---- DUSK — 香色 incense paper, 栗 chestnut beams, 黄金 gold ---- */
+html[data-time="dusk"] {
+  --bg: #eddfc0;                 /* derived tint of 香色 kō-iro */
+  --bg-deep: #e2cfa6;            /* derived */
+  --surface: #f6ecd8;            /* derived tint of 香色 */
+  --surface-2: #efcd9a;          /* 香色 kō-iro */
+  --ink: #250d00;                /* 黒檀 */
+  --muted: #57402e;              /* derived shade of 焦茶 */
+  --faint: #5f5138;              /* derived shade of 媚茶 */
+  --accent: #762f07;             /* 栗色 kuri, chestnut */
+  --accent-2: #8f2e14;           /* 弁柄色 */
+  --gold: #e6b422;               /* 黄金 kogane */
+  --gold-soft: rgba(230, 180, 34, 0.4);
+  --gold-on-wood: #efcd9a;       /* 香色 */
+  --beam: #4f2c12;               /* derived shade of 栗色 */
+  --beam-hi: #762f07;            /* 栗色 */
+  --beam-ink: #f6ecd8;
+  --line: rgba(37, 13, 0, 0.18);
+  --line-strong: rgba(37, 13, 0, 0.36);
+  --lattice: rgba(79, 44, 18, 0.55);
+  --panel-glow: 0 0 0 0 transparent;
+  --shadow-1: 0 2px 3px rgba(37, 13, 0, 0.08), 0 10px 26px rgba(37, 13, 0, 0.11);
+  --shadow-2: 0 3px 8px rgba(37, 13, 0, 0.09), 0 20px 44px rgba(37, 13, 0, 0.14);
+  --img-filter: sepia(0.05) saturate(1.03);
+  color-scheme: light;
 }
 
-* {
-  box-sizing: border-box;
+/* ---- NIGHT — 漆黒 lacquer, 黒檀 ebony, 黄金 gold, 照柿 lantern ---- */
+html[data-time="night"] {
+  --bg: #0d0500;                 /* derived from 漆黒 shikkoku, warmed */
+  --bg-deep: #000b00;            /* 濡羽色 nureba */
+  --surface: #250d00;            /* 黒檀 kokutan */
+  --surface-2: #331a09;          /* derived tint of 黒檀 */
+  --ink: #f8f4e6;                /* 象牙色 */
+  --muted: #cbb994;              /* 白橡 shirotsurubami */
+  --faint: #a59564;              /* 利休茶 rikyūcha */
+  --accent: #e6b422;             /* 黄金 kogane */
+  --accent-2: #eb6238;           /* 照柿 terigaki, glowing persimmon */
+  --gold: #e6b422;
+  --gold-soft: rgba(230, 180, 34, 0.32);
+  --gold-on-wood: #e6b422;       /* 黄金 */
+  --beam: #0a0703;               /* derived, near-black keyaki */
+  --beam-hi: #291a0d;            /* derived */
+  --beam-ink: #cbb994;           /* 白橡 */
+  --line: rgba(203, 185, 148, 0.16);
+  --line-strong: rgba(203, 185, 148, 0.32);
+  --lattice: rgba(203, 185, 148, 0.42);
+  --panel-glow: inset 0 0 60px rgba(230, 180, 34, 0.05);
+  --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
+  --shadow-2: 0 4px 10px rgba(0, 0, 0, 0.55), 0 22px 48px rgba(0, 0, 0, 0.5);
+  --img-filter: brightness(0.92);
+  color-scheme: dark;
 }
 
-html {
-  scroll-behavior: smooth;
+/* --------------------------------------------------------------------------
+   1. Textures — one inline SVG per material
+   -------------------------------------------------------------------------- */
+:root {
+  /* washi grain — barely-there fractal paper */
+  --tx-washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23w)'/%3E%3C/svg%3E");
+
+  /* vertical grain for beams */
+  --tx-wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.28' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* kinpaku gold-leaf sheen with faint leaf seams */
+  --tx-gold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.84 0 0 0 0 0.42 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23k)'/%3E%3Cpath d='M80 0V160M0 80H160' stroke='rgba(120,90,30,0.08)' stroke-width='1'/%3E%3C/svg%3E");
+
+  /* seigaiha 青海波 — figures only */
+  --tx-seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cg fill='none' stroke='%23806640' stroke-opacity='0.13'%3E%3Cpath d='M-21 42a21 21 0 0 1 42 0M-13 42a13 13 0 0 1 26 0M-6 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M21 42a21 21 0 0 1 42 0M29 42a13 13 0 0 1 26 0M36 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M63 42a21 21 0 0 1 42 0M71 42a13 13 0 0 1 26 0M78 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M0 21a21 21 0 0 1 42 0M8 21a13 13 0 0 1 26 0M15 21a6 6 0 0 1 12 0'/%3E%3Cpath d='M42 21a21 21 0 0 1 42 0M50 21a13 13 0 0 1 26 0M57 21a6 6 0 0 1 12 0'/%3E%3Cpath d='M-42 21a21 21 0 0 1 42 0M-34 21a13 13 0 0 1 26 0M-27 21a6 6 0 0 1 12 0'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* kumiko lattice strip — heading rails and hr only */
+  --tx-kumiko: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='12' viewBox='0 0 36 12'%3E%3Cg stroke='%23000' stroke-width='1.1' fill='none'%3E%3Cpath d='M0 6h36M0 0l12 12M12 0 0 12M12 0l12 12M24 0 12 12M24 0l12 12M36 0 24 12'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* kawara eave — flat tile band with hanging round eave-end tiles
+     (軒丸瓦), true 56×22 proportions; header only */
+  --tx-kawara: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='22' viewBox='0 0 56 22'%3E%3Cpath d='M0 0h56v7H0z' fill='%23000'/%3E%3Cpath d='M2 7a12 12 0 0 0 24 0zM30 7a12 12 0 0 0 24 0z' fill='%23000'/%3E%3Ccircle cx='14' cy='11' r='5.2' fill='%23000' stroke='%23fff' stroke-opacity='0.28' stroke-width='1.4'/%3E%3Ccircle cx='42' cy='11' r='5.2' fill='%23000' stroke='%23fff' stroke-opacity='0.28' stroke-width='1.4'/%3E%3Ccircle cx='14' cy='11' r='1.7' fill='%23fff' fill-opacity='0.3'/%3E%3Ccircle cx='42' cy='11' r='1.7' fill='%23fff' fill-opacity='0.3'/%3E%3C/svg%3E");
+
+  /* the owner's seal 「曾」 — used once, beside the hero caption */
+  --tx-seal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Crect x='1' y='1' width='28' height='28' rx='3' fill='%238f2e14'/%3E%3Crect x='1' y='1' width='28' height='28' rx='3' fill='none' stroke='%23fff' stroke-opacity='0.18'/%3E%3Ctext x='15' y='21.5' font-family='serif' font-size='19' font-weight='700' fill='%23fbfaf5' text-anchor='middle'%3E%E6%9B%BE%3C/text%3E%3C/svg%3E");
 }
 
-body.site-body {
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body,
+.site-body {
   margin: 0;
-  background: var(--bg) url('../img/washi1.png');
-  background-size: cover;
-  background-attachment: fixed;
-  color: var(--muted);
-  font-family: 'EB Garamond', 'Noto Serif JP', serif;
-  line-height: 1.75;
-  font-size: 17px;
-  position: relative;
-  
-  /* Subtle traditional pattern overlay */
-  &::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: var(--texture-koushi);
-    opacity: 0.2;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  /* Paper texture effect */
-  &::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url(#paper-texture);
-    pointer-events: none;
-    z-index: 0;
-  }
-}
-
-// Ensure italic text uses proper cursive italic font
-em, i, cite, var, dfn {
-  font-style: italic;
-}
-
-html[lang='zh-Hans'] body.site-body {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR',  serif;
-  background: var(--bg) url('../img/washi2.png');
-  background-size: cover;
-  background-attachment: fixed;
-  color: var(--muted);  /* Use Chinese theme's bronze color */
-  
-  /* Tang Dynasty cloud pattern */
-  &::before {
-    background-image: var(--texture-koushi);
-    opacity: 0.2;
-  }
-}
-
-html[lang='ja'] body.site-body {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
-  letter-spacing: 0.05em;
-}
-
-a {
-  color: var(--accent-dark);
-  text-decoration: none;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-a:hover,
-a:focus {
-  color: var(--accent);
-}
-
-/* Animated underline for main content links */
-.post a:not(.btn),
-.section a:not(.btn):not(.note-card__title a):not(.featured-card__title a) {
-  background-image: linear-gradient(120deg, var(--accent-light) 0%, var(--accent) 100%);
-  background-repeat: no-repeat;
-  background-size: 100% 1px;
-  background-position: 0 100%;
-  transition: background-size 0.3s ease;
-}
-
-.post a:not(.btn):hover,
-.post a:not(.btn):focus,
-.section a:not(.btn):not(.note-card__title a):not(.featured-card__title a):hover,
-.section a:not(.btn):not(.note-card__title a):not(.featured-card__title a):focus {
-  background-size: 100% 2px;
-  text-decoration: none;
-}
-
-img,
-iframe {
-  max-width: 100%;
-  display: block;
-}
-
-figure {
-  margin: 0;
-}
-
-.section figure {
-  margin: 1.5rem 0;
-  border-radius: 4px;
-  box-shadow: 
-    /* Main elegant shadow */
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    /* Inner highlight for depth (top edge lit) */
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    /* Side depth for 3D bulge */
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    /* Bottom depth */
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  position: relative;
-  overflow: hidden;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 2;
-  }
-}
-
-.section figure img {
-  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  line-height: 1.72;
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image: var(--tx-washi);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--t-theme) var(--ease), color var(--t-theme) var(--ease);
 }
 
 .container {
-  width: min(960px, calc(100% - 2.5rem));
+  max-width: var(--container);
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  padding: 0 clamp(1rem, 4vw, 2.2rem);
 }
 
+img { max-width: 100%; height: auto; }
+
+::selection { background: var(--gold-soft); color: var(--ink); }
+
+a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--gold-soft);
+  transition: color var(--t-fast) var(--ease), text-decoration-color var(--t-fast) var(--ease);
+}
+a:hover { color: var(--accent-2); text-decoration-color: currentColor; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* on the dark beams, shrine-red is invisible — focus in gilded ink */
+.site-header :focus-visible,
+.site-footer :focus-visible {
+  outline-color: var(--gold-on-wood);
+}
+
+/* --------------------------------------------------------------------------
+   3. Headings
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  letter-spacing: 0.012em;
+  margin: 0 0 0.6em;
+}
+
+h1 { font-size: clamp(1.9rem, 3.6vw, 2.5rem); }
+h2 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); }
+h3 { font-size: 1.24rem; font-weight: 700; }
+h4 {
+  font-size: 0.95rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+
+/* panel headings: bengara kamon tick + kumiko rail.
+   NOTE: these h2 are flex rows — keep their content a single text node
+   (no inline tags), or flex items lose their spaces. Post headings
+   (.post__content h2) stay plain for exactly that reason. */
+.section > h2,
+.list-card > h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  letter-spacing: 0.14em;
+  font-variant-caps: all-small-caps;
+  font-weight: 700;
+}
+.section > h2::before,
+.list-card > h2::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.5em; height: 0.5em;
+  background: var(--accent-2);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 1px var(--surface), 0 0 0 2px var(--gold-soft);
+}
+.section > h2::after,
+.list-card > h2::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 9px;
+  margin-left: 0.4em;
+  -webkit-mask-image: var(--tx-kumiko);
+  mask-image: var(--tx-kumiko);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  background: var(--lattice);
+  opacity: 0.65;
+}
+
+/* --------------------------------------------------------------------------
+   4. Header — a beam under a kawara eave
+   -------------------------------------------------------------------------- */
 .site-header {
-  background: linear-gradient(to bottom, var(--surface) 0%, rgba(253, 252, 250, 0.98) 100%);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 3px solid var(--accent);
   position: sticky;
   top: 0;
-  z-index: 20;
-  box-shadow: var(--shadow-lg);
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-  
-  /* Temple roof effect - curved top border */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-wood);
-    box-shadow: 0 2px 8px rgba(45, 31, 21, 0.3);
-  }
-  
-  /* Decorative pillars on sides */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      var(--accent) 20%, 
-      var(--accent) 80%, 
-      transparent 100%);
-    opacity: 0.3;
-  }
+  z-index: 50;
+  background-color: var(--beam);
+  background-image: var(--tx-wood), linear-gradient(180deg, var(--beam-hi) 0%, var(--beam) 38%, var(--beam) 100%);
+  color: var(--beam-ink);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
+  transition: background-color var(--t-theme) var(--ease);
 }
-
-html[lang='zh-Hans'] .site-header {
-  border-bottom: 4px solid var(--accent);
-  
-  /* Solid vermillion top border for Tang Dynasty palace */
-  &::before {
-    height: 4px;
-    background: var(--accent);
-    box-shadow: 0 2px 8px rgba(196, 30, 58, 0.4);
-  }
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -21px;
+  height: 22px;
+  pointer-events: none;
+  -webkit-mask-image: var(--tx-kawara);
+  mask-image: var(--tx-kawara);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-size: 56px 22px;
+  mask-size: 56px 22px;
+  background: var(--beam);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.22));
+  transition: background var(--t-theme) var(--ease);
 }
-
-.site-header.scrolled {
-  box-shadow: var(--shadow-xl);
-  background: rgba(253, 252, 250, 0.95);
-}
+html[data-time="night"] .site-header { border-bottom: 1px solid var(--gold-soft); }
 
 .site-header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 0;
+  gap: 1.4rem;
+  min-height: var(--beam-h);
+  flex-wrap: wrap;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
 }
 
-.brand {
-  display: flex;
-  flex-direction: column;
-  color: inherit;
-  position: relative;
-  padding-left: 1.2rem;
-  
-  /* Decorative seal mark */
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 100%;
-    background: var(--gradient-primary);
-    box-shadow: 1px 0 4px rgba(45, 31, 21, 0.2);
-  }
-}
-
-html[lang='zh-Hans'] .brand::before {
-  width: 5px;
-  background: var(--accent);
-}
-
+.brand { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
 .brand__title {
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent-dark);
-  text-shadow: 0 1px 2px rgba(45, 31, 21, 0.1);
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  color: var(--beam-ink);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
-
-html[lang='zh-Hans'] .brand__title {
-  font-size: 1.5rem;
-  letter-spacing: 0.1em;
-  font-weight: 500;
-}
-
 .brand__subtitle {
-  font-size: 0.95rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--beam-ink) 78%, transparent);
 }
-
-html[lang='zh-Hans'] .brand__subtitle {
-  letter-spacing: 0.12em;
-  font-size: 1rem;
-}
-
-html[lang='ja'] .brand__subtitle {
-  letter-spacing: 0.1em;
-}
-
-.site-nav {
-  position: relative;
-}
+.brand:hover .brand__title { color: var(--gold-on-wood); transition: color var(--t-fast) var(--ease); }
 
 .site-nav ul {
   display: flex;
-  gap: 1.5rem;
+  align-items: center;
+  gap: clamp(0.6rem, 2.2vw, 1.5rem);
   list-style: none;
-  margin: 0;
-  padding: 0;
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Noto Serif SC', serif;
-  font-size: 1.05rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-weight: 600;
+  margin: 0; padding: 0;
 }
-
-html[lang='zh-Hans'] .site-nav ul {
-  font-size: 1.1rem;
-  letter-spacing: 0.12em;
-  font-weight: 500;
+.site-nav a {
+  display: inline-block;
+  padding: 0.5rem 0.15rem;
+  font-size: 0.86rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.22em;
+  text-decoration: none;
+  color: var(--beam-ink);
+  border-bottom: 2px solid transparent;
 }
-
-.site-nav li {
-  position: relative;
-}
-
-/* Active page styling - underline only, no dot */
+.site-nav a:hover { color: var(--gold-on-wood); }
 .site-nav li.active a {
-  color: var(--accent);
-}
-
-/* Navigation enhancements - Ink brush underline */
-.site-nav li::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-primary);
-  transform: scaleX(0);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 1px 4px rgba(45, 31, 21, 0.2);
-}
-
-html[lang='zh-Hans'] .site-nav li::after {
-  height: 3px;
-  background: var(--accent);
-}
-
-.site-nav li:hover::after,
-.site-nav li.active::after {
-  transform: scaleX(1);
+  color: var(--gold-on-wood);
+  border-bottom-color: var(--accent-2);
 }
 
 .nav-toggle {
   display: none;
+  font: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  font-variant-caps: all-small-caps;
+  color: var(--beam-ink);
   background: transparent;
-  border: 1px solid var(--border);
-  padding: 0.45rem 0.85rem;
-  font-family: 'EB Garamond', 'Zen Old Mincho', serif;
-  letter-spacing: 0.08em;
+  border: 1px solid color-mix(in srgb, var(--beam-ink) 45%, transparent);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
 }
 
-.site-main {
-  padding: 4rem 0 5rem;
-}
+/* --------------------------------------------------------------------------
+   5. Main
+   -------------------------------------------------------------------------- */
+.site-main { padding: clamp(2.4rem, 5vw, 3.8rem) 0 clamp(3rem, 7vw, 5rem); }
 
-.section {
-  background: var(--surface);
-  padding: 1.6rem;
-  margin-bottom: 2.5em;
-  border-radius: 4px;
+/* --------------------------------------------------------------------------
+   6. Panels — quiet washi cards
+   -------------------------------------------------------------------------- */
+.section,
+.list-card {
   position: relative;
-  overflow: hidden;
-  
-  /* 3D bulge effect - makes block appear raised from screen */
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  
-  /* Classy 3D effect with subtle depth */
-  box-shadow: 
-    /* Main elegant shadow */
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    /* Inner highlight for depth (top edge lit) */
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    /* Side depth for 3D bulge */
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    /* Bottom depth */
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-  
-  /* Ensure content is above textures */
-  > *, .section-content {
-    position: relative;
-    z-index: 1;
-  }
+  background-color: var(--surface);
+  background-image: var(--tx-washi);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1), var(--panel-glow);
+  padding: clamp(1.3rem, 3.4vw, 2.2rem) clamp(1.2rem, 3.4vw, 2.4rem);
+  margin: 0 0 clamp(1.6rem, 3.5vw, 2.4rem);
+  transition: background-color var(--t-theme) var(--ease);
 }
 
-html[lang='zh-Hans'] .section {
-  /* Keep the same elegant frame */
-  border-color: var(--border);
-  
-  &::before {
-    border-color: var(--accent);
-  }
-}
+.section > h2:first-child,
+.list-card > h2:first-child { margin-top: 0.2rem; }
 
-.section:hover,
-.hero__text:hover,
-.hero__image:hover,
-.list-card:hover,
-.note-card:hover,
-.note-card:focus-within,
-.featured-card:hover,
-.featured-card:focus-within {
-  /* Enhanced 3D bulge on hover */
-  transform: perspective(1000px) translateZ(16px) translateY(-4px);
-  
-  box-shadow: 
-    /* Enhanced hover shadow */
-    0 16px 40px rgba(45, 31, 21, 0.14),
-    0 0 0 1px var(--accent),
-    /* Stronger inner highlight for more pronounced bulge */
-    inset 0 2px 0 rgba(255, 255, 255, 0.7),
-    inset -2px 0 0 rgba(255, 255, 255, 0.3),
-    inset 2px 0 0 rgba(0, 0, 0, 0.08),
-    0 6px 16px rgba(45, 31, 21, 0.08);
-}
+.list-card ul { margin: 0.2rem 0 0.6rem; padding-left: 1.15rem; }
+.list-card li { margin: 0.34em 0; }
+.list-card li::marker { color: var(--accent-2); }
 
-/* Collapsible sections */
-.section[data-collapsible="true"] h2,
-.section[data-collapsible="true"] h3,
-.section[data-collapsible="true"] h4 {
-  padding-right: 2.5rem;
-  transition: color 0.3s ease;
-}
+.section ol { padding-left: 1.5rem; }
+.section ol li { margin: 0.4em 0; }
+.section ol li::marker { color: var(--accent); font-weight: 600; }
 
-.section[data-collapsible="true"] h2:hover,
-.section[data-collapsible="true"] h3:hover,
-.section[data-collapsible="true"] h4:hover {
-  color: var(--accent);
-}
+.hero__note { color: var(--faint); font-size: 0.88rem; font-style: italic; }
 
-.collapsible-content {
-  will-change: max-height, opacity, transform;
-}
-
-/* Koushi lattice collapse effect */
-.section[data-collapsible="true"].collapsing .collapsible-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url(#koushi-pattern);
-  background-size: 80px 80px;
-  opacity: 0;
-  animation: koushiFadeIn 0.4s ease forwards;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes koushiFadeIn {
-  from {
-    opacity: 0;
-    transform: scaleY(1);
-  }
-  to {
-    opacity: 0.6;
-    transform: scaleY(0.1);
-  }
-}
-
-.section h2 {
-  margin-top: 0;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--accent-dark);
-  position: relative;
-  padding-bottom: 0.8rem;
-  
-  /* Elegant underline with animation */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 4px rgba(45, 31, 21, 0.15);
-  }
-}
-
-.section:hover h2::after,
-.section[data-collapsible="true"] h2:hover::after {
-  width: 80px;
-}
-
-html[lang='zh-Hans'] .section h2 {
-  font-size: 1.08rem;
-  letter-spacing: 0.13em;
-  font-weight: 500;
-}
-
-html[lang='ja'] .section h2 {
-  letter-spacing: 0.14em;
-}
-
-.section h3 {
-  font-size: 1.05rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 1.2rem;
-  margin-bottom: 1rem;
-  color: var(--accent-dark);
-  font-weight: 600;
-}
-
-html[lang='zh-Hans'] .section h3 {
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
-  font-weight: 500;
-}
-
-/* Add spacing between feature block content and next feature block */
-.section h3 + p,
-.section h3 + ul,
-.section h3 + ol,
-.section h3 + div {
-  margin-top: 0.8rem;
-}
-
-.section ol li + li {
-  margin-top: 0.8em;
-}
-
-/* Add more space after feature block content before next feature block */
-.section h3 ~ h3 {
-  margin-top: 1.5rem;
-}
-
+/* --------------------------------------------------------------------------
+   7. Hero — the byōbu
+   -------------------------------------------------------------------------- */
 .hero {
+  position: relative;
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: minmax(0, 1fr) minmax(200px, 260px);
+  grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr);
+  gap: clamp(1.4rem, 4vw, 2.6rem);
   align-items: start;
-  margin-bottom: 2.5rem;
-}
-
-.hero__text {
-  background: var(--surface);
-  padding: 1.6rem;
-  border-radius: 4px;
-  position: relative;
+  background-color: var(--surface);
+  background-image:
+    repeating-linear-gradient(90deg,
+      transparent 0 168px,
+      rgba(0, 0, 0, 0.026) 168px 175px,
+      var(--line) 175px 176px),
+    var(--tx-gold),
+    var(--tx-washi);
+  background-size: auto, 160px 160px, 240px 240px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2), var(--panel-glow);
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+  margin-bottom: clamp(1.8rem, 4vw, 2.6rem);
   overflow: hidden;
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  box-shadow:
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.3s ease;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 5px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
+}
+html[data-time="day"] .hero { background-blend-mode: normal, soft-light, normal; }
+html[data-time="dusk"] .hero,
+html[data-time="night"] .hero { background-blend-mode: normal, overlay, normal; }
+
+/* byōbu brass rails */
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--gold) 0%, color-mix(in srgb, var(--gold) 55%, var(--surface)) 30%, var(--gold) 60%, color-mix(in srgb, var(--gold) 60%, var(--surface)) 100%);
+  opacity: 0.7;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 55%, var(--surface)) 50%, var(--gold));
+  opacity: 0.45;
 }
 
-.hero__text > * {
-  position: relative;
-  z-index: 1;
-}
+.hero__text p { margin: 0 0 0.9em; }
 
-html[lang='zh-Hans'] .hero__text::before {
-  border-color: var(--accent);
-}
-
-.hero__text h1 {
-  font-size: clamp(2.4rem, 4vw, 3.2rem);
-  margin: 0 0 0.5rem;
-  letter-spacing: 0.04em;
-}
-
-html[lang='zh-Hans'] .hero__text h1 {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
-  letter-spacing: 0.08em;
-}
-
-html[lang='ja'] .hero__text h1 {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
-  letter-spacing: 0.06em;
-}
-
-.hero__text h1 span {
-  display: block;
-  font-family: 'EB Garamond', 'Zen Old Mincho', serif;
-  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
-  letter-spacing: 0.08em;
-}
-
-html[lang='zh-Hans'] .hero__text h1 span {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
-  letter-spacing: 0.12em;
-}
-
-html[lang='ja'] .hero__text h1 span {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
-  letter-spacing: 0.1em;
-}
-
-.hero__subtitle {
-  font-size: 1.2rem;
-  color: var(--muted);
-  margin-bottom: 1.4rem;
-}
-
-html[lang='zh-Hans'] .hero__subtitle {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
-  letter-spacing: 0.12em;
-  font-size: 1.25rem;
-}
-
-html[lang='ja'] .hero__subtitle {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
-  letter-spacing: 0.08em;
-}
-
-.hero__note {
-  margin-top: 1rem;
-  font-family: 'EB Garamond', 'Zen Old Mincho', serif;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-
-html[lang='zh-Hans'] .hero__note {
-  font-family: 'EB Garamond', 'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif KR', serif;
-  letter-spacing: 0.12em;
-  text-transform: none;
-}
-
-html[lang='ja'] .hero__note {
-  font-family: 'EB Garamond', 'Noto Serif JP', 'Zen Old Mincho', 'Noto Serif KR', serif;
-  letter-spacing: 0.1em;
-  text-transform: none;
-}
-
+/* portrait in a tokonoma frame */
 .hero__image {
-  overflow: hidden;
-  box-shadow: 
-    /* Main elegant shadow */
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    /* Inner highlight for depth (top edge lit) */
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    /* Side depth for 3D bulge */
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    /* Bottom depth */
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  border-radius: 4px;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease;
-  position: relative;
+  margin: 0;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
-  
-  /* 3D bulge effect - makes block appear raised from screen */
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 2;
-  }
 }
-
-.hero__image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.hero__image:hover::after {
-  opacity: 1;
-}
-
 .hero__image img {
-  display: block;
   width: 100%;
-  height: auto;
-  transition: transform 0.4s ease;
-  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 0 0 6px var(--surface),
+    0 0 0 7px var(--line-strong),
+    0 0 0 12px color-mix(in srgb, var(--beam) 16%, var(--surface)),
+    var(--shadow-1);
+  filter: var(--img-filter);
+  transition: filter var(--t-theme) var(--ease);
 }
-
-.hero__image:hover img {
-  transform: scale(1.05);
-}
-
 .hero__image figcaption {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--muted);
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--faint);
+  text-align: right;
+}
+/* the owner's name-seal, as on a painting — decorative, empty alt */
+.hero__image figcaption::before {
+  content: var(--tx-seal) / "";
+  display: inline-block;
+  vertical-align: -0.35em;
+  margin-right: 0.5em;
 }
 
-.list-card {
-  background: var(--surface);
-  padding: 1.6rem;
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 1.5em;
-  
-  /* 3D bulge effect - makes block appear raised from screen */
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  
-  /* Classy 3D effect matching .section */
-  box-shadow: 
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-html[lang='zh-Hans'] .list-card {
-  border-color: var(--border);
-  
-  &::before {
-    border-color: var(--accent);
-  }
-}
-
-.list-card h2 {
-  margin-top: 0;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--accent-dark);
-  position: relative;
-  padding-bottom: 0.8rem;
-  
-  /* Elegant underline with animation */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 4px rgba(45, 31, 21, 0.15);
-  }
-}
-
-.list-card:hover h2::after,
-.list-card[data-collapsible="true"] h2:hover::after {
-  width: 80px;
-}
-
-html[lang='zh-Hans'] .list-card h2 {
-  font-size: 1.08rem;
-  letter-spacing: 0.13em;
-  font-weight: 500;
-}
-
-html[lang='ja'] .list-card h2 {
-  letter-spacing: 0.14em;
-}
-
-/* Collapsible list-card */
-.list-card[data-collapsible="true"] h2 {
-  padding-right: 2.5rem;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-
-.list-card[data-collapsible="true"] h2:hover {
-  color: var(--accent);
-}
-
-.list-card ul {
-  list-style: disc;
-  margin: 0;
-  padding-left: 1.4rem;
-}
-
+/* --------------------------------------------------------------------------
+   8. Definition list
+   -------------------------------------------------------------------------- */
 .definition-list {
   display: grid;
-  grid-template-columns: minmax(160px, 220px) 1fr;
-  gap: 0.35rem 1rem;
-  margin: 0;
+  grid-template-columns: max-content 1fr;
+  gap: 0.34rem 1.4rem;
+  margin: 1.1rem 0 0;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--gold);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 8%, transparent), transparent 38%);
+  border-radius: 2px;
 }
-
 .definition-list dt {
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.definition-list dd {
-  margin: 0;
-}
-
-/* Table of Contents - Makimono (巻物) Scroll Style */
-.toc {
-  margin-bottom: 3rem;
-}
-
-.toc__details {
-  background: var(--surface);
-  border-radius: 4px;
-  box-shadow: 
-    0 0 0 3px var(--accent-dark),
-    0 4px 12px rgba(45, 31, 21, 0.12),
-    0 8px 24px rgba(45, 31, 21, 0.08);
-  position: relative;
-  overflow: hidden;
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.toc__details:hover {
-  transform: perspective(1000px) translateZ(16px) translateY(-4px);
-  box-shadow: 
-    0 0 0 3px var(--accent-dark),
-    0 8px 20px rgba(45, 31, 21, 0.16),
-    0 16px 40px rgba(45, 31, 21, 0.12),
-    0 24px 56px rgba(45, 31, 21, 0.08);
-}
-
-.toc__details::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(0deg, transparent 47%, var(--accent-dark) 49%, var(--accent-dark) 51%, transparent 53%),
-    linear-gradient(90deg, transparent 47%, var(--accent-dark) 49%, var(--accent-dark) 51%, transparent 53%);
-  background-size: 20px 20px;
-  opacity: 0.3;
-  pointer-events: none;
-  z-index: 1;
-}
-
-html[lang='zh-Hans'] .toc__details::before {
-  background-image: 
-    linear-gradient(0deg, transparent 47%, var(--accent) 49%, var(--accent) 51%, transparent 53%),
-    linear-gradient(90deg, transparent 47%, var(--accent) 49%, var(--accent) 51%, transparent 53%);
-}
-
-.toc__summary {
-  padding: 0.9rem 1.2rem;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--accent-dark);
-  list-style: none;
-  user-select: none;
-  position: relative;
-  z-index: 2;
-  transition: color 0.2s ease;
-}
-
-html[lang='zh-Hans'] .toc__summary {
-  color: var(--accent);
-}
-
-.toc__summary::-webkit-details-marker {
-  display: none;
-}
-
-.toc__summary::after {
-  content: '▼';
-  float: right;
-  font-size: 0.75em;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0.6;
-}
-
-.toc__details[open] .toc__summary::after {
-  transform: rotate(180deg);
-}
-
-.toc__summary:hover {
-  color: var(--text);
-}
-
-.toc__summary span[lang] {
-  font-family: 'Noto Serif JP', serif;
-}
-
-.toc__summary span[lang='ja'] {
-  display: none;
-}
-
-.toc__summary span[lang='zh-Hans'] {
-  display: none;
-}
-
-.toc__summary .toc__divider {
-  display: none;
-}
-
-html[lang='ja'] .toc__summary span[lang='ja'] {
-  display: inline;
-}
-
-html[lang='ja'] .toc__summary .toc__divider {
-  display: inline;
-}
-
-html[lang='zh-Hans'] .toc__summary span[lang='zh-Hans'] {
-  display: inline;
-  font-family: 'Noto Serif SC', serif;
-}
-
-html[lang='zh-Hans'] .toc__summary .toc__divider {
-  display: inline;
-}
-
-.toc__list a span[lang='ja'] {
-  display: none;
-}
-
-.toc__list a span[lang='zh-Hans'] {
-  display: none;
-}
-
-.toc__list a .toc__divider {
-  display: none;
-}
-
-html[lang='ja'] .toc__list a span[lang='ja'] {
-  display: inline;
-}
-
-html[lang='ja'] .toc__list a .toc__divider {
-  display: inline;
-}
-
-html[lang='zh-Hans'] .toc__list a span[lang='zh-Hans'] {
-  display: inline;
-  font-family: 'Noto Serif SC', 'Noto Serif KR', serif;
-}
-
-html[lang='zh-Hans'] .toc__list a .toc__divider {
-  display: inline;
-}
-
-.toc__list {
-  list-style: none;
-  margin: 0;
-  padding: 0 1.2rem 1.2rem;
-  position: relative;
-  z-index: 2;
-}
-
-.toc__list li {
-  margin: 0.5rem 0;
-}
-
-.toc__list a {
-  display: block;
-  padding: 0.4rem 0.8rem;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.18em;
+  font-size: 0.86rem;
   color: var(--muted);
-  text-decoration: none;
-  border-left: 2px solid transparent;
-  transition: all 0.2s ease;
-  font-size: 0.95rem;
+}
+.definition-list dd { margin: 0; }
+
+/* --------------------------------------------------------------------------
+   9. Figures, quotes, rules
+   -------------------------------------------------------------------------- */
+.section figure,
+.post__content figure {
+  margin: 1.2rem 0;
+  padding: 0.9rem;
+  background-color: var(--surface-2);
+  background-image: var(--tx-seigaiha);
+  background-size: 84px 42px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.section figure img,
+.post__content figure img {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  filter: var(--img-filter);
+}
+.section figcaption,
+.post__content figcaption {
+  padding-top: 0.55rem;
+  font-size: 0.86rem;
+  font-style: italic;
+  color: var(--muted);
 }
 
-.toc__list a:hover {
-  color: var(--accent-dark);
-  border-left-color: var(--accent-dark);
-  padding-left: 1rem;
+blockquote {
+  margin: 1.2rem 0;
+  padding: 0.9rem 1.2rem;
+  border-left: 3px solid var(--accent-2);
+  background: var(--surface-2);
+  border-radius: 2px;
+  color: var(--muted);
 }
 
-html[lang='zh-Hans'] .toc__list a:hover {
-  color: var(--accent);
-  border-left-color: var(--accent);
+hr {
+  border: 0;
+  height: 11px;
+  margin: 2rem auto;
+  max-width: 420px;
+  -webkit-mask-image: var(--tx-kumiko);
+  mask-image: var(--tx-kumiko);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  background: var(--lattice);
+  opacity: 0.55;
 }
 
-.toc__list a span[lang] {
-  font-family: 'Noto Serif JP', serif;
-  opacity: 0.7;
+code, pre {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
   font-size: 0.9em;
 }
-
-html[lang='zh-Hans'] .toc__list a span[lang='zh-Hans'] {
-  font-family: 'Noto Serif SC', serif;
+pre {
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+code { background: color-mix(in srgb, var(--line) 40%, transparent); padding: 0.08em 0.35em; border-radius: 3px; }
+pre code { background: none; padding: 0; }
 
-/* Section with Grid Background */
+table { border-collapse: collapse; width: 100%; margin: 1.2rem 0; }
+th, td { padding: 0.5rem 0.8rem; border: 1px solid var(--line); text-align: left; }
+th { background: var(--surface-2); font-variant-caps: all-small-caps; letter-spacing: 0.1em; }
+
+/* --------------------------------------------------------------------------
+   10. Cards
+   -------------------------------------------------------------------------- */
+.note-list { list-style: none; margin: 0; padding: 0; }
+.note-list--grid,
+.featured-grid,
 .section--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.1rem;
+}
+
+.note-card,
+.featured-card {
   position: relative;
-  padding: 1.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 960px;
+  background-color: var(--surface);
+  background-image: var(--tx-washi);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-1);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
 }
-
-.section--grid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(0deg, transparent 47%, var(--accent-dark) 49%, var(--accent-dark) 51%, transparent 53%),
-    linear-gradient(90deg, transparent 47%, var(--accent-dark) 49%, var(--accent-dark) 51%, transparent 53%);
-  background-size: 20px 20px;
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
-}
-
-html[lang='zh-Hans'] .section--grid::before {
-  background-image: 
-    linear-gradient(0deg, transparent 47%, var(--accent) 49%, var(--accent) 51%, transparent 53%),
-    linear-gradient(90deg, transparent 47%, var(--accent) 49%, var(--accent) 51%, transparent 53%);
-}
-
-.section--grid > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Section TOC - Integrated into Section Header */
-.section-toc {
-  margin-bottom: 1.5rem;
-}
-
-.section-toc__summary {
-  cursor: pointer;
-  list-style: none;
-  user-select: none;
-  position: relative;
-}
-
-.section-toc__summary::-webkit-details-marker {
-  display: none;
-}
-
-.section-toc__summary h2 {
-  display: inline-block;
-  margin: 0;
-  padding-right: 2.5rem;
-  position: relative;
-}
-
-.section-toc__summary::after {
-  content: '▼';
-  position: absolute;
-  right: 0;
-  top: 0.3rem;
-  font-size: 0.9rem;
-  color: var(--muted);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0.6;
-}
-
-.section-toc[open] .section-toc__summary::after {
-  transform: rotate(180deg);
-}
-
-.section-toc__summary:hover::after {
-  color: var(--accent-dark);
-  opacity: 1;
-}
-
-html[lang='zh-Hans'] .section-toc__summary:hover::after {
-  color: var(--accent);
-}
-
-.section-toc__list {
-  list-style: none;
-  margin: 1rem 0 1.5rem;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.section-toc__list li {
-  margin: 0;
-}
-
-.section-toc__list a {
-  display: inline-block;
-  padding: 0.4rem 0.9rem;
-  background: var(--bg);
-  color: var(--text);
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-family: var(--font-body);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  white-space: nowrap;
-  box-shadow: 
-    0 0 0 1px var(--border),
-    0 1px 3px rgba(45, 31, 21, 0.08);
-}
-
-.section-toc__list a:hover {
-  background: var(--accent-dark);
-  color: white;
+.note-card:hover,
+.featured-card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 0 0 2px var(--accent-dark),
-    0 4px 12px rgba(74, 47, 26, 0.25);
+  box-shadow: var(--shadow-2);
 }
-
-html[lang='zh-Hans'] .section-toc__list a:hover {
-  background: var(--accent);
-  box-shadow: 
-    0 0 0 2px var(--accent),
-    0 4px 12px rgba(196, 30, 58, 0.25);
+.note-card__title,
+.featured-card__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.06rem;
+  margin: 0 0 0.3em;
 }
+.featured-card__excerpt { color: var(--muted); font-size: 0.94rem; }
+.featured-card__preview { margin-top: 0.7rem; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.featured-card__decoration { position: absolute; inset: auto 0 0 0; height: 3px; background: var(--gold-soft); opacity: 0; transition: opacity var(--t-fast) var(--ease); }
+.featured-card:hover .featured-card__decoration { opacity: 1; }
 
-.post {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 2rem;
-  box-shadow: var(--shadow);
+/* --------------------------------------------------------------------------
+   11. Posts
+   -------------------------------------------------------------------------- */
+.post__header { margin-bottom: 1.6rem; }
+.post__meta {
+  font-size: 0.84rem;
+  letter-spacing: 0.16em;
+  font-variant-caps: all-small-caps;
+  color: var(--muted);
 }
+.post__content { max-width: 46rem; }
+.post__embed { margin: 1.4rem 0; }
+.post__comments { margin-top: 2.4rem; }
+.post__comments-title { font-variant-caps: all-small-caps; letter-spacing: 0.14em; }
 
-.post__header {
-  margin-bottom: 1.5rem;
-  position: relative;
+.section-toc {
+  padding: 1rem 1.2rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
+.section-toc__list { margin: 0.4rem 0 0; padding-left: 1.2rem; }
 
-/* Minimalistic back link button */
 .back-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-bottom: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--accent-dark);
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-  
-  /* Subtle 3D effect matching blocks */
-  box-shadow: 
-    0 4px 12px rgba(45, 31, 21, 0.06),
-    0 0 0 1px rgba(45, 31, 21, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border: 2px solid var(--accent);
-    border-radius: 5px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  
-  svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-}
-
-.back-link:hover,
-.back-link:focus {
-  transform: translateX(-4px) scale(1.05);
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: 
-    0 8px 20px rgba(45, 31, 21, 0.12),
-    0 0 0 1px var(--accent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  
-  &::before {
-    opacity: 0.1;
-  }
-  
-  svg {
-    transform: translateX(-2px);
-  }
-}
-
-/* Chinese theme adaptation */
-html[lang='zh-Hans'] .back-link {
-  border-color: rgba(196, 30, 58, 0.15);
-  
-  &::before {
-    border-color: var(--accent);
-  }
-}
-
-html[lang='zh-Hans'] .back-link:hover,
-html[lang='zh-Hans'] .back-link:focus {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.post__header h1 {
-  margin: 0 0 0.5rem;
-}
-
-.post__meta {
-  font-family: 'EB Garamond', 'Zen Old Mincho', serif;
+  gap: 0.45em;
+  margin-bottom: 1.2rem;
   font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-decoration: none;
 }
+.back-link::before { content: "←"; color: var(--accent-2); }
 
-.post__embed {
-  margin-top: 2rem;
+/* --------------------------------------------------------------------------
+   12. Embeds
+   -------------------------------------------------------------------------- */
+.embed-container, .pdf-frame, .gif-frame {
   position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 75%; /* 4:3 aspect ratio for interactive demos */
-  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 
-    0 0 0 3px var(--accent-dark),
-    0 4px 12px rgba(45, 31, 21, 0.12),
-    0 8px 24px rgba(45, 31, 21, 0.08);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-1);
 }
-
+.embed-frame, .pdf-frame iframe { width: 100%; border: 0; display: block; }
+.pdf-download, .gif-download, .download-list a { font-size: 0.9rem; }
 .embed-fullscreen {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  width: 2.4rem;
-  height: 2.4rem;
-  padding: 0;
+  top: 0.5rem; right: 0.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--surface);
-  color: var(--accent-dark);
+  width: 2.1rem; height: 2.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--ink);
   cursor: pointer;
-  z-index: 2;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.3s ease,
-              border-color 0.3s ease;
-  box-shadow: 
-    0 6px 16px rgba(45, 31, 21, 0.12),
-    0 0 0 1px rgba(45, 31, 21, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+.embed-fullscreen:hover { background: var(--surface); color: var(--accent-2); }
+.embed-fullscreen__icon { width: 1rem; height: 1rem; }
+.embed-fullscreen__icon--exit { display: none; }
 
-.embed-fullscreen:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-dark);
-  box-shadow: 
-    0 10px 22px rgba(45, 31, 21, 0.18),
-    0 0 0 1px var(--accent-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.embed-fullscreen:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.embed-fullscreen__icon {
-  width: 1.15rem;
-  height: 1.15rem;
-}
-
-.embed-fullscreen__icon--exit {
-  display: none;
-}
-
-.embed-fullscreen.is-fullscreen .embed-fullscreen__icon--enter {
-  display: none;
-}
-
-.embed-fullscreen.is-fullscreen .embed-fullscreen__icon--exit {
-  display: block;
-}
-
-.post__embed iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.post__embed:fullscreen,
-.post__embed:-webkit-full-screen,
-.post__embed:-ms-fullscreen {
-  padding-bottom: 0;
-  height: 100%;
-  width: 100%;
-  border-radius: 0;
-  box-shadow: none;
-  background: var(--surface);
-}
-
-.post__embed:fullscreen iframe,
-.post__embed:-webkit-full-screen iframe,
-.post__embed:-ms-fullscreen iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.post__comments {
-  margin-top: 3rem;
-}
-
-.post__comments-title {
-  font-size: 1.3rem;
-  margin: 0 0 1rem;
-}
-
-.post__comments .utterances {
-  max-width: 100%;
-}
-
-.post__comments-help {
-  margin: 0;
-  color: var(--muted);
-}
-
-.note-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.note-list--grid {
-  display: grid;
-  gap: 1.1rem;
-  margin-top: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-.note-list li {
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.note-list--grid li {
-  padding: 0;
-  border: none;
-}
-
-.note-list li:last-child {
-  border-bottom: none;
-}
-
-.note-list a {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.note-card {
-  height: 100%;
-  padding: 0.9rem 1.2rem 1.2rem;
-  border-radius: 4px;
-  background: var(--surface);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  position: relative;
-  overflow: hidden;
-  
-  /* 3D bulge effect - makes block appear raised from screen */
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  
-  /* Classy 3D effect matching other blocks */
-  box-shadow: 
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-.note-card--embed {
-  margin-top: 1.5rem;
-}
-
-/* Featured Cards - Byōbu (屏風) Folding Screen Style */
-.featured-grid {
-  display: grid;
-  gap: 1.5rem;
-  margin-top: 1.3rem;
-  margin-bottom: 1.5rem;
-  grid-template-columns: 1fr;
-}
-
-.featured-card {
-  position: relative;
-  padding: 1rem 1.3rem 1.3rem;
-  border-radius: 4px;
-  background: var(--surface);
-  overflow: hidden;
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
-  
-  /* 3D bulge effect - makes block appear raised from screen */
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  
-  /* Classy 3D effect matching other blocks */
-  box-shadow: 
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-  
-  /* Content above textures */
-  > * {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.featured-card__content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  flex: 1;
-}
-
-.featured-card__decoration {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 200px;
-  height: 200px;
-  background-image: var(--texture-seigaiha);
-  opacity: 0.15;
-  pointer-events: none;
-  transition: transform 0.6s ease, opacity 0.4s ease;
-  z-index: 1;
-}
-
-html[lang='zh-Hans'] .featured-card__decoration {
-  /* Cloud pattern instead of waves */
-  background-image: url(#tang-cloud-pattern);
-  opacity: 0.25;
-}
-
-.featured-card:hover .featured-card__decoration,
-.featured-card:focus-within .featured-card__decoration {
-  transform: translate(-15px, -15px) scale(1.15);
-  opacity: 0.3;
-}
-
-.featured-card__title {
-  font-size: 1.35rem !important;
-  margin: 0 !important;
-  line-height: 1.35;
-  letter-spacing: 0.025em !important;
-  text-transform: none !important;
-  font-weight: 600;
-  position: relative;
-  padding-bottom: 0.8rem;
-  
-  /* Elegant underline with animation */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 4px rgba(45, 31, 21, 0.15);
-  }
-}
-
-.featured-card:hover .featured-card__title::after,
-.featured-card:focus-within .featured-card__title::after {
-  width: 90px;
-}
-
-html[lang='zh-Hans'] .featured-card__title {
-  font-size: 1.4rem !important;
-  letter-spacing: 0.07em !important;
-  font-weight: 500;
-}
-
-html[lang='ja'] .featured-card__title {
-  letter-spacing: 0.06em !important;
-}
-
-.featured-card__title a {
-  position: relative;
-  display: inline;
-  color: var(--accent-dark);
-  text-decoration: none;
-  
-  /* Ink brush underline effect */
-  background-image: linear-gradient(to right, 
-    var(--accent-dark) 0%, 
-    var(--accent) 50%, 
-    var(--accent-dark) 100%);
-  background-repeat: no-repeat;
-  background-size: 0% 3px;
-  background-position: 0 100%;
-  transition: background-size 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
-  
-  /* Subtle text shadow for depth */
-  text-shadow: 0 1px 2px rgba(45, 31, 21, 0.1);
-}
-
-html[lang='zh-Hans'] .featured-card__title a {
-  background-image: linear-gradient(to right, 
-    var(--accent-dark) 0%, 
-    var(--accent) 30%, 
-    var(--wood-light) 50%, 
-    var(--accent) 70%, 
-    var(--accent-dark) 100%);
-  background-size: 0% 4px;
-}
-
-.featured-card:hover .featured-card__title a,
-.featured-card:focus-within .featured-card__title a {
-  background-size: 100% 3px;
-  color: var(--accent-dark);
-}
-
-html[lang='zh-Hans'] .featured-card:hover .featured-card__title a,
-html[lang='zh-Hans'] .featured-card:focus-within .featured-card__title a {
-  background-size: 100% 4px;
-}
-
-.featured-card__excerpt {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--muted);
-  margin: 0;
-  opacity: 0.9;
-}
-
-.featured-card .post__meta {
-  font-size: 0.95rem;
-  opacity: 0.8;
-}
-
-.featured-card .download-list {
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.featured-card .download-list a {
-  color: var(--accent-dark);
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  background: rgba(74, 47, 26, 0.04);
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-}
-
-.featured-card .download-list a:hover {
-  background: rgba(74, 47, 26, 0.08);
-  border-color: var(--accent-dark);
-  transform: translateY(-1px);
-}
-
-.featured-card__preview {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 66.67%; /* 3:2 aspect ratio */
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--surface);
-  box-shadow: 
-    inset 0 0 0 1px var(--border),
-    0 2px 8px rgba(45, 31, 21, 0.08);
-}
-
-.featured-card__preview iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.featured-card__preview:fullscreen,
-.featured-card__preview:-webkit-full-screen,
-.featured-card__preview:-ms-fullscreen {
-  margin-top: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 100%;
-  width: 100%;
-  border-radius: 0;
-  border-top: none;
-  box-shadow: none;
-  background: var(--surface);
-}
-
-.featured-card__preview:fullscreen iframe,
-.featured-card__preview:-webkit-full-screen iframe,
-.featured-card__preview:-ms-fullscreen iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.note-card__title {
-  font-size: 1.15rem !important;
-  font-weight: 600;
-  letter-spacing: 0.015em !important;
-  text-transform: none !important;
-  color: var(--accent-dark);
-  margin: 0 !important;
-  position: relative;
-  padding-bottom: 0.5rem;
-  
-  /* Elegant underline with animation */
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 4px rgba(45, 31, 21, 0.15);
-  }
-}
-
-.note-card:hover .note-card__title::after,
-.note-card:focus-within .note-card__title::after {
-  width: 80px;
-}
-
-html[lang='zh-Hans'] .note-card__title {
-  font-size: 1.18rem !important;
-  letter-spacing: 0.025em !important;
-  font-weight: 500;
-}
-
-html[lang='ja'] .note-card__title {
-  letter-spacing: 0.02em !important;
-}
-
-.note-card p {
-  margin: 0;
-}
-
-.download-list {
-  list-style: none;
-  margin: 0.25rem 0 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1rem;
-}
-
-.download-list li {
-  margin: 0;
-}
-
-.download-list a {
-  font-weight: 500;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
-}
-
-.download-list a:hover,
-.download-list a:focus {
-  border-color: currentColor;
-}
-
-.link-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.link-list li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.link-list li:last-child {
-  border-bottom: none;
-}
-
-.link-list a {
-  font-weight: 600;
-}
-
-.pdf-frame {
-  margin-top: 1rem;
-  border-radius: 4px;
-  box-shadow: 
-    var(--shadow),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark);
-  background: #fff;
-  position: relative;
-  overflow: hidden;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-.pdf-frame object,
-.pdf-frame iframe,
-.pdf-frame embed {
-  width: 100%;
-  height: clamp(28rem, 70vh, 48rem);
-  border: none;
-  display: block;
-}
-
-.pdf-download {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.pdf-download a {
-  font-weight: 600;
-}
-
-// GIF/Image embed styling - fits to viewing window
-.gif-frame {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  border-radius: 4px;
-  box-shadow: 
-    var(--shadow),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark);
-  background: var(--surface-alt);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-.gif-frame img {
-  width: 100%;
-  height: auto;
-  max-height: 85vh; /* Fit to viewport height with some margin */
-  object-fit: contain; /* Preserve aspect ratio */
-  display: block;
-  position: relative;
-  z-index: 1;
-}
-
-.gif-download {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
-}
-
-.gif-download a {
-  font-weight: 600;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  border: 2px solid var(--accent);
-  padding: 0.6rem 1.4rem;
-  background: var(--accent);
-  color: var(--surface);
-  font-family: 'EB Garamond', 'Noto Serif JP', serif;
-  font-size: 0.95rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 600;
-  border-radius: 0;
-  box-shadow: 0 4px 12px rgba(45, 31, 21, 0.25), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-  
-  /* Seal stamp texture */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url(#paper-texture);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  /* Ink shine */
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.15) 0%, 
-      transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-}
-
-html[lang='zh-Hans'] .btn {
-  /* Chinese seal style - square, bold */
-  border-width: 3px;
-  letter-spacing: 0.15em;
-  font-weight: 700;
-  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-.btn:hover,
-.btn:focus {
-  background: var(--accent-dark);
-  border-color: var(--accent-dark);
-  color: var(--surface);
-  text-decoration: none;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(45, 31, 21, 0.35), 
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.btn:hover::before,
-.btn:focus::before,
-.btn:hover::after,
-.btn:focus::after {
-  opacity: 1;
-}
-
-.btn:active {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(45, 31, 21, 0.25);
-}
-
-.cv-public {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.embed-frame {
-  position: relative;
-  margin-top: 1.2rem;
-  padding-bottom: 56.25%;
-  border-radius: 4px;
-  box-shadow: 
-    var(--shadow),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark);
-  overflow: hidden;
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-.embed-frame iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.cv-public__embed {
-  position: relative;
-  padding-bottom: 129%;
-  max-width: 850px;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 
-    var(--shadow),
-    /* Wooden koushi border frame */
-    0 0 0 3px var(--accent-dark);
-  
-  /* Wooden koushi texture overlay on frame */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 4px;
-    background: var(--texture-koushi);
-    background-size: 8px 8px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-.cv-public__embed iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: #fff;
-}
-
+/* --------------------------------------------------------------------------
+   13. Footer — a clean sill: gold hairline on the lower beam
+   -------------------------------------------------------------------------- */
 .site-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 1.5rem 0 2rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--muted);
   position: relative;
+  margin-top: 2rem;
+  padding: 2rem 0 1.6rem;
+  background-color: var(--beam);
+  background-image: var(--tx-wood), linear-gradient(0deg, color-mix(in srgb, var(--beam) 72%, black), var(--beam) 48%, var(--beam-hi) 100%);
+  border-top: 1px solid var(--gold-soft);
+  color: color-mix(in srgb, var(--beam-ink) 88%, transparent);
+  transition: background-color var(--t-theme) var(--ease);
 }
-
-/* Language selector - Minimalistic stacked buttons */
-.lang-overlay {
+.site-footer::before {
+  content: "";
   position: absolute;
-  left: clamp(20px, 3vw, 32px);
-  bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  z-index: 30;
+  left: 0; right: 0; top: 2px;
+  height: 1px;
+  background: color-mix(in srgb, var(--gold) 40%, transparent);
 }
+.site-footer .container { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.site-footer p { margin: 0; font-size: 0.88rem; letter-spacing: 0.06em; }
 
-.lang-toggle {
-  min-width: auto;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  box-shadow: 
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    0 0 0 1px rgba(45, 31, 21, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  font-family: 'EB Garamond', 'Noto Serif JP', serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--accent-dark);
+/* --------------------------------------------------------------------------
+   14. Language & time controls
+   -------------------------------------------------------------------------- */
+.lang-overlay { position: relative; display: inline-flex; align-items: center; gap: 0.6rem; }
+.lang-toggle, .time-toggle {
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  font-variant-caps: all-small-caps;
+  color: var(--beam-ink);
+  background: color-mix(in srgb, var(--beam-hi) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--beam-ink) 35%, transparent);
+  border-radius: var(--radius);
+  padding: 0.42rem 0.9rem;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-              box-shadow 0.3s ease,
-              border-color 0.3s ease;
-  position: relative;
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  white-space: nowrap;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
-
-html[lang='zh-Hans'] .lang-toggle {
-  border-color: var(--accent);
-}
-
-.lang-toggle:hover {
-  transform: perspective(1000px) translateZ(16px) translateY(-4px);
-  box-shadow: 
-    0 16px 40px rgba(45, 31, 21, 0.14),
-    0 0 0 1px var(--accent),
-    inset 0 2px 0 rgba(255, 255, 255, 0.7),
-    inset -2px 0 0 rgba(255, 255, 255, 0.3),
-    inset 2px 0 0 rgba(0, 0, 0, 0.08),
-    0 6px 16px rgba(45, 31, 21, 0.08);
-  border-color: var(--accent);
-}
-
-.lang-toggle:active {
-  transform: translateY(-2px) scale(1.02);
-}
-
-.lang-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
-
+.lang-toggle:hover, .time-toggle:hover { color: var(--gold-on-wood); border-color: var(--gold-on-wood); }
 .lang-list {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 10rem;
+  margin: 0; padding: 0.35rem;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.lang-list li {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none;
-}
-
-/* Hide current language option */
-.lang-list li.current {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
   display: none;
+  z-index: 60;
 }
-
-.lang-overlay.open .lang-list li:not(.current) {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-/* Staggered animation */
-.lang-overlay.open .lang-list li:nth-child(1) {
-  transition-delay: 0s;
-}
-
-.lang-overlay.open .lang-list li:nth-child(2) {
-  transition-delay: 0.05s;
-}
-
-.lang-overlay.open .lang-list li:nth-child(3) {
-  transition-delay: 0.1s;
-}
-
+.lang-overlay.open .lang-list { display: block; }
 .lang-option {
-  min-width: auto;
-  padding: 0.5rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--accent-dark);
-  font-family: 'EB Garamond', 'Zen Old Mincho', 'Noto Serif SC', serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-align: center;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  padding: 0.45rem 0.7rem;
   cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  box-shadow: 
-    0 8px 24px rgba(45, 31, 21, 0.08),
-    0 0 0 1px rgba(45, 31, 21, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px 0 0 rgba(255, 255, 255, 0.2),
-    inset 1px 0 0 rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(45, 31, 21, 0.05);
-  transform: perspective(1000px) translateZ(8px);
-  transform-style: preserve-3d;
-  white-space: nowrap;
 }
+.lang-option:hover { background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--accent-2); }
 
-/* Tang Dynasty style for Chinese */
-html[lang='zh-Hans'] .lang-option {
-  border-color: var(--accent);
-}
+.time-toggle .time-icon { margin-right: 0.4em; }
 
-.lang-option:hover,
-.lang-option:focus {
-  transform: perspective(1000px) translateZ(16px) translateY(-4px);
-  box-shadow: 
-    0 16px 40px rgba(45, 31, 21, 0.14),
-    0 0 0 1px var(--accent),
-    inset 0 2px 0 rgba(255, 255, 255, 0.7),
-    inset -2px 0 0 rgba(255, 255, 255, 0.3),
-    inset 2px 0 0 rgba(0, 0, 0, 0.08),
-    0 6px 16px rgba(45, 31, 21, 0.08);
-  border-color: var(--accent);
-}
+/* --------------------------------------------------------------------------
+   15. Collapsible panels (enhancements.js adds button semantics)
+   -------------------------------------------------------------------------- */
+.section[data-collapsible="true"] > h2,
+.list-card[data-collapsible="true"] > h2 { cursor: pointer; user-select: none; }
+.collapse-indicator { color: var(--accent); }
 
-/* Smooth entrance animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.section {
-  animation: fadeInUp 0.6s ease backwards;
-}
-
-.section:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.section:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.section:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.section:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-figcaption {
-  padding: 1rem 1.5rem;
-  background: var(--surface);
-  font-size: 0.9rem;
-  color: var(--muted);
-  border-top: 2px solid var(--accent-dark);
-  font-style: italic;
-  letter-spacing: 0.02em;
-  position: relative;
-  z-index: 3;
-}
-
-html[lang='zh-Hans'] figcaption {
-  background: var(--surface);
-  border-top-color: var(--accent);
-  border-top-width: 3px;
-}
-
-/* Download list enhancements */
-.download-list a {
-  font-weight: 500;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: all 0.3s ease;
-  position: relative;
-  padding-bottom: 2px;
-}
-
-.download-list a::after {
-  content: '→';
-  margin-left: 4px;
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.download-list a:hover::after,
-.download-list a:focus::after {
-  transform: translateX(4px);
-}
-
-/* Improved focus states */
-*:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 5px;
-  border-radius: 0;
-}
-
-html[lang='zh-Hans'] *:focus-visible {
-  outline-width: 4px;
-}
-
-/* Selection styling - Ink brush effect */
-::selection {
-  background: var(--accent);
-  color: var(--surface);
-  text-shadow: none;
-}
-
-::-moz-selection {
-  background: var(--accent);
-  color: var(--surface);
-  text-shadow: none;
-}
-
-html[lang='zh-Hans'] ::selection,
-html[lang='zh-Hans'] ::-moz-selection {
-  background: var(--accent);
-  color: white;
-}
-
-/* Scrollbar styling - Wood grain aesthetic */
-::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-  border-left: 1px solid var(--border);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--gradient-wood);
-  border-radius: 0;
-  border: 2px solid var(--bg);
-  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.2);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, 
-    var(--accent-dark) 0%, 
-    var(--accent) 50%, 
-    var(--accent-dark) 100%);
-}
-
-html[lang='zh-Hans'] ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, 
-    var(--accent-dark) 0%, 
-    var(--accent) 50%, 
-    var(--accent-dark) 100%);
-}
-
+/* --------------------------------------------------------------------------
+   16. Responsive
+   -------------------------------------------------------------------------- */
 @media (max-width: 860px) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .featured-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .featured-card {
-    padding: 2rem;
-    min-height: 240px;
-  }
-
-  .featured-card__title {
-    font-size: 1.4rem;
-  }
+  .hero { grid-template-columns: 1fr; }
+  .hero__image { max-width: 420px; }
 }
 
 @media (max-width: 720px) {
-  .site-header .container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.8rem;
-  }
-
-  .nav-toggle {
-    display: inline-flex;
-  }
-
+  .site-header .container { align-items: center; }
+  .nav-toggle { display: inline-block; }
+  .site-nav { width: 100%; }
   .site-nav ul {
     display: none;
     flex-direction: column;
-    width: 100%;
-    gap: 0.5rem;
-    padding-top: 0.5rem;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.4rem 0 0.8rem;
   }
+  .site-nav ul.open { display: flex; }
+  .site-nav a { display: block; padding: 0.6rem 0.2rem; border-bottom: 0; }
+  .site-nav li.active a { border-left: 3px solid var(--accent-2); padding-left: 0.7rem; }
+  .definition-list { grid-template-columns: 1fr; gap: 0.1rem 0; }
+  .definition-list dt { margin-top: 0.5rem; }
+}
 
-  .site-nav ul.open {
-    display: flex;
-  }
+/* --------------------------------------------------------------------------
+   17. Motion & print
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
 
-  .note-list--grid {
-    grid-template-columns: 1fr;
+@media print {
+  :root, html[data-time="day"], html[data-time="dusk"], html[data-time="night"] {
+    --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff;
+    --ink: #000000; --muted: #333333; --faint: #444444;
+    --accent: #000000; --accent-2: #000000;
   }
-
-  .section {
-    padding: 1.5rem;
+  .site-header, .site-footer, .nav-toggle, .lang-overlay, .time-toggle,
+  .collapse-indicator { display: none !important; }
+  body, .site-body, .section, .list-card, .hero {
+    background: #fff !important;
+    background-image: none !important;
+    color: #000;
+    box-shadow: none !important;
   }
-
-  .featured-card {
-    padding: 1.5rem;
-  }
-
-  .featured-card__title {
-    font-size: 1.3rem;
-  }
-
-  .section:nth-child(n) {
-    animation-delay: 0s;
-  }
+  .section, .list-card, .hero { border: 1px solid #bbb; }
+  a { color: #000; text-decoration: none; }
 }
