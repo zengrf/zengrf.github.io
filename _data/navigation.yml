@@ -12,6 +12,3 @@ main:
   - key: notes
     title: "Notes"
     url: /notes/
-  - key: ogura
-    title: "小倉色紙"
-    url: /ogura-shikishi/

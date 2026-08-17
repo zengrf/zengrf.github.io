@@ -5,20 +5,15 @@ permalink: /research/
 ---
 
 <section class="section">
-  <h2>Publications &amp; preprints</h2>
+  <h2>Research</h2>
   <figure>
     <img src="{{ '/assets/img/spanning lines.png' | relative_url }}" alt="Spanning lines" />
     <figcaption>A spanning line configuration, made with <a href="https://www.vzome.com/">vZome</a>.</figcaption>
   </figure>
 
-  <br>
-
-  <h3> Research Interests </h3>
-  I am interested in Schubert calculus, intersection theory on moduli stacks, and enumerative geometry. I am also interested in using machine learning and artificial intelligence to facilitate mathematical discoveries.
-
-  Some of the things I like to think about recently include Euler characteristics on spanning line configurations, lines on quartic surfaces, the $K_0$-ring of some moduli stacks, nef divisors on $\overline{\mathcal{M}}_{g,n}$, and canonical bundles of toric varieties.
-
-  <br>
+  <h3>Research Interests</h3>
+  <p>I am interested in Schubert calculus, intersection theory on moduli stacks, and enumerative geometry. I am also interested in using machine learning and artificial intelligence to facilitate mathematical discoveries.</p>
+  <p>Some of the things I like to think about recently include lines on quartic surfaces, the $K_0$-ring of some moduli stacks, nef divisors on $\overline{\mathscr{M}}_{g,n}$, line bundles of toric varieties, and moduli of stable maps.</p>
 
   <h3>Publications &amp; Preprints</h3>
 

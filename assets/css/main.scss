@@ -2,158 +2,218 @@
 ---
 
 /* ==========================================================================
-   MIYABI (雅) — a temple across the day
-   Theme for zengrf.github.io — 清潔感と高級感
+   KIWARI (木割) — the page as a shoin-room wall elevation
+   Theme for zengrf.github.io
    --------------------------------------------------------------------------
-   One material system — washi paper, cedar & keyaki beams, a kawara eave,
-   kumiko lattice, byōbu gold — rendered at three times of day:
+   One continuous timber frame organizes every page: two hashira posts run
+   the full page height, nageshi rails divide the wall into washi bays, a
+   kawara eave (ibushi-silver tiles, mitsudomoe end-discs, karakusa strip)
+   crowns the header beam, and an engawa plank floor closes the page.
+   Sections are NOT cards: they are bays inside the frame.
 
-     html[data-time="day"]    asa/hiru : ivory washi, sumi ink, hinoki bark
-     html[data-time="dusk"]   yūgure   : incense-gold paper, chestnut beams
-     html[data-time="night"]  yoru     : lacquer black, ebony panels, gold
+   Member sizes follow the kiwari proportion system: post face D = 20px;
+   nageshi = 0.85D; minor rails = 0.35D; kumiko hairlines ~0.07D.
+   Ornament lives in exactly one zone per surface (the ranma band under the
+   beam; shippō brocade only on the scroll mounting; kinpaku only in the
+   tokonoma and on 小倉色紙 figures). Everything else is material.
 
-   Colors are Japanese traditional colors (和色) taken from the
-   和色大辞典 (colordic.org/w) — named in comments; shades marked "derived"
-   are tints/shades of those. Time is set by assets/js/theme.js.
-   All textures are inline SVG data-URIs: no image files, no requests.
-   Motif budget: washi ground + wood beams + ONE lattice accent per view;
-   gold lives in the hero; seigaiha only inside figures. Restraint is the
-   design.  Plain flat CSS (valid SCSS), portable to any stack.
+   Two material worlds, switched by language (assets/js/lang.js):
+     html[lang=en], html[lang=ja]  — Japanese sukiya/shoin: sumi ink, washi,
+                                     dark cedar, bengara accents, quiet gold
+     html[lang=zh-Hans]            — Tang palace: vermilion lacquer columns,
+                                     dark-lacquer beams, gilded fittings
+   Three times of day (assets/js/theme.js): the SAME materials under
+   different light — day / dusk / night — not three different designs.
+
+   Colors are documented traditional colors: 和色大辞典 (colordic.org/w),
+   irocore.com, wa-iro.com for the Japanese world; 中国色 (zhongguose.com)
+   for the Tang world. Shades marked "derived" are tints/shades of those.
+   Textures are inline SVG data-URIs (no image requests); geometric patterns
+   are alpha masks so each world colors them with its own tokens.
+   No fade effects anywhere: the only animated things move (doors slide,
+   panels collapse); nothing cross-fades, nothing fades in on scroll.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   0. Design tokens
+   0. Kiwari constants, faces, motion
    -------------------------------------------------------------------------- */
-
 :root {
   --font-serif: "EB Garamond", "Zen Old Mincho", "Noto Serif JP", Georgia, serif;
   --font-display: "Cormorant Garamond", "Zen Old Mincho", "Noto Serif JP", serif;
 
-  --radius: 3px;
-  --radius-lg: 6px;
-  --container: 1060px;
-  --beam-h: 4.4rem;
+  --hashira: 20px;              /* post face D */
+  --nageshi: 17px;              /* rail = 0.85 D */
+  --rail-minor: 7px;            /* kamoi face = 0.35 D */
+  --container: 1120px;
+  --bay-pad-x: clamp(1.5rem, 3.6vw, 2.8rem);
+  --bay-pad-y: clamp(1.9rem, 4vw, 2.8rem);
+
+  --arris-lit: rgba(255, 255, 255, 0.17);
+  --arris-lit2: rgba(255, 255, 255, 0.05);
+  --arris-sh1: rgba(0, 0, 0, 0.22);
+  --arris-sh2: rgba(0, 0, 0, 0.42);
 
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --t-fast: 160ms;
-  --t-theme: 900ms;
+  --door-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --t-door: 760ms;
 }
 
-/* per-language book faces (loaded weights only; see default.html) */
 :lang(ja) { font-family: "Zen Old Mincho", "Noto Serif JP", serif; }
 :lang(zh-Hans), :lang(zh) { font-family: "Noto Serif SC", "Zen Old Mincho", serif; }
 
-/* ---- DAY — 象牙 ivory, 黒檀 ink, 檜皮 hinoki bark, 弁柄 shrine red ---- */
+/* --------------------------------------------------------------------------
+   1. Japanese world — DAY 昼
+   象牙 zōge ground · 生成り kinari bays · 檳榔子染 ink · 弁柄 accents
+   -------------------------------------------------------------------------- */
 :root,
 html[data-time="day"] {
-  --bg: #f8f4e6;                 /* 象牙色 zōge, ivory */
-  --bg-deep: #eee8d5;            /* derived shade of 象牙 */
-  --surface: #fbfaf5;            /* 生成り色 kinari */
-  --surface-2: #f3efe0;          /* derived */
-  --ink: #250d00;                /* 黒檀 kokutan, ebony */
-  --muted: #544a47;              /* 黒橡 kurotsurubami */
-  --faint: #6a5d44;              /* derived shade of 媚茶 kobicha */
-  --accent: #965036;             /* 檜皮色 hiwada, hinoki bark */
-  --accent-2: #8f2e14;           /* 弁柄色 bengara, shrine iron-red */
-  --gold: #d9a62e;               /* 櫨染 hajizome */
-  --gold-soft: rgba(217, 166, 46, 0.32);
-  --gold-on-wood: #efcd9a;       /* 香色 kō-iro, incense */
-  --beam: #59392a;               /* derived shade of 焦茶 kogecha */
-  --beam-hi: #6f4b3e;            /* 焦茶 kogecha */
-  --beam-ink: #fbfaf5;           /* 生成り */
-  --line: rgba(37, 13, 0, 0.14);
-  --line-strong: rgba(37, 13, 0, 0.30);
-  --lattice: rgba(89, 57, 42, 0.50);
-  --panel-glow: 0 0 0 0 transparent;
-  --shadow-1: 0 1px 2px rgba(37, 13, 0, 0.05), 0 6px 18px rgba(37, 13, 0, 0.07);
-  --shadow-2: 0 2px 6px rgba(37, 13, 0, 0.07), 0 14px 34px rgba(37, 13, 0, 0.10);
-  --img-filter: none;
-  color-scheme: light;
-}
+  --ground: #f0ebdc;             /* derived tint between 象牙 #f8f4e6 and 灰白 #e9e4d4 */
+  --bay: #faf7ee;                /* derived warm of 生成り #fbfaf5 */
+  --panel: #f4eedd;              /* derived tint of 練色 #ede4cd — shōji-paper panels */
+  --ink: #35302c;                /* derived tint of 檳榔子染 #433d3c */
+  --ink-strong: #211b16;         /* derived shade of 檳榔子染 */
+  --muted: #5d554f;              /* derived tint of 黒橡 #544a47 */
+  --link: #8f2e14;               /* 弁柄色 bengara — temple ironwork red */
+  --link-hover: #b7282e;         /* 茜色 akane */
+  --gold: #e6b422;               /* 金色 konjiki */
+  --gold-quiet: rgba(230, 180, 34, 0.34);
+  --gold-ground: #d8a854;        /* derived: 金色 toward 琥珀 #bf783a — matte red-gold leaf */
+  --seal: #d9341d;               /* 真朱 shinshu (irocore) — inkpad vermilion */
 
-/* ---- DUSK — 香色 incense paper, 栗 chestnut beams, 黄金 gold ---- */
-html[data-time="dusk"] {
-  --bg: #eddfc0;                 /* derived tint of 香色 kō-iro */
-  --bg-deep: #e2cfa6;            /* derived */
-  --surface: #f6ecd8;            /* derived tint of 香色 */
-  --surface-2: #efcd9a;          /* 香色 kō-iro */
-  --ink: #250d00;                /* 黒檀 */
-  --muted: #57402e;              /* derived shade of 焦茶 */
-  --faint: #5f5138;              /* derived shade of 媚茶 */
-  --accent: #762f07;             /* 栗色 kuri, chestnut */
-  --accent-2: #8f2e14;           /* 弁柄色 */
-  --gold: #e6b422;               /* 黄金 kogane */
-  --gold-soft: rgba(230, 180, 34, 0.4);
-  --gold-on-wood: #efcd9a;       /* 香色 */
-  --beam: #4f2c12;               /* derived shade of 栗色 */
-  --beam-hi: #762f07;            /* 栗色 */
-  --beam-ink: #f6ecd8;
-  --line: rgba(37, 13, 0, 0.18);
-  --line-strong: rgba(37, 13, 0, 0.36);
-  --lattice: rgba(79, 44, 18, 0.55);
-  --panel-glow: 0 0 0 0 transparent;
-  --shadow-1: 0 2px 3px rgba(37, 13, 0, 0.08), 0 10px 26px rgba(37, 13, 0, 0.11);
-  --shadow-2: 0 3px 8px rgba(37, 13, 0, 0.09), 0 20px 44px rgba(37, 13, 0, 0.14);
-  --img-filter: sepia(0.05) saturate(1.03);
-  color-scheme: light;
-}
+  --post-lo: #362519;            /* derived shade of 焦茶 #6f4b3e */
+  --post-mid: #634232;           /* derived of 焦茶 */
+  --post-hi: #7a5844;            /* derived tint of 焦茶 */
+  --beam-lo: #362519; --beam-mid: #634232; --beam-hi: #7a5844;
+  --rail-lo: #493326;            /* derived of 煤竹色 #6f514c */
+  --rail-mid: #66493a;           /* derived */
+  --rail-hi: #82624f;            /* derived tint */
+  --beam-ink: #ede4cd;           /* 練色 neri — unbleached silk on dark wood */
+  --beam-ink-dim: rgba(237, 228, 205, 0.72);
+  --plaque: rgba(239, 205, 154, 0.9); /* 香色 kō-iro */
 
-/* ---- NIGHT — 漆黒 lacquer, 黒檀 ebony, 黄金 gold, 照柿 lantern ---- */
-html[data-time="night"] {
-  --bg: #0d0500;                 /* derived from 漆黒 shikkoku, warmed */
-  --bg-deep: #000b00;            /* 濡羽色 nureba */
-  --surface: #250d00;            /* 黒檀 kokutan */
-  --surface-2: #331a09;          /* derived tint of 黒檀 */
-  --ink: #f8f4e6;                /* 象牙色 */
-  --muted: #cbb994;              /* 白橡 shirotsurubami */
-  --faint: #a59564;              /* 利休茶 rikyūcha */
-  --accent: #e6b422;             /* 黄金 kogane */
-  --accent-2: #eb6238;           /* 照柿 terigaki, glowing persimmon */
-  --gold: #e6b422;
-  --gold-soft: rgba(230, 180, 34, 0.32);
-  --gold-on-wood: #e6b422;       /* 黄金 */
-  --beam: #0a0703;               /* derived, near-black keyaki */
-  --beam-hi: #291a0d;            /* derived */
-  --beam-ink: #cbb994;           /* 白橡 */
-  --line: rgba(203, 185, 148, 0.16);
-  --line-strong: rgba(203, 185, 148, 0.32);
-  --lattice: rgba(203, 185, 148, 0.42);
-  --panel-glow: inset 0 0 60px rgba(230, 180, 34, 0.05);
-  --shadow-1: 0 2px 4px rgba(0, 0, 0, 0.5), 0 10px 26px rgba(0, 0, 0, 0.45);
-  --shadow-2: 0 4px 10px rgba(0, 0, 0, 0.55), 0 22px 48px rgba(0, 0, 0, 0.5);
-  --img-filter: brightness(0.92);
-  color-scheme: dark;
+  --lattice: rgba(90, 70, 52, 0.5);   /* ranma/kumiko color over washi */
+  --line: rgba(53, 48, 44, 0.16);
+  --line-strong: rgba(53, 48, 44, 0.34);
+  --shoji-grid: rgba(90, 74, 56, 0.20);
+  --toko-shadow: rgba(33, 27, 22, 0.10);
+  --img-filter: sepia(0.05) saturate(0.95);
+  --eave: var(--tx-eave-day);
+  --paper-glow: none;
+  color-scheme: light;
+  --mon: #8f2e14;                 /* 弁柄色 bengara — the crest as iron-oxide pigment on paper */
 }
 
 /* --------------------------------------------------------------------------
-   1. Textures — one inline SVG per material
+   2. Japanese world — DUSK 夕暮
+   same room, low amber sun: paper warms, wood deepens, gold wakes up
+   -------------------------------------------------------------------------- */
+html[data-time="dusk"] {
+  --ground: #e0cb9e;             /* derived shade of 香色 #efcd9a — amber air */
+  --bay: #f2e4bd;                /* derived */
+  --panel: #ecd9a9;              /* derived of 香色 */
+  --ink: #372f28;                /* derived */
+  --ink-strong: #241c12;         /* derived */
+  --muted: #5c5044;              /* derived */
+  --link: #8f2e14;               /* 弁柄色 */
+  --link-hover: #b7282e;         /* 茜色 */
+  --gold: #e6b422;               /* 黄金 kogane */
+  --gold-quiet: rgba(230, 180, 34, 0.45);
+  --gold-ground: #d7a24a;        /* derived, richer at dusk */
+  --seal: #d9341d;
+
+  --post-lo: #26170a;            /* derived shade of 栗色 #762f07 */
+  --post-mid: #4d2f14;           /* derived of 栗色 */
+  --post-hi: #6b4620;            /* derived */
+  --beam-lo: #26170a; --beam-mid: #4d2f14; --beam-hi: #6b4620;
+  --rail-lo: #452c14;            /* derived */
+  --rail-mid: #5f4023;           /* derived */
+  --rail-hi: #765533;            /* derived */
+  --beam-ink: #f0e3c6;
+  --beam-ink-dim: rgba(240, 227, 198, 0.72);
+  --plaque: rgba(239, 205, 154, 0.95);
+
+  --lattice: rgba(80, 58, 34, 0.60);
+  --line: rgba(55, 47, 40, 0.20);
+  --line-strong: rgba(55, 47, 40, 0.40);
+  --shoji-grid: rgba(84, 64, 40, 0.24);
+  --toko-shadow: rgba(34, 24, 12, 0.14);
+  --img-filter: sepia(0.14) saturate(1.06) brightness(0.97);
+  --eave: var(--tx-eave-day);
+  --paper-glow: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(214, 106, 53, 0.06), transparent 72%);
+  color-scheme: light;
+  --mon: #9a3216;                 /* derived tint of 弁柄色, warmed by the low sun */
+}
+
+/* --------------------------------------------------------------------------
+   3. Japanese world — NIGHT 夜
+   lantern light: lacquer dark ground, lit paper, gold alive, ink reversed
+   -------------------------------------------------------------------------- */
+html[data-time="night"] {
+  --ground: #0f0b08;             /* derived warm of 呂色 #0c0c0c lacquer */
+  --bay: #1c1510;                /* derived — wood interior in lantern light */
+  --panel: #241b13;              /* derived */
+  --ink: #e6dcc2;                /* derived tint of 練色 #ede4cd */
+  --ink-strong: #f5efdc;         /* derived of 生成り */
+  --muted: #b3a687;              /* derived of 白橡 #cbb994 */
+  --link: #d97c4a;               /* derived tint of 樺色 #cd5e3c for dark ground */
+  --link-hover: #efcd9a;         /* 香色 */
+  --gold: #e6b422;
+  --gold-quiet: rgba(230, 180, 34, 0.30);
+  --gold-ground: #a07d2c;        /* derived: leaf warm by lantern light */
+  --seal: #d9341d;
+
+  --post-lo: #070503;            /* derived near-black keyaki */
+  --post-mid: #221709;           /* derived */
+  --post-hi: #382817;            /* derived */
+  --beam-lo: #070503; --beam-mid: #221709; --beam-hi: #382817;
+  --rail-lo: #0b0805;            /* derived */
+  --rail-mid: #271b0e;           /* derived */
+  --rail-hi: #40301c;            /* derived */
+  --beam-ink: #d9cba6;           /* derived of 白橡 */
+  --beam-ink-dim: rgba(217, 203, 166, 0.66);
+  --plaque: rgba(230, 180, 34, 0.8);
+
+  --lattice: rgba(203, 185, 148, 0.42); /* 白橡 lattice against night */
+  --line: rgba(230, 220, 194, 0.15);
+  --line-strong: rgba(230, 220, 194, 0.30);
+  --shoji-grid: rgba(203, 185, 148, 0.16);
+  --toko-shadow: rgba(0, 0, 0, 0.5);
+  --img-filter: brightness(0.78) sepia(0.12) saturate(0.9);
+  --arris-lit: rgba(255, 231, 186, 0.27);
+  --arris-lit2: rgba(255, 231, 186, 0.08);
+  --arris-sh1: rgba(0, 0, 0, 0.35);
+  --arris-sh2: rgba(0, 0, 0, 0.62);
+  --eave: var(--tx-eave-night);
+  --paper-glow: radial-gradient(ellipse 60% 46% at 50% 42%, rgba(230, 180, 34, 0.10), transparent 70%);
+  color-scheme: dark;
+  --mon: #e6b422;                 /* 金色 konjiki — the crest reads as gilt inlay by lantern light */
+}
+
+/* --------------------------------------------------------------------------
+   4. Textures (generated; see repo DRAFT notes) — masks color via tokens
    -------------------------------------------------------------------------- */
 :root {
-  /* washi grain — barely-there fractal paper */
-  --tx-washi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23w)'/%3E%3C/svg%3E");
-
-  /* vertical grain for beams */
-  --tx-wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.28' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)'/%3E%3C/svg%3E");
-
-  /* kinpaku gold-leaf sheen with faint leaf seams */
-  --tx-gold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='k'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.84 0 0 0 0 0.42 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23k)'/%3E%3Cpath d='M80 0V160M0 80H160' stroke='rgba(120,90,30,0.08)' stroke-width='1'/%3E%3C/svg%3E");
-
-  /* seigaiha 青海波 — figures only */
-  --tx-seigaiha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='42' viewBox='0 0 84 42'%3E%3Cg fill='none' stroke='%23806640' stroke-opacity='0.13'%3E%3Cpath d='M-21 42a21 21 0 0 1 42 0M-13 42a13 13 0 0 1 26 0M-6 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M21 42a21 21 0 0 1 42 0M29 42a13 13 0 0 1 26 0M36 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M63 42a21 21 0 0 1 42 0M71 42a13 13 0 0 1 26 0M78 42a6 6 0 0 1 12 0'/%3E%3Cpath d='M0 21a21 21 0 0 1 42 0M8 21a13 13 0 0 1 26 0M15 21a6 6 0 0 1 12 0'/%3E%3Cpath d='M42 21a21 21 0 0 1 42 0M50 21a13 13 0 0 1 26 0M57 21a6 6 0 0 1 12 0'/%3E%3Cpath d='M-42 21a21 21 0 0 1 42 0M-34 21a13 13 0 0 1 26 0M-27 21a6 6 0 0 1 12 0'/%3E%3C/g%3E%3C/svg%3E");
-
-  /* kumiko lattice strip — heading rails and hr only */
-  --tx-kumiko: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='12' viewBox='0 0 36 12'%3E%3Cg stroke='%23000' stroke-width='1.1' fill='none'%3E%3Cpath d='M0 6h36M0 0l12 12M12 0 0 12M12 0l12 12M24 0 12 12M24 0l12 12M36 0 24 12'/%3E%3C/g%3E%3C/svg%3E");
-
-  /* kawara eave — flat tile band with hanging round eave-end tiles
-     (軒丸瓦), true 56×22 proportions; header only */
-  --tx-kawara: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='22' viewBox='0 0 56 22'%3E%3Cpath d='M0 0h56v7H0z' fill='%23000'/%3E%3Cpath d='M2 7a12 12 0 0 0 24 0zM30 7a12 12 0 0 0 24 0z' fill='%23000'/%3E%3Ccircle cx='14' cy='11' r='5.2' fill='%23000' stroke='%23fff' stroke-opacity='0.28' stroke-width='1.4'/%3E%3Ccircle cx='42' cy='11' r='5.2' fill='%23000' stroke='%23fff' stroke-opacity='0.28' stroke-width='1.4'/%3E%3Ccircle cx='14' cy='11' r='1.7' fill='%23fff' fill-opacity='0.3'/%3E%3Ccircle cx='42' cy='11' r='1.7' fill='%23fff' fill-opacity='0.3'/%3E%3C/svg%3E");
-
-  /* the owner's seal 「曾」 — used once, beside the hero caption */
-  --tx-seal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Crect x='1' y='1' width='28' height='28' rx='3' fill='%238f2e14'/%3E%3Crect x='1' y='1' width='28' height='28' rx='3' fill='none' stroke='%23fff' stroke-opacity='0.18'/%3E%3Ctext x='15' y='21.5' font-family='serif' font-size='19' font-weight='700' fill='%23fbfaf5' text-anchor='middle'%3E%E6%9B%BE%3C/text%3E%3C/svg%3E");
+  --tx-eave-day: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='38'%20viewBox='0%200%2056%2038'%3E%3Cdefs%3E%3ClinearGradient%20id='fg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23605e58'/%3E%3Cstop%20offset='1'%20stop-color='%23454440'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='rg'%20x1='0'%20y1='0'%20x2='1'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23454440'/%3E%3Cstop%20offset='0.5'%20stop-color='%236e6c65'/%3E%3Cstop%20offset='1'%20stop-color='%23454440'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='sg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%236e6c66'/%3E%3Cstop%20offset='1'%20stop-color='%2357554f'/%3E%3C/linearGradient%3E%3CradialGradient%20id='dg'%20cx='0.38'%20cy='0.30'%20r='0.9'%3E%3Cstop%20offset='0'%20stop-color='%23716e67'/%3E%3Cstop%20offset='1'%20stop-color='%23434140'/%3E%3C/radialGradient%3E%3Cfilter%20id='ds'%20x='-40%25'%20y='-40%25'%20width='180%25'%20height='180%25'%3E%3CfeDropShadow%20dx='0.4'%20dy='1.8'%20stdDeviation='1.3'%20flood-color='%23000'%20flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width='56'%20height='12.5'%20fill='url(%23fg)'/%3E%3Crect%20x='20'%20width='16'%20height='12.5'%20fill='url(%23rg)'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%2331302d'%20stroke-width='6'%20stroke-opacity='0.35'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%236e6c65'%20stroke-width='2.6'/%3E%3Crect%20y='11.6'%20width='56'%20height='1'%20fill='%2333312e'/%3E%3Crect%20y='12.5'%20width='56'%20height='12'%20fill='url(%23sg)'/%3E%3Cg%20transform='translate(0,13.6)'%3E%3Cg%20stroke='%2396938b'%20stroke-width='0.9'%20fill='none'%20stroke-linecap='round'%3E%3Cpath%20d='M%200%205%20C%207%202%2012%202%2014%205%20C%2016%208%2021%208%2028%205%20C%2035%202%2040%202%2042%205%20C%2044%208%2049%208%2056%205%20'/%3E%3Cpath%20d='M%2014%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2028%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3Cpath%20d='M%2042%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2056%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3C/g%3E%3C/g%3E%3Cpath%20d='M0%2024.5%20Q%2014%2027%2028%2024.5%20Q%2042%2027%2056%2024.5%20L%2056%2023.3%20L%200%2023.3%20Z'%20fill='%2333312e'/%3E%3Cg%20filter='url(%23ds)'%3E%3Ccircle%20cx='28'%20cy='24'%20r='12.5'%20fill='url(%23dg)'/%3E%3C/g%3E%3Cpath%20d='M%2020.25%2016.25%20A%2011%2011%200%200%201%2034.88%2015.25'%20stroke='%23b6b3aa'%20stroke-width='1.1'%20fill='none'%20stroke-linecap='round'%20stroke-opacity='0.55'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='11'%20fill='none'%20stroke='%238f8c84'%20stroke-width='1'%20stroke-opacity='0.9'/%3E%3Cpath%20d='M%2028%2017.4%20A%206.6%206.6%200%200%201%2033.72%2027.3%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2028%2017.4%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2033.72%2027.3%20A%206.6%206.6%200%200%201%2022.28%2027.3%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2033.72%2027.3%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2022.28%2027.3%20A%206.6%206.6%200%200%201%2028%2017.4%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2022.28%2027.3%20Z'%20fill='%232e2d2a'/%3E%3C/svg%3E\")"};
+  --tx-eave-night: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='38'%20viewBox='0%200%2056%2038'%3E%3Cdefs%3E%3ClinearGradient%20id='fg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23211f1c'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='rg'%20x1='0'%20y1='0'%20x2='1'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23121110'/%3E%3Cstop%20offset='0.5'%20stop-color='%232a2824'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='sg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23292824'/%3E%3Cstop%20offset='1'%20stop-color='%23181714'/%3E%3C/linearGradient%3E%3CradialGradient%20id='dg'%20cx='0.38'%20cy='0.30'%20r='0.9'%3E%3Cstop%20offset='0'%20stop-color='%232e2c27'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/radialGradient%3E%3Cfilter%20id='ds'%20x='-40%25'%20y='-40%25'%20width='180%25'%20height='180%25'%3E%3CfeDropShadow%20dx='0.4'%20dy='1.8'%20stdDeviation='1.3'%20flood-color='%23000'%20flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width='56'%20height='12.5'%20fill='url(%23fg)'/%3E%3Crect%20x='20'%20width='16'%20height='12.5'%20fill='url(%23rg)'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%230a0a09'%20stroke-width='6'%20stroke-opacity='0.35'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%232a2824'%20stroke-width='2.6'/%3E%3Crect%20y='11.6'%20width='56'%20height='1'%20fill='%23080807'/%3E%3Crect%20y='12.5'%20width='56'%20height='12'%20fill='url(%23sg)'/%3E%3Cg%20transform='translate(0,13.6)'%3E%3Cg%20stroke='%23454239'%20stroke-width='0.9'%20fill='none'%20stroke-linecap='round'%3E%3Cpath%20d='M%200%205%20C%207%202%2012%202%2014%205%20C%2016%208%2021%208%2028%205%20C%2035%202%2040%202%2042%205%20C%2044%208%2049%208%2056%205%20'/%3E%3Cpath%20d='M%2014%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2028%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3Cpath%20d='M%2042%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2056%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3C/g%3E%3C/g%3E%3Cpath%20d='M0%2024.5%20Q%2014%2027%2028%2024.5%20Q%2042%2027%2056%2024.5%20L%2056%2023.3%20L%200%2023.3%20Z'%20fill='%23080807'/%3E%3Cg%20filter='url(%23ds)'%3E%3Ccircle%20cx='28'%20cy='24'%20r='12.5'%20fill='url(%23dg)'/%3E%3C/g%3E%3Cpath%20d='M%2020.25%2016.25%20A%2011%2011%200%200%201%2034.88%2015.25'%20stroke='%235a564c'%20stroke-width='1.1'%20fill='none'%20stroke-linecap='round'%20stroke-opacity='0.55'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='11'%20fill='none'%20stroke='%234b4840'%20stroke-width='1'%20stroke-opacity='0.9'/%3E%3Cpath%20d='M%2028%2017.4%20A%206.6%206.6%200%200%201%2033.72%2027.3%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2028%2017.4%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2033.72%2027.3%20A%206.6%206.6%200%200%201%2022.28%2027.3%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2033.72%2027.3%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2022.28%2027.3%20A%206.6%206.6%200%200%201%2028%2017.4%20A%203.3%203.3%200%200%200%2028%2024%20A%203.3%203.3%200%200%200%2022.28%2027.3%20Z'%20fill='%230a0a09'/%3E%3C/svg%3E\")"};
+  --tx-asanoha: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='34'%20height='58.89'%20viewBox='0%200%2034%2058.89'%3E%3Cg%20stroke='%23000'%20stroke-width='1.4'%20stroke-linecap='square'%3E%3Cline%20x1='-34'%20y1='-29.44'%20x2='68'%20y2='-29.44'/%3E%3Cline%20x1='-34'%20y1='0'%20x2='68'%20y2='0'/%3E%3Cline%20x1='-34'%20y1='29.44'%20x2='68'%20y2='29.44'/%3E%3Cline%20x1='-34'%20y1='58.89'%20x2='68'%20y2='58.89'/%3E%3Cline%20x1='-34'%20y1='88.33'%20x2='68'%20y2='88.33'/%3E%3Cline%20x1='-51'%20y1='-29.44'%20x2='-68'%20y2='0'/%3E%3Cline%20x1='-51'%20y1='-29.44'%20x2='-34'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='-29.44'%20x2='-34'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='-29.44'%20x2='0'%20y2='0'/%3E%3Cline%20x1='17'%20y1='-29.44'%20x2='0'%20y2='0'/%3E%3Cline%20x1='17'%20y1='-29.44'%20x2='34'%20y2='0'/%3E%3Cline%20x1='51'%20y1='-29.44'%20x2='34'%20y2='0'/%3E%3Cline%20x1='51'%20y1='-29.44'%20x2='68'%20y2='0'/%3E%3Cline%20x1='85'%20y1='-29.44'%20x2='68'%20y2='0'/%3E%3Cline%20x1='85'%20y1='-29.44'%20x2='102'%20y2='0'/%3E%3Cline%20x1='119'%20y1='-29.44'%20x2='102'%20y2='0'/%3E%3Cline%20x1='119'%20y1='-29.44'%20x2='136'%20y2='0'/%3E%3Cline%20x1='-68'%20y1='0'%20x2='-51'%20y2='29.44'/%3E%3Cline%20x1='-68'%20y1='0'%20x2='-85'%20y2='29.44'/%3E%3Cline%20x1='-34'%20y1='0'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='-34'%20y1='0'%20x2='-51'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='0'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='0'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='0'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='0'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='68'%20y1='0'%20x2='85'%20y2='29.44'/%3E%3Cline%20x1='68'%20y1='0'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='102'%20y1='0'%20x2='119'%20y2='29.44'/%3E%3Cline%20x1='102'%20y1='0'%20x2='85'%20y2='29.44'/%3E%3Cline%20x1='-51'%20y1='29.44'%20x2='-68'%20y2='58.89'/%3E%3Cline%20x1='-51'%20y1='29.44'%20x2='-34'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='29.44'%20x2='-34'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='29.44'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='29.44'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='29.44'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='29.44'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='29.44'%20x2='68'%20y2='58.89'/%3E%3Cline%20x1='85'%20y1='29.44'%20x2='68'%20y2='58.89'/%3E%3Cline%20x1='85'%20y1='29.44'%20x2='102'%20y2='58.89'/%3E%3Cline%20x1='119'%20y1='29.44'%20x2='102'%20y2='58.89'/%3E%3Cline%20x1='119'%20y1='29.44'%20x2='136'%20y2='58.89'/%3E%3Cline%20x1='-68'%20y1='58.89'%20x2='-51'%20y2='88.33'/%3E%3Cline%20x1='-68'%20y1='58.89'%20x2='-85'%20y2='88.33'/%3E%3Cline%20x1='-34'%20y1='58.89'%20x2='-17'%20y2='88.33'/%3E%3Cline%20x1='-34'%20y1='58.89'%20x2='-51'%20y2='88.33'/%3E%3Cline%20x1='0'%20y1='58.89'%20x2='17'%20y2='88.33'/%3E%3Cline%20x1='0'%20y1='58.89'%20x2='-17'%20y2='88.33'/%3E%3Cline%20x1='34'%20y1='58.89'%20x2='51'%20y2='88.33'/%3E%3Cline%20x1='34'%20y1='58.89'%20x2='17'%20y2='88.33'/%3E%3Cline%20x1='68'%20y1='58.89'%20x2='85'%20y2='88.33'/%3E%3Cline%20x1='68'%20y1='58.89'%20x2='51'%20y2='88.33'/%3E%3Cline%20x1='102'%20y1='58.89'%20x2='119'%20y2='88.33'/%3E%3Cline%20x1='102'%20y1='58.89'%20x2='85'%20y2='88.33'/%3E%3C/g%3E%3Cg%20stroke='%23000'%20stroke-width='0.7'%20stroke-linecap='square'%3E%3Cline%20x1='0'%20y1='-19.63'%20x2='-17'%20y2='-29.44'/%3E%3Cline%20x1='0'%20y1='-19.63'%20x2='17'%20y2='-29.44'/%3E%3Cline%20x1='0'%20y1='-19.63'%20x2='0'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='-9.81'%20x2='-34'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='-9.81'%20x2='0'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='-9.81'%20x2='-17'%20y2='-29.44'/%3E%3Cline%20x1='34'%20y1='-19.63'%20x2='17'%20y2='-29.44'/%3E%3Cline%20x1='34'%20y1='-19.63'%20x2='51'%20y2='-29.44'/%3E%3Cline%20x1='34'%20y1='-19.63'%20x2='34'%20y2='0'/%3E%3Cline%20x1='17'%20y1='-9.81'%20x2='0'%20y2='0'/%3E%3Cline%20x1='17'%20y1='-9.81'%20x2='34'%20y2='0'/%3E%3Cline%20x1='17'%20y1='-9.81'%20x2='17'%20y2='-29.44'/%3E%3Cline%20x1='51'%20y1='-9.81'%20x2='34'%20y2='0'/%3E%3Cline%20x1='51'%20y1='-9.81'%20x2='68'%20y2='0'/%3E%3Cline%20x1='51'%20y1='-9.81'%20x2='51'%20y2='-29.44'/%3E%3Cline%20x1='-17'%20y1='9.81'%20x2='-34'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='9.81'%20x2='0'%20y2='0'/%3E%3Cline%20x1='-17'%20y1='9.81'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='19.63'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='19.63'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='19.63'%20x2='0'%20y2='0'/%3E%3Cline%20x1='17'%20y1='9.81'%20x2='0'%20y2='0'/%3E%3Cline%20x1='17'%20y1='9.81'%20x2='34'%20y2='0'/%3E%3Cline%20x1='17'%20y1='9.81'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='19.63'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='19.63'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='19.63'%20x2='34'%20y2='0'/%3E%3Cline%20x1='51'%20y1='9.81'%20x2='34'%20y2='0'/%3E%3Cline%20x1='51'%20y1='9.81'%20x2='68'%20y2='0'/%3E%3Cline%20x1='51'%20y1='9.81'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='39.26'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='39.26'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='0'%20y1='39.26'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='49.07'%20x2='-34'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='49.07'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='49.07'%20x2='-17'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='39.26'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='39.26'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='34'%20y1='39.26'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='49.07'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='49.07'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='49.07'%20x2='17'%20y2='29.44'/%3E%3Cline%20x1='51'%20y1='49.07'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='49.07'%20x2='68'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='49.07'%20x2='51'%20y2='29.44'/%3E%3Cline%20x1='-17'%20y1='68.7'%20x2='-34'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='68.7'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='-17'%20y1='68.7'%20x2='-17'%20y2='88.33'/%3E%3Cline%20x1='0'%20y1='78.52'%20x2='-17'%20y2='88.33'/%3E%3Cline%20x1='0'%20y1='78.52'%20x2='17'%20y2='88.33'/%3E%3Cline%20x1='0'%20y1='78.52'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='68.7'%20x2='0'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='68.7'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='17'%20y1='68.7'%20x2='17'%20y2='88.33'/%3E%3Cline%20x1='34'%20y1='78.52'%20x2='17'%20y2='88.33'/%3E%3Cline%20x1='34'%20y1='78.52'%20x2='51'%20y2='88.33'/%3E%3Cline%20x1='34'%20y1='78.52'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='68.7'%20x2='34'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='68.7'%20x2='68'%20y2='58.89'/%3E%3Cline%20x1='51'%20y1='68.7'%20x2='51'%20y2='88.33'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-renji: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='18'%20viewBox='0%200%2014%2018'%3E%3Crect%20x='0'%20width='3.48'%20height='18'%20fill='%23000'/%3E%3Crect%20x='3.48'%20width='2.52'%20height='18'%20fill='%23000'%20fill-opacity='0.55'/%3E%3C/svg%3E\")"};
+  --tx-meander: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%3E%3Cpath%20d='M%200%2017%20H%203%20V%203%20H%2015%20V%2011%20H%208%20V%207%20H%2011'%20fill='none'%20stroke='%23000'%20stroke-width='1.5'/%3E%3Cpath%20d='M%2015%2017%20H%2020%20M%2015%2017%20V%2015'%20fill='none'%20stroke='%23000'%20stroke-width='1.5'/%3E%3C/svg%3E\")"};
+  --tx-shippo: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='44'%20height='44'%20viewBox='0%200%2044%2044'%3E%3Ccircle%20cx='0'%20cy='0'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='44'%20cy='0'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='0'%20cy='44'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='44'%20cy='44'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='22'%20cy='22'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3C/svg%3E\")"};
+  --tx-grain-v: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.02%200.09'%20numOctaves='2'%20seed='41'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='4'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.5%200.03'%20numOctaves='2'%20seed='48'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='44'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='0.22'%20y1='-10'%20x2='0.22'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.04'/%3E%3Cline%20x1='164.68'%20y1='-10'%20x2='164.68'%20y2='250'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.03'/%3E%3Cline%20x1='187'%20y1='-10'%20x2='187'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.06'/%3E%3Cline%20x1='209.14'%20y1='-10'%20x2='209.14'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.06'/%3E%3Cline%20x1='226.08'%20y1='-10'%20x2='226.08'%20y2='250'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.04'/%3E%3Cline%20x1='43.49'%20y1='-10'%20x2='43.49'%20y2='250'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.05'/%3E%3Cline%20x1='231.1'%20y1='-10'%20x2='231.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.1'%20stroke-opacity='0.03'/%3E%3Cline%20x1='43.35'%20y1='-10'%20x2='43.35'%20y2='250'%20stroke='%23000'%20stroke-width='1.99'%20stroke-opacity='0.06'/%3E%3Cline%20x1='155.21'%20y1='-10'%20x2='155.21'%20y2='250'%20stroke='%23000'%20stroke-width='1.81'%20stroke-opacity='0.07'/%3E%3Cline%20x1='61.15'%20y1='-10'%20x2='61.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.73'%20stroke-opacity='0.05'/%3E%3Cline%20x1='237.33'%20y1='-10'%20x2='237.33'%20y2='250'%20stroke='%23000'%20stroke-width='0.97'%20stroke-opacity='0.04'/%3E%3Cline%20x1='45.04'%20y1='-10'%20x2='45.04'%20y2='250'%20stroke='%23000'%20stroke-width='1.25'%20stroke-opacity='0.05'/%3E%3Cline%20x1='40.3'%20y1='-10'%20x2='40.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.85'%20stroke-opacity='0.04'/%3E%3Cline%20x1='68.3'%20y1='-10'%20x2='68.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.05'/%3E%3Cline%20x1='238.22'%20y1='-10'%20x2='238.22'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.05'/%3E%3Cline%20x1='158.25'%20y1='-10'%20x2='158.25'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.05'/%3E%3Cline%20x1='164.9'%20y1='-10'%20x2='164.9'%20y2='250'%20stroke='%23000'%20stroke-width='1.88'%20stroke-opacity='0.06'/%3E%3Cline%20x1='27.09'%20y1='-10'%20x2='27.09'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.03'/%3E%3Cline%20x1='177.52'%20y1='-10'%20x2='177.52'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.05'/%3E%3Cline%20x1='33.79'%20y1='-10'%20x2='33.79'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.05'/%3E%3Cline%20x1='72.1'%20y1='-10'%20x2='72.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.05'/%3E%3Cline%20x1='122.95'%20y1='-10'%20x2='122.95'%20y2='250'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.03'/%3E%3Cline%20x1='44.89'%20y1='-10'%20x2='44.89'%20y2='250'%20stroke='%23000'%20stroke-width='1.11'%20stroke-opacity='0.03'/%3E%3Cline%20x1='183.05'%20y1='-10'%20x2='183.05'%20y2='250'%20stroke='%23000'%20stroke-width='1.72'%20stroke-opacity='0.06'/%3E%3Cline%20x1='60.26'%20y1='-10'%20x2='60.26'%20y2='250'%20stroke='%23000'%20stroke-width='0.96'%20stroke-opacity='0.05'/%3E%3Cline%20x1='30.87'%20y1='-10'%20x2='30.87'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.05'/%3E%3Cline%20x1='39.86'%20y1='-10'%20x2='39.86'%20y2='250'%20stroke='%23000'%20stroke-width='0.94'%20stroke-opacity='0.03'/%3E%3Cline%20x1='207.92'%20y1='-10'%20x2='207.92'%20y2='250'%20stroke='%23000'%20stroke-width='1.9'%20stroke-opacity='0.06'/%3E%3Cline%20x1='108.82'%20y1='-10'%20x2='108.82'%20y2='250'%20stroke='%23000'%20stroke-width='1.07'%20stroke-opacity='0.05'/%3E%3Cline%20x1='234.15'%20y1='-10'%20x2='234.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.03'/%3E%3Cline%20x1='166.92'%20y1='-10'%20x2='166.92'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.08'/%3E%3Cline%20x1='30.85'%20y1='-10'%20x2='30.85'%20y2='250'%20stroke='%23000'%20stroke-width='0.58'%20stroke-opacity='0.05'/%3E%3Cline%20x1='95.15'%20y1='-10'%20x2='95.15'%20y2='250'%20stroke='%23000'%20stroke-width='2.57'%20stroke-opacity='0.08'/%3E%3Cline%20x1='239.23'%20y1='-10'%20x2='239.23'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.07'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
+  --tx-grain-h: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.09%200.02'%20numOctaves='2'%20seed='87'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='4'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.03%200.5'%20numOctaves='2'%20seed='94'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='90'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='-10'%20y1='0.47'%20x2='250'%20y2='0.47'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='50.92'%20x2='250'%20y2='50.92'%20stroke='%23000'%20stroke-width='1.14'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='209.48'%20x2='250'%20y2='209.48'%20stroke='%23000'%20stroke-width='1.13'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='156.96'%20x2='250'%20y2='156.96'%20stroke='%23000'%20stroke-width='0.9'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='64.12'%20x2='250'%20y2='64.12'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='203.5'%20x2='250'%20y2='203.5'%20stroke='%23000'%20stroke-width='1.86'%20stroke-opacity='0.08'/%3E%3Cline%20x1='-10'%20y1='104.04'%20x2='250'%20y2='104.04'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='214.91'%20x2='250'%20y2='214.91'%20stroke='%23000'%20stroke-width='0.86'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='200.58'%20x2='250'%20y2='200.58'%20stroke='%23000'%20stroke-width='0.82'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='229.27'%20x2='250'%20y2='229.27'%20stroke='%23000'%20stroke-width='0.93'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='6.04'%20x2='250'%20y2='6.04'%20stroke='%23000'%20stroke-width='0.63'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='200.94'%20x2='250'%20y2='200.94'%20stroke='%23000'%20stroke-width='0.69'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='108.93'%20x2='250'%20y2='108.93'%20stroke='%23000'%20stroke-width='0.74'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='156.63'%20x2='250'%20y2='156.63'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='43.05'%20x2='250'%20y2='43.05'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='48.97'%20x2='250'%20y2='48.97'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='156.74'%20x2='250'%20y2='156.74'%20stroke='%23000'%20stroke-width='0.66'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='104.31'%20x2='250'%20y2='104.31'%20stroke='%23000'%20stroke-width='1.19'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='89.85'%20x2='250'%20y2='89.85'%20stroke='%23000'%20stroke-width='0.6'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='106.83'%20x2='250'%20y2='106.83'%20stroke='%23000'%20stroke-width='0.98'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='94.45'%20x2='250'%20y2='94.45'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='32.6'%20x2='250'%20y2='32.6'%20stroke='%23000'%20stroke-width='0.84'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='30.86'%20x2='250'%20y2='30.86'%20stroke='%23000'%20stroke-width='0.91'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='2.09'%20x2='250'%20y2='2.09'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='116.17'%20x2='250'%20y2='116.17'%20stroke='%23000'%20stroke-width='0.81'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='211.85'%20x2='250'%20y2='211.85'%20stroke='%23000'%20stroke-width='1.08'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='8.48'%20x2='250'%20y2='8.48'%20stroke='%23000'%20stroke-width='1.18'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='37.3'%20x2='250'%20y2='37.3'%20stroke='%23000'%20stroke-width='1'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='225.06'%20x2='250'%20y2='225.06'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='192.47'%20x2='250'%20y2='192.47'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='143.46'%20x2='250'%20y2='143.46'%20stroke='%23000'%20stroke-width='2.43'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='53.77'%20x2='250'%20y2='53.77'%20stroke='%23000'%20stroke-width='0.52'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='61.41'%20x2='250'%20y2='61.41'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='214.95'%20x2='250'%20y2='214.95'%20stroke='%23000'%20stroke-width='1.24'%20stroke-opacity='0.05'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
+  --tx-engawa: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.09%200.02'%20numOctaves='2'%20seed='61'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='3.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20y='0'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='28.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='27.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='0'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='44.88'%20y='0'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='46.08'%20y='0'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='30'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.03'/%3E%3Crect%20y='58.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='57.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='30'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='93.19'%20y='30'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='94.39'%20y='30'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='60'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='88.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='87.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='60'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='137.06'%20y='60'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='138.26'%20y='60'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='90'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='118.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='117.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='90'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='66.84'%20y='90'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='68.04'%20y='90'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='120'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='148.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='147.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='120'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='85.02'%20y='120'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='86.22'%20y='120'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='150'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='178.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='177.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='150'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='44.11'%20y='150'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='45.31'%20y='150'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='180'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='208.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='207.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='180'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='92.06'%20y='180'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='93.26'%20y='180'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='210'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='238.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='237.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='210'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='51.47'%20y='210'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='52.67'%20y='210'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='-10'%20y1='113.92'%20x2='250'%20y2='113.92'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='231.19'%20x2='250'%20y2='231.19'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='208.65'%20x2='250'%20y2='208.65'%20stroke='%23000'%20stroke-width='1.08'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='156.84'%20x2='250'%20y2='156.84'%20stroke='%23000'%20stroke-width='0.53'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='76.2'%20x2='250'%20y2='76.2'%20stroke='%23000'%20stroke-width='1.15'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='70.4'%20x2='250'%20y2='70.4'%20stroke='%23000'%20stroke-width='1.07'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='29.09'%20x2='250'%20y2='29.09'%20stroke='%23000'%20stroke-width='0.62'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='48.15'%20x2='250'%20y2='48.15'%20stroke='%23000'%20stroke-width='0.6'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='42.85'%20x2='250'%20y2='42.85'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='129.74'%20x2='250'%20y2='129.74'%20stroke='%23000'%20stroke-width='0.52'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='89.13'%20x2='250'%20y2='89.13'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='144.57'%20x2='250'%20y2='144.57'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='148.44'%20x2='250'%20y2='148.44'%20stroke='%23000'%20stroke-width='0.73'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='38.88'%20x2='250'%20y2='38.88'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='106.14'%20x2='250'%20y2='106.14'%20stroke='%23000'%20stroke-width='0.87'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='239.82'%20x2='250'%20y2='239.82'%20stroke='%23000'%20stroke-width='0.93'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='192.66'%20x2='250'%20y2='192.66'%20stroke='%23000'%20stroke-width='0.95'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='155.03'%20x2='250'%20y2='155.03'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='180.95'%20x2='250'%20y2='180.95'%20stroke='%23000'%20stroke-width='0.86'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='29.01'%20x2='250'%20y2='29.01'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-dougong: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='48'%20height='14'%20viewBox='0%200%2048%2014'%3E%3Cg%20fill='%23000'%3E%3Crect%20x='2'%20y='0'%20width='44'%20height='4'/%3E%3Crect%20x='8'%20y='4'%20width='32'%20height='4'/%3E%3Crect%20x='18'%20y='8'%20width='12'%20height='6'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-kusa: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='36'%20height='22'%20viewBox='0%200%2036%2022'%3E%3Cg%20stroke='%23000'%20stroke-width='1.7'%20stroke-linecap='round'%3E%3Cpath%20d='M0%2011%20C%206%204%2011%204%2018%2011%20C%2025%2018%2030%2018%2036%2011'%20fill='none'/%3E%3Cpath%20d='M18%2011%20c%203%20-2.6%206.6%20-1.4%206%202%20c%20-0.4%202.4%20-3.4%202.8%20-4.4%200.7'%20fill='none'/%3E%3Cpath%20d='M36%2011%20c%20-3%202.6%20-6.6%201.4%20-6%20-2%20c%200.4%20-2.4%203.4%20-2.8%204.4%20-0.7'%20fill='none'/%3E%3Cpath%20d='M9%207.6%20c%201.6%20-2%204%20-1.2%203.6%200.9'%20fill='none'/%3E%3Cpath%20d='M27%2014.4%20c%20-1.6%202%20-4%201.2%20-3.6%20-0.9'%20fill='none'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-eave-zh-night: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='38'%20viewBox='0%200%2056%2038'%3E%3Cdefs%3E%3ClinearGradient%20id='fg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23211f1c'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='rg'%20x1='0'%20y1='0'%20x2='1'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23121110'/%3E%3Cstop%20offset='0.5'%20stop-color='%232a2824'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='sg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23292824'/%3E%3Cstop%20offset='1'%20stop-color='%23181714'/%3E%3C/linearGradient%3E%3CradialGradient%20id='dg'%20cx='0.38'%20cy='0.30'%20r='0.9'%3E%3Cstop%20offset='0'%20stop-color='%232e2c27'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/radialGradient%3E%3Cfilter%20id='ds'%20x='-40%25'%20y='-40%25'%20width='180%25'%20height='180%25'%3E%3CfeDropShadow%20dx='0.4'%20dy='1.8'%20stdDeviation='1.3'%20flood-color='%23000'%20flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width='56'%20height='12.5'%20fill='url(%23fg)'/%3E%3Crect%20x='20'%20width='16'%20height='12.5'%20fill='url(%23rg)'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%230a0a09'%20stroke-width='6'%20stroke-opacity='0.35'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%232a2824'%20stroke-width='2.6'/%3E%3Crect%20y='11.6'%20width='56'%20height='1'%20fill='%23080807'/%3E%3Crect%20y='12.5'%20width='56'%20height='12'%20fill='url(%23sg)'/%3E%3Cg%20transform='translate(0,13.6)'%3E%3Cg%20stroke='%23454239'%20stroke-width='0.9'%20fill='none'%20stroke-linecap='round'%3E%3Cpath%20d='M%200%205%20C%207%202%2012%202%2014%205%20C%2016%208%2021%208%2028%205%20C%2035%202%2040%202%2042%205%20C%2044%208%2049%208%2056%205%20'/%3E%3Cpath%20d='M%2014%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2028%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3Cpath%20d='M%2042%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2056%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3C/g%3E%3C/g%3E%3Cpath%20d='M0%2024.5%20Q%2014%2027%2028%2024.5%20Q%2042%2027%2056%2024.5%20L%2056%2023.3%20L%200%2023.3%20Z'%20fill='%23080807'/%3E%3Cg%20filter='url(%23ds)'%3E%3Ccircle%20cx='28'%20cy='24'%20r='12.5'%20fill='url(%23dg)'/%3E%3C/g%3E%3Cpath%20d='M%2020.25%2016.25%20A%2011%2011%200%200%201%2034.88%2015.25'%20stroke='%235a564c'%20stroke-width='1.1'%20fill='none'%20stroke-linecap='round'%20stroke-opacity='0.55'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='11'%20fill='none'%20stroke='%234b4840'%20stroke-width='1'%20stroke-opacity='0.9'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='1.67'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2025.72%2021.11%20Q%2028%2019.67%2028%2016.78%20Q%2029.14%2020.39%2030.28%2021.11%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2028.43%2020.35%20Q%2031.06%2020.94%2033.11%2018.89%20Q%2031.36%2022.25%2031.65%2023.57%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2030.89%2021.72%20Q%2032.33%2024%2035.22%2024%20Q%2031.61%2025.14%2030.89%2026.28%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2031.65%2024.43%20Q%2031.06%2027.06%2033.11%2029.11%20Q%2029.75%2027.36%2028.43%2027.65%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2030.28%2026.89%20Q%2028%2028.33%2028%2031.22%20Q%2026.86%2027.61%2025.72%2026.89%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2027.57%2027.65%20Q%2024.94%2027.06%2022.89%2029.11%20Q%2024.64%2025.75%2024.35%2024.43%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2025.11%2026.28%20Q%2023.67%2024%2020.78%2024%20Q%2024.39%2022.86%2025.11%2021.72%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2024.35%2023.57%20Q%2024.94%2020.94%2022.89%2018.89%20Q%2026.25%2020.64%2027.57%2020.35%20Z'%20fill='%230a0a09'/%3E%3C/svg%3E\")"};
+  --tx-eave-zh-day: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='38'%20viewBox='0%200%2056%2038'%3E%3Cdefs%3E%3ClinearGradient%20id='fg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23605e58'/%3E%3Cstop%20offset='1'%20stop-color='%23454440'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='rg'%20x1='0'%20y1='0'%20x2='1'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23454440'/%3E%3Cstop%20offset='0.5'%20stop-color='%236e6c65'/%3E%3Cstop%20offset='1'%20stop-color='%23454440'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='sg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%236e6c66'/%3E%3Cstop%20offset='1'%20stop-color='%2357554f'/%3E%3C/linearGradient%3E%3CradialGradient%20id='dg'%20cx='0.38'%20cy='0.30'%20r='0.9'%3E%3Cstop%20offset='0'%20stop-color='%23716e67'/%3E%3Cstop%20offset='1'%20stop-color='%23434140'/%3E%3C/radialGradient%3E%3Cfilter%20id='ds'%20x='-40%25'%20y='-40%25'%20width='180%25'%20height='180%25'%3E%3CfeDropShadow%20dx='0.4'%20dy='1.8'%20stdDeviation='1.3'%20flood-color='%23000'%20flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width='56'%20height='12.5'%20fill='url(%23fg)'/%3E%3Crect%20x='20'%20width='16'%20height='12.5'%20fill='url(%23rg)'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%2331302d'%20stroke-width='6'%20stroke-opacity='0.35'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%236e6c65'%20stroke-width='2.6'/%3E%3Crect%20y='11.6'%20width='56'%20height='1'%20fill='%2333312e'/%3E%3Crect%20y='12.5'%20width='56'%20height='12'%20fill='url(%23sg)'/%3E%3Cg%20transform='translate(0,13.6)'%3E%3Cg%20stroke='%2396938b'%20stroke-width='0.9'%20fill='none'%20stroke-linecap='round'%3E%3Cpath%20d='M%200%205%20C%207%202%2012%202%2014%205%20C%2016%208%2021%208%2028%205%20C%2035%202%2040%202%2042%205%20C%2044%208%2049%208%2056%205%20'/%3E%3Cpath%20d='M%2014%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2028%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3Cpath%20d='M%2042%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2056%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3C/g%3E%3C/g%3E%3Cpath%20d='M0%2024.5%20Q%2014%2027%2028%2024.5%20Q%2042%2027%2056%2024.5%20L%2056%2023.3%20L%200%2023.3%20Z'%20fill='%2333312e'/%3E%3Cg%20filter='url(%23ds)'%3E%3Ccircle%20cx='28'%20cy='24'%20r='12.5'%20fill='url(%23dg)'/%3E%3C/g%3E%3Cpath%20d='M%2020.25%2016.25%20A%2011%2011%200%200%201%2034.88%2015.25'%20stroke='%23b6b3aa'%20stroke-width='1.1'%20fill='none'%20stroke-linecap='round'%20stroke-opacity='0.55'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='11'%20fill='none'%20stroke='%238f8c84'%20stroke-width='1'%20stroke-opacity='0.9'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='1.67'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2025.72%2021.11%20Q%2028%2019.67%2028%2016.78%20Q%2029.14%2020.39%2030.28%2021.11%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2028.43%2020.35%20Q%2031.06%2020.94%2033.11%2018.89%20Q%2031.36%2022.25%2031.65%2023.57%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2030.89%2021.72%20Q%2032.33%2024%2035.22%2024%20Q%2031.61%2025.14%2030.89%2026.28%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2031.65%2024.43%20Q%2031.06%2027.06%2033.11%2029.11%20Q%2029.75%2027.36%2028.43%2027.65%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2030.28%2026.89%20Q%2028%2028.33%2028%2031.22%20Q%2026.86%2027.61%2025.72%2026.89%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2027.57%2027.65%20Q%2024.94%2027.06%2022.89%2029.11%20Q%2024.64%2025.75%2024.35%2024.43%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2025.11%2026.28%20Q%2023.67%2024%2020.78%2024%20Q%2024.39%2022.86%2025.11%2021.72%20Z'%20fill='%232e2d2a'/%3E%3Cpath%20d='M%2024.35%2023.57%20Q%2024.94%2020.94%2022.89%2018.89%20Q%2026.25%2020.64%2027.57%2020.35%20Z'%20fill='%232e2d2a'/%3E%3C/svg%3E\")"};
+  --tx-lacquer-v: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%3E%3Cdefs%3E%3Cfilter%20id='d'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.008%200.06'%20numOctaves='2'%20seed='9'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='7'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='0.04'%20y1='-20'%20x2='0.04'%20y2='220'%20stroke='%23000'%20stroke-width='4.39'%20stroke-opacity='0.03'/%3E%3Cline%20x1='4.9'%20y1='-20'%20x2='4.9'%20y2='220'%20stroke='%23000'%20stroke-width='4.25'%20stroke-opacity='0.04'/%3E%3Cline%20x1='126.96'%20y1='-20'%20x2='126.96'%20y2='220'%20stroke='%23000'%20stroke-width='3.91'%20stroke-opacity='0.03'/%3E%3Cline%20x1='138.32'%20y1='-20'%20x2='138.32'%20y2='220'%20stroke='%23000'%20stroke-width='4.5'%20stroke-opacity='0.02'/%3E%3Cline%20x1='48.01'%20y1='-20'%20x2='48.01'%20y2='220'%20stroke='%23000'%20stroke-width='3.14'%20stroke-opacity='0.02'/%3E%3Cline%20x1='121.08'%20y1='-20'%20x2='121.08'%20y2='220'%20stroke='%23000'%20stroke-width='4.71'%20stroke-opacity='0.04'/%3E%3Cline%20x1='107.18'%20y1='-20'%20x2='107.18'%20y2='220'%20stroke='%23000'%20stroke-width='4.22'%20stroke-opacity='0.04'/%3E%3Cline%20x1='166.89'%20y1='-20'%20x2='166.89'%20y2='220'%20stroke='%23000'%20stroke-width='2.65'%20stroke-opacity='0.04'/%3E%3Cline%20x1='22.76'%20y1='-20'%20x2='22.76'%20y2='220'%20stroke='%23000'%20stroke-width='4.1'%20stroke-opacity='0.03'/%3E%3Cline%20x1='144.38'%20y1='-20'%20x2='144.38'%20y2='220'%20stroke='%23000'%20stroke-width='2.82'%20stroke-opacity='0.03'/%3E%3Cline%20x1='85.24'%20y1='-20'%20x2='85.24'%20y2='220'%20stroke='%23000'%20stroke-width='4.3'%20stroke-opacity='0.04'/%3E%3Cline%20x1='126.81'%20y1='-20'%20x2='126.81'%20y2='220'%20stroke='%23000'%20stroke-width='3.85'%20stroke-opacity='0.02'/%3E%3Cline%20x1='40.45'%20y1='-20'%20x2='40.45'%20y2='220'%20stroke='%23000'%20stroke-width='4.74'%20stroke-opacity='0.02'/%3E%3Cline%20x1='168.53'%20y1='-20'%20x2='168.53'%20y2='220'%20stroke='%23000'%20stroke-width='3.66'%20stroke-opacity='0.04'/%3E%3Cline%20x1='79.19'%20y1='-20'%20x2='79.19'%20y2='220'%20stroke='%23000'%20stroke-width='3.97'%20stroke-opacity='0.03'/%3E%3Cline%20x1='191.12'%20y1='-20'%20x2='191.12'%20y2='220'%20stroke='%23000'%20stroke-width='4.08'%20stroke-opacity='0.04'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-washi: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='320'%20height='320'%3E%3Cfilter%20id='w'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.55'%20numOctaves='2'%20seed='7'/%3E%3CfeColorMatrix%20values='0%200%200%200%200.40%200%200%200%200%200.34%200%200%200%200%200.24%200%200%200%200.042%200'/%3E%3C/filter%3E%3Cfilter%20id='m'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.035'%20numOctaves='3'%20seed='4'/%3E%3CfeColorMatrix%20values='0%200%200%200%200.40%200%200%200%200%200.35%200%200%200%200%200.25%200%200%200%200.030%200'/%3E%3C/filter%3E%3Crect%20width='320'%20height='320'%20filter='url(%23w)'/%3E%3Crect%20width='320'%20height='320'%20filter='url(%23m)'/%3E%3Cpath%20d='M%20-19.82%20305.84%20C%20-18.28%20331.64%20-16.58%20348.45%20-8.27%20375.77'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.53'%20fill='none'/%3E%3Cpath%20d='M%20282.25%20125.21%20C%20295.25%20132.66%20326.46%20126.2%20341.34%20131.98'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.86'%20fill='none'/%3E%3Cpath%20d='M%20214.07%206.07%20C%20235.61%203.68%20260.38%20-10.72%20274.97%20-18.59'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.54'%20fill='none'/%3E%3Cpath%20d='M%20266.46%2030.36%20C%20278.06%2029.11%20282.67%2044.94%20299.26%2042.34'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.69'%20fill='none'/%3E%3Cpath%20d='M%2090.43%20248.15%20C%20101.38%20271.88%2096.72%20285.02%20105.99%20307.13'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.5'%20fill='none'/%3E%3Cpath%20d='M%2056.51%2029.89%20C%2067.57%2039.77%2083.69%2046.95%20104.02%2050.23'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.84'%20fill='none'/%3E%3Cpath%20d='M%20307.19%204.5%20C%20320.45%205.58%20330%208.08%20339.68%2016.65'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.57'%20fill='none'/%3E%3Cpath%20d='M%20308.1%20124.75%20C%20328.39%20108.98%20349.15%20103.06%20370.51%2094.34'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.73'%20fill='none'/%3E%3Cpath%20d='M%20140.06%20276.91%20C%20150.31%20279.58%20168.24%20276.06%20185.89%20283.37'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.91'%20fill='none'/%3E%3Cpath%20d='M%20166.59%20280.65%20C%20179.65%20280.51%20201.28%20270.34%20213.16%20257.79'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.82'%20fill='none'/%3E%3Cpath%20d='M%2036.74%2037.89%20C%2060.99%2036.77%2073.85%2023.35%2098.67%2014.87'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.93'%20fill='none'/%3E%3Cpath%20d='M%20317.96%20132.63%20C%20335.56%20124.7%20350.02%20117.71%20355.16%20114.55'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.61'%20fill='none'/%3E%3Cpath%20d='M%20302.8%20126%20C%20324.38%20115.26%20334%20111.7%20351.95%20112.42'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.73'%20fill='none'/%3E%3Cpath%20d='M%20228.61%20163.1%20C%20247.98%20171.23%20280.82%20173.76%20293.94%20185.72'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.77'%20fill='none'/%3E%3Cpath%20d='M%20137.66%2058.39%20C%20147.72%2061.81%20142.52%2078.39%20148.75%2088.4'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.52'%20fill='none'/%3E%3Cpath%20d='M%20193.41%2037.62%20C%20206.76%2034.81%20222.56%2031.29%20228.47%2032.57'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.95'%20fill='none'/%3E%3Cpath%20d='M%2051.33%20188.65%20C%2054.69%20200.2%2065.18%20207.54%2062.97%20219.11'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.85'%20fill='none'/%3E%3Cpath%20d='M%2026.84%2074.22%20C%2038.43%2077.42%2054.69%2076.51%2061.82%2077.07'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.59'%20fill='none'/%3E%3Cpath%20d='M%20245.38%20110.88%20C%20263.79%20102.89%20287.04%2095.71%20313.55%2092.6'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.9'%20fill='none'/%3E%3Cpath%20d='M%2015.1%20290.62%20C%2024.46%20301.18%2034.82%20331.08%2053.04%20347.45'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.53'%20fill='none'/%3E%3Cpath%20d='M%20247.1%20219.1%20C%20275.29%20214.92%20292.66%20208.62%20321.33%20197.37'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.95'%20fill='none'/%3E%3Cpath%20d='M%2064.91%20226.8%20C%2084.35%20233.47%2098.35%20244.37%20108.57%20245.05'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.9'%20fill='none'/%3E%3Cpath%20d='M%20302.11%20275.68%20C%20321.89%20259.73%20349.97%20253.13%20368.57%20245.32'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.61'%20fill='none'/%3E%3Cpath%20d='M%2043.71%20209.61%20C%2051.64%20202.51%2071.3%20208.7%2075.2%20203.66'%20stroke='%23000'%20stroke-opacity='0.05'%20stroke-width='0.78'%20fill='none'/%3E%3Cpath%20d='M%20116.19%2020.14%20C%20110.27%2031.9%20106.43%2068.32%20110.83%2081.69'%20stroke='%23000'%20stroke-opacity='0.04'%20stroke-width='0.67'%20fill='none'/%3E%3Cpath%20d='M%20136.39%20293.89%20C%20155.22%20296.86%20177.92%20314.94%20202.25%20326.8'%20stroke='%23000'%20stroke-opacity='0.03'%20stroke-width='0.76'%20fill='none'/%3E%3C/svg%3E\")"};
+  --tx-kinpaku: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='282'%20height='282'%3E%3Cfilter%20id='k'%3E%3CfeTurbulence%20type='turbulence'%20baseFrequency='0.9'%20numOctaves='2'%20seed='3'/%3E%3CfeColorMatrix%20values='0%200%200%200%201%200%200%200%200%200.84%200%200%200%200%200.42%200%200%200%200.085%200'/%3E%3C/filter%3E%3Cfilter%20id='c'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.16'%20numOctaves='3'%20seed='12'/%3E%3CfeColorMatrix%20values='0%200%200%200%201%200%200%200%200%200.95%200%200%200%200%200.75%200%200%200%200.05%200'/%3E%3C/filter%3E%3Crect%20width='282'%20height='282'%20filter='url(%23k)'/%3E%3Crect%20width='282'%20height='282'%20filter='url(%23c)'/%3E%3Crect%20x='0'%20y='0'%20width='94'%20height='94'%20fill='%231a3a1a'%20fill-opacity='0'/%3E%3Crect%20x='94'%20y='0'%20width='94'%20height='94'%20fill='%231a3a1a'%20fill-opacity='0'/%3E%3Crect%20x='188'%20y='0'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.05'/%3E%3Crect%20x='0'%20y='94'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.03'/%3E%3Crect%20x='94'%20y='94'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20x='188'%20y='94'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.03'/%3E%3Crect%20x='0'%20y='188'%20width='94'%20height='94'%20fill='%231a3a1a'%20fill-opacity='0.05'/%3E%3Crect%20x='94'%20y='188'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.06'/%3E%3Crect%20x='188'%20y='188'%20width='94'%20height='94'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Cpath%20d='M0%200V282M0%200H282'%20stroke='%23000'%20stroke-opacity='0.08'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M0.8%200V282M0%200.8H282'%20stroke='%23fff'%20stroke-opacity='0.06'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M94%200V282M0%2094H282'%20stroke='%23000'%20stroke-opacity='0.08'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M94.8%200V282M0%2094.8H282'%20stroke='%23fff'%20stroke-opacity='0.06'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M188%200V282M0%20188H282'%20stroke='%23000'%20stroke-opacity='0.08'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M188.8%200V282M0%20188.8H282'%20stroke='%23fff'%20stroke-opacity='0.06'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M282%200V282M0%20282H282'%20stroke='%23000'%20stroke-opacity='0.08'%20stroke-width='0.8'%20fill='none'/%3E%3Cpath%20d='M282.8%200V282M0%20282.8H282'%20stroke='%23fff'%20stroke-opacity='0.06'%20stroke-width='0.8'%20fill='none'/%3E%3C/svg%3E\")"};
+  --tx-seal: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%3E%3Cpath%20d='M2%203.2%20Q2%202%203.2%202%20L26.6%202.2%20Q28%202.2%2027.9%203.6%20L27.8%2026.8%20Q27.8%2028%2026.5%2027.9%20L3.4%2027.7%20Q2.1%2027.7%202.2%2026.4%20Z'%20fill='%23c93a20'/%3E%3Cpath%20d='M2%203.2%20L4.5%202.05%20M27.9%2025%20L27.8%2027.9%20L25%2027.85'%20stroke='%23a52c15'%20stroke-width='0.9'%20fill='none'/%3E%3Ctext%20x='15'%20y='21.8'%20font-family='serif'%20font-size='18'%20font-weight='700'%20fill='%23f6ede0'%20text-anchor='middle'%3E%E6%9B%BE%3C/text%3E%3C/svg%3E\")"};
 }
 
 /* --------------------------------------------------------------------------
-   2. Base
+   5. Base
    -------------------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -163,188 +223,169 @@ body,
 .site-body {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 1.06rem;
-  line-height: 1.72;
+  font-size: 1.05rem;
+  line-height: 1.68;
   color: var(--ink);
-  background-color: var(--bg);
+  background-color: var(--ground);
   background-image: var(--tx-washi);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  transition: background-color var(--t-theme) var(--ease), color var(--t-theme) var(--ease);
-}
-
-.container {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 2.2rem);
 }
 
 img { max-width: 100%; height: auto; }
 
-::selection { background: var(--gold-soft); color: var(--ink); }
+::selection { background: var(--gold-quiet); color: var(--ink-strong); }
 
 a {
-  color: var(--accent);
+  color: var(--link);
   text-decoration-line: underline;
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-  text-decoration-color: var(--gold-soft);
-  transition: color var(--t-fast) var(--ease), text-decoration-color var(--t-fast) var(--ease);
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--gold-quiet);
 }
-a:hover { color: var(--accent-2); text-decoration-color: currentColor; }
+a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
 
 :focus-visible {
-  outline: 2px solid var(--accent-2);
+  outline: 2px solid var(--link-hover);
   outline-offset: 3px;
-  border-radius: 2px;
 }
-/* on the dark beams, shrine-red is invisible — focus in gilded ink */
 .site-header :focus-visible,
-.site-footer :focus-visible {
-  outline-color: var(--gold-on-wood);
-}
+.site-footer :focus-visible { outline-color: var(--plaque); }
 
 /* --------------------------------------------------------------------------
-   3. Headings
+   6. Type
    -------------------------------------------------------------------------- */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--ink);
-  letter-spacing: 0.012em;
+  line-height: 1.28;
+  color: var(--ink-strong);
   margin: 0 0 0.6em;
 }
+h1 { font-size: clamp(1.9rem, 3.4vw, 2.4rem); font-weight: 600; letter-spacing: 0.01em; }
+h2 { font-size: clamp(1.4rem, 2.5vw, 1.72rem); font-weight: 600; letter-spacing: 0.06em; }
+h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: 0.02em; }
+.section h3:not(:first-child),
+.post__content h3:not(:first-child) { margin-top: 1.5em; }
+.section h4:not(:first-child),
+.post__content h4:not(:first-child) { margin-top: 1.8em; }
 
-h1 { font-size: clamp(1.9rem, 3.6vw, 2.5rem); }
-h2 { font-size: clamp(1.35rem, 2.6vw, 1.7rem); }
-h3 { font-size: 1.24rem; font-weight: 700; }
 h4 {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-variant-caps: all-small-caps;
-  letter-spacing: 0.16em;
-  color: var(--accent);
-}
-
-/* panel headings: bengara kamon tick + kumiko rail.
-   NOTE: these h2 are flex rows — keep their content a single text node
-   (no inline tags), or flex items lose their spaces. Post headings
-   (.post__content h2) stay plain for exactly that reason. */
-.section > h2,
-.list-card > h2 {
-  display: flex;
-  align-items: center;
-  gap: 0.55em;
-  letter-spacing: 0.14em;
-  font-variant-caps: all-small-caps;
+  letter-spacing: 0.18em;
+  color: var(--link);
   font-weight: 700;
 }
-.section > h2::before,
-.list-card > h2::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 0.5em; height: 0.5em;
-  background: var(--accent-2);
-  transform: rotate(45deg);
-  box-shadow: 0 0 0 1px var(--surface), 0 0 0 2px var(--gold-soft);
-}
+
+/* bay headings: an ink line ends short — the emptiness is the ornament */
 .section > h2::after,
 .list-card > h2::after {
   content: "";
-  flex: 1 1 auto;
-  height: 9px;
-  margin-left: 0.4em;
-  -webkit-mask-image: var(--tx-kumiko);
-  mask-image: var(--tx-kumiko);
-  -webkit-mask-repeat: repeat-x;
-  mask-repeat: repeat-x;
-  -webkit-mask-position: left center;
-  mask-position: left center;
-  background: var(--lattice);
-  opacity: 0.65;
+  display: block;
+  width: 5.2em;
+  margin-top: 0.42em;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+  height: 4px;
 }
 
 /* --------------------------------------------------------------------------
-   4. Header — a beam under a kawara eave
+   7. Header — beam under a kawara eave
    -------------------------------------------------------------------------- */
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background-color: var(--beam);
-  background-image: var(--tx-wood), linear-gradient(180deg, var(--beam-hi) 0%, var(--beam) 38%, var(--beam) 100%);
+  position: relative;
+  background-color: var(--beam-mid);
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 30px, rgba(0, 0, 0, 0.06) 56px, rgba(0, 0, 0, 0) 76px),
+    linear-gradient(180deg,
+      transparent calc(100% - 5px),
+      rgba(0, 0, 0, 0.22) calc(100% - 5px) calc(100% - 2.5px), rgba(0, 0, 0, 0.45) calc(100% - 2.5px)),
+    var(--tx-grain-h);
   color: var(--beam-ink);
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.22);
-  transition: background-color var(--t-theme) var(--ease);
+  padding-top: 34px; /* room for the eave */
+  box-shadow: inset 0 -3px 6px -2px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.28);
 }
-.site-header::after {
-  content: "";
+
+.eave {
   position: absolute;
-  left: 0; right: 0;
-  bottom: -21px;
-  height: 22px;
+  top: 0; left: 0; right: 0;
+  height: 38px;
+  background-image: var(--eave);
+  background-repeat: repeat-x;
+  background-size: 56px 38px;
   pointer-events: none;
-  -webkit-mask-image: var(--tx-kawara);
-  mask-image: var(--tx-kawara);
-  -webkit-mask-repeat: repeat-x;
-  mask-repeat: repeat-x;
-  -webkit-mask-size: 56px 22px;
-  mask-size: 56px 22px;
-  background: var(--beam);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.22));
-  transition: background var(--t-theme) var(--ease);
+  z-index: 2;
 }
-html[data-time="night"] .site-header { border-bottom: 1px solid var(--gold-soft); }
+/* dusk: warm rim light along the tiles */
+html[data-time="dusk"] .eave::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(214, 106, 53, 0.28), rgba(214, 106, 53, 0) 70%);
+}
 
 .site-header .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.4rem;
-  min-height: var(--beam-h);
   flex-wrap: wrap;
-  padding-top: 0.55rem;
-  padding-bottom: 0.55rem;
+  min-height: 4.1rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.65rem;
 }
 
-.brand { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: clamp(0.8rem, 3vw, 2rem);
+  padding-right: clamp(0.8rem, 3vw, 2rem);
+}
+
+.brand { display: flex; flex-direction: column; text-decoration: none; color: inherit; gap: 0.08em; }
+/* writing on wood is carved, not printed */
+.brand__title, .brand__subtitle, .site-nav a, .nav-toggle,
+.lang-toggle, .time-toggle, .lang-option, .site-footer p {
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.72), 0 1px 0 rgba(255, 255, 255, 0.13);
+}
 .brand__title {
   font-family: var(--font-display);
-  font-size: 1.32rem;
+  font-size: 1.34rem;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.09em;
   color: var(--beam-ink);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
 }
 .brand__subtitle {
-  font-size: 0.76rem;
-  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--beam-ink) 78%, transparent);
+  color: var(--beam-ink-dim);
 }
-.brand:hover .brand__title { color: var(--gold-on-wood); transition: color var(--t-fast) var(--ease); }
+.brand:hover .brand__title { color: var(--plaque); }
 
 .site-nav ul {
   display: flex;
   align-items: center;
-  gap: clamp(0.6rem, 2.2vw, 1.5rem);
+  gap: clamp(0.35rem, 1.6vw, 0.85rem);
   list-style: none;
   margin: 0; padding: 0;
 }
 .site-nav a {
   display: inline-block;
-  padding: 0.5rem 0.15rem;
-  font-size: 0.86rem;
+  padding: 0.42rem 0.62rem;
+  font-size: 0.85rem;
   font-variant-caps: all-small-caps;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-decoration: none;
   color: var(--beam-ink);
-  border-bottom: 2px solid transparent;
+  border: 1px solid transparent;
 }
-.site-nav a:hover { color: var(--gold-on-wood); }
+.site-nav a:hover { color: var(--plaque); }
+/* active page hangs as a small wooden name-plaque (額) on the beam */
 .site-nav li.active a {
-  color: var(--gold-on-wood);
-  border-bottom-color: var(--accent-2);
+  color: var(--plaque);
+  border-color: rgba(0, 0, 0, 0.35);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.14));
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .nav-toggle {
@@ -353,201 +394,318 @@ html[data-time="night"] .site-header { border-bottom: 1px solid var(--gold-soft)
   font-size: 0.82rem;
   letter-spacing: 0.2em;
   font-variant-caps: all-small-caps;
-  color: var(--beam-ink);
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--beam-ink) 45%, transparent);
-  border-radius: var(--radius);
-  padding: 0.4rem 0.9rem;
   cursor: pointer;
 }
 
 /* --------------------------------------------------------------------------
-   5. Main
+   8. The timber frame — posts, rails, bays
    -------------------------------------------------------------------------- */
-.site-main { padding: clamp(2.4rem, 5vw, 3.8rem) 0 clamp(3rem, 7vw, 5rem); }
+.site-main { padding: 0; }
 
-/* --------------------------------------------------------------------------
-   6. Panels — quiet washi cards
-   -------------------------------------------------------------------------- */
+.frame {
+  position: relative;
+  padding-left: calc(var(--hashira) + var(--bay-pad-x));
+  padding-right: calc(var(--hashira) + var(--bay-pad-x));
+  padding-bottom: clamp(1.6rem, 4vw, 2.6rem);
+  background-color: var(--bay);
+  background-image:
+    var(--paper-glow),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.045), transparent 30px),
+    linear-gradient(270deg, rgba(0, 0, 0, 0.045), transparent 30px),
+    var(--tx-washi);
+}
+/* hashira — the two posts, full page height, vertical grain */
+.frame::before,
+.frame::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: var(--hashira);
+  background-color: var(--post-mid);
+  background-image:
+    linear-gradient(90deg,
+      var(--arris-lit) 0 2px, var(--arris-lit2) 2px 4px,
+      transparent 4px calc(100% - 4px),
+      var(--arris-sh1) calc(100% - 4px) calc(100% - 2px), var(--arris-sh2) calc(100% - 2px)),
+    var(--tx-grain-v);
+  z-index: 3;
+}
+.frame::before { left: 0; box-shadow: 4px 0 10px -3px rgba(0, 0, 0, 0.28); }
+.frame::after { right: 0; box-shadow: -4px 0 10px -3px rgba(0, 0, 0, 0.28); }
+
+/* ranma — the single ornament zone: asanoha transom under the beam */
+.ranma {
+  height: 30px;
+  background-color: var(--lattice);
+  -webkit-mask-image: var(--tx-asanoha);
+  mask-image: var(--tx-asanoha);
+  -webkit-mask-size: 34px 58.89px;
+  mask-size: 34px 58.89px;
+  -webkit-mask-position: 50% -44px;
+  mask-position: 50% -44px;
+  opacity: 0.8;
+}
+/* kamoi bar capturing the ranma below (the beam above already frames it) */
+.ranma-wrap {
+  margin: 0 calc(-1 * var(--bay-pad-x));
+  border-bottom: var(--rail-minor) solid var(--rail-mid);
+  box-shadow: 0 2px 5px var(--toko-shadow);
+}
+
+/* bays: no cards, no borders — sections are wall areas between rails */
+.hero,
 .section,
 .list-card {
   position: relative;
-  background-color: var(--surface);
-  background-image: var(--tx-washi);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-1), var(--panel-glow);
-  padding: clamp(1.3rem, 3.4vw, 2.2rem) clamp(1.2rem, 3.4vw, 2.4rem);
-  margin: 0 0 clamp(1.6rem, 3.5vw, 2.4rem);
-  transition: background-color var(--t-theme) var(--ease);
+  padding: var(--bay-pad-y) 0;
+  margin: 0;
 }
+.section.is-collapsed,
+.list-card.is-collapsed { padding-top: 1.3rem; padding-bottom: 1.3rem; }
+.section.is-collapsed > h2,
+.list-card.is-collapsed > h2 { margin-bottom: 0; }
+.frame > .section:last-child,
+.frame > .list-card:last-child { padding-bottom: 1.1rem; }
+
+/* nageshi — rails between bays, running continuously over the posts */
+.frame > * + .section::before,
+.frame > * + .list-card::before,
+.frame > * + .hero::before {
+  content: "";
+  position: absolute;
+  top: calc(-0.5 * var(--nageshi));
+  left: calc(-1 * (var(--hashira) + var(--bay-pad-x)));
+  right: calc(-1 * (var(--hashira) + var(--bay-pad-x)));
+  height: var(--nageshi);
+  background-color: var(--rail-mid);
+  background-image:
+    linear-gradient(180deg,
+      var(--arris-lit) 0 2px, var(--arris-lit2) 2px 3.5px,
+      transparent 3.5px calc(100% - 4px),
+      var(--arris-sh1) calc(100% - 4px) calc(100% - 2px), var(--arris-sh2) calc(100% - 2px)),
+    var(--tx-grain-h);
+  box-shadow: 0 4px 9px -1px rgba(0, 0, 0, 0.24);
+  z-index: 4;
+}
+/* the ranma is not a bay: the first real bay after it needs no rail */
+.frame > .ranma-wrap + .hero::before,
+.frame > .ranma-wrap + .section::before,
+.frame > .ranma-wrap + .list-card::before { display: none; }
 
 .section > h2:first-child,
-.list-card > h2:first-child { margin-top: 0.2rem; }
+.list-card > h2:first-child { margin-top: 0; }
 
-.list-card ul { margin: 0.2rem 0 0.6rem; padding-left: 1.15rem; }
+/* prose measure: bays are wide, text is not */
+.section p, .section ul, .section ol, .section dl,
+.section h3, .section h4, .section blockquote { max-width: 72ch; }
+
+.list-card ul { margin: 0.2rem 0 0.6rem; padding-left: 1.2rem; }
 .list-card li { margin: 0.34em 0; }
-.list-card li::marker { color: var(--accent-2); }
-
-.section ol { padding-left: 1.5rem; }
+.list-card li::marker { color: var(--link); }
+.section ol { padding-left: 1.6rem; }
 .section ol li { margin: 0.4em 0; }
-.section ol li::marker { color: var(--accent); font-weight: 600; }
+.section ol li::marker { color: var(--link); font-weight: 600; }
 
-.hero__note { color: var(--faint); font-size: 0.88rem; font-style: italic; }
+.hero__note { color: var(--muted); font-size: 0.9rem; font-style: italic; }
 
 /* --------------------------------------------------------------------------
-   7. Hero — the byōbu
+   9. Hero — the tokonoma bay: text beside a hanging scroll on gold
    -------------------------------------------------------------------------- */
 .hero {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(240px, 1fr);
-  gap: clamp(1.4rem, 4vw, 2.6rem);
+  grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr);
+  gap: clamp(1.6rem, 4vw, 3rem);
   align-items: start;
-  background-color: var(--surface);
-  background-image:
-    repeating-linear-gradient(90deg,
-      transparent 0 168px,
-      rgba(0, 0, 0, 0.026) 168px 175px,
-      var(--line) 175px 176px),
-    var(--tx-gold),
-    var(--tx-washi);
-  background-size: auto, 160px 160px, 240px 240px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-2), var(--panel-glow);
-  padding: clamp(1.4rem, 4vw, 2.6rem);
-  margin-bottom: clamp(1.8rem, 4vw, 2.6rem);
-  overflow: hidden;
 }
-html[data-time="day"] .hero { background-blend-mode: normal, soft-light, normal; }
-html[data-time="dusk"] .hero,
-html[data-time="night"] .hero { background-blend-mode: normal, overlay, normal; }
-
-/* byōbu brass rails */
-.hero::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--gold) 0%, color-mix(in srgb, var(--gold) 55%, var(--surface)) 30%, var(--gold) 60%, color-mix(in srgb, var(--gold) 60%, var(--surface)) 100%);
-  opacity: 0.7;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 55%, var(--surface)) 50%, var(--gold));
-  opacity: 0.45;
-}
-
+.hero__text { padding-top: 0.4rem; }
 .hero__text p { margin: 0 0 0.9em; }
 
-/* portrait in a tokonoma frame */
+/* the alcove: bounded kinpaku ground, recessed, toko-gamachi sill below */
 .hero__image {
   margin: 0;
-  align-self: stretch;
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(1.2rem, 2.6vw, 2rem) clamp(1rem, 2.2vw, 1.7rem) 1rem;
+  background-color: var(--gold-ground);
+  background-image: var(--tx-kinpaku);
+  border-left: 5px solid var(--rail-mid);
+  border-right: 11px solid var(--rail-mid);   /* the differentiated post side */
+  border-top: 14px solid var(--rail-lo);      /* otoshigake band */
+  border-bottom: 16px solid var(--post-lo);   /* toko-gamachi: heaviest member */
+  box-shadow: inset 0 6px 14px var(--toko-shadow), inset 0 -4px 10px var(--toko-shadow),
+    inset 3px 0 8px -3px var(--toko-shadow), inset -3px 0 8px -3px var(--toko-shadow);
 }
+
+/* kakejiku: rod above, mounting silk with shippō weave, rollers below */
 .hero__image img {
-  width: 100%;
-  object-fit: cover;
-  border-radius: 2px;
+  display: block;
+  width: min(100%, 300px);
   border: 1px solid var(--line-strong);
-  box-shadow:
-    0 0 0 6px var(--surface),
-    0 0 0 7px var(--line-strong),
-    0 0 0 12px color-mix(in srgb, var(--beam) 16%, var(--surface)),
-    var(--shadow-1);
   filter: var(--img-filter);
-  transition: filter var(--t-theme) var(--ease);
+  position: relative;
+  z-index: 1;
+  /* ichimonji — gold-figured strips above and below the picture */
+  box-shadow: 0 -8px 0 var(--gold-quiet), 0 8px 0 var(--gold-quiet);
+  margin: 8px 0;
 }
+.hero__scroll {
+  position: relative;
+  padding: 44px 14px 22px;   /* ten roughly twice chi, as a mounter would cut */
+  background-color: var(--panel);
+  /* fūtai — the two brocade strips hanging from the upper mounting */
+  background-image:
+    linear-gradient(var(--lattice), var(--lattice)),
+    linear-gradient(var(--lattice), var(--lattice)),
+    var(--tx-washi);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: 7px 40px, 7px 40px, auto;
+  background-position: 26% 0, 74% 0, 0 0;
+  box-shadow: 0 6px 18px -2px var(--toko-shadow), 0 2px 5px var(--toko-shadow);
+}
+.hero__scroll::before {
+  /* hassō — the hanging rod */
+  content: "";
+  position: absolute;
+  top: -5px; left: -8px; right: -8px;
+  height: 7px;
+  background: linear-gradient(180deg, var(--post-hi), var(--post-lo));
+  border-radius: 3px;
+}
+.hero__scroll::after {
+  /* jiku — the roller with end knobs */
+  content: "";
+  position: absolute;
+  bottom: -7px; left: -12px; right: -12px;
+  height: 11px;
+  background:
+    radial-gradient(circle 5px at 6px 50%, var(--post-hi) 4px, var(--post-lo) 5px, transparent 6px),
+    radial-gradient(circle 5px at calc(100% - 6px) 50%, var(--post-hi) 4px, var(--post-lo) 5px, transparent 6px),
+    linear-gradient(180deg, var(--post-hi), var(--post-mid) 45%, var(--post-lo)) 12px 0 / calc(100% - 24px) 100% no-repeat;
+  border-radius: 5px;
+}
+/* mounting brocade: shippō weave, barely there */
+.hero__scroll .hero__mount {
+  position: absolute; inset: 0;
+  background-color: var(--lattice);
+  -webkit-mask-image: var(--tx-shippo);
+  mask-image: var(--tx-shippo);
+  -webkit-mask-size: 44px 44px;
+  mask-size: 44px 44px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* caption on a washi title-slip, never directly on the gold */
 .hero__image figcaption {
-  margin-top: 0.9rem;
-  font-size: 0.82rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
   font-style: italic;
-  color: var(--faint);
-  text-align: right;
+  color: var(--muted);
+  text-align: center;
+  z-index: 1;
+  background-color: var(--bay);
+  background-image: var(--tx-washi);
+  border: 1px solid var(--line);
+  padding: 0.32rem 0.85rem;
+  box-shadow: 0 1px 4px var(--toko-shadow);
 }
-/* the owner's name-seal, as on a painting — decorative, empty alt */
-.hero__image figcaption::before {
+/* the seal follows the inscription, as on a painting */
+.hero__image figcaption::after {
   content: var(--tx-seal) / "";
   display: inline-block;
-  vertical-align: -0.35em;
-  margin-right: 0.5em;
+  vertical-align: -0.4em;
+  margin-left: 0.55em;
+}
+/* kakehimo — the cord the scroll actually hangs from */
+.hero__image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: clamp(1.2rem, 2.6vw, 2rem);
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--rail-lo), var(--post-lo));
 }
 
 /* --------------------------------------------------------------------------
-   8. Definition list
+   10. Definition list — a quiet register, hairline rows
    -------------------------------------------------------------------------- */
 .definition-list {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.34rem 1.4rem;
-  margin: 1.1rem 0 0;
-  padding: 0.9rem 1.1rem;
-  border-left: 3px solid var(--gold);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--gold) 8%, transparent), transparent 38%);
-  border-radius: 2px;
+  gap: 0 1.6rem;
+  margin: 1.2rem 0 0;
 }
 .definition-list dt {
   font-variant-caps: all-small-caps;
   letter-spacing: 0.18em;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   color: var(--muted);
+  padding: 0.42rem 0;
+  border-bottom: 1px solid var(--line);
 }
-.definition-list dd { margin: 0; }
+.definition-list dd {
+  margin: 0;
+  padding: 0.42rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.definition-list dt:last-of-type,
+.definition-list dd:last-of-type { border-bottom: 0; }
 
 /* --------------------------------------------------------------------------
-   9. Figures, quotes, rules
+   11. Figures — shōji-paper panels in thin wood frames
    -------------------------------------------------------------------------- */
 .section figure,
 .post__content figure {
-  margin: 1.2rem 0;
-  padding: 0.9rem;
-  background-color: var(--surface-2);
-  background-image: var(--tx-seigaiha);
-  background-size: 84px 42px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  margin: 1.4rem 0;
+  padding: clamp(0.8rem, 2vw, 1.2rem);
+  background-color: var(--panel);
+  background-image: var(--tx-washi);
+  border: 3px solid var(--rail-mid);
+  box-shadow: inset 0 0 0 1px var(--line), 0 2px 8px var(--toko-shadow);
 }
 .section figure img,
 .post__content figure img {
   display: block;
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  margin: 0 auto;
+  border: 1px solid var(--line-strong);
   filter: var(--img-filter);
+  background: #fff;
 }
 .section figcaption,
 .post__content figcaption {
-  padding-top: 0.55rem;
+  padding-top: 0.6rem;
   font-size: 0.86rem;
   font-style: italic;
   color: var(--muted);
+  text-align: center;
 }
 
 blockquote {
   margin: 1.2rem 0;
-  padding: 0.9rem 1.2rem;
-  border-left: 3px solid var(--accent-2);
-  background: var(--surface-2);
-  border-radius: 2px;
+  padding: 0.8rem 1.2rem;
+  border-left: 3px solid var(--rail-mid);
   color: var(--muted);
 }
 
+/* hr — a run of renji slats, captured, off-center (fukinsei) */
 hr {
   border: 0;
-  height: 11px;
-  margin: 2rem auto;
-  max-width: 420px;
-  -webkit-mask-image: var(--tx-kumiko);
-  mask-image: var(--tx-kumiko);
+  height: 18px;
+  margin: 2.2rem 0 2.2rem 12%;
+  width: 180px;
+  background-color: var(--lattice);
+  -webkit-mask-image: var(--tx-renji);
+  mask-image: var(--tx-renji);
+  -webkit-mask-size: 14px 18px;
+  mask-size: 14px 18px;
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
-  background: var(--lattice);
-  opacity: 0.55;
+  opacity: 0.8;
 }
 
 code, pre {
@@ -557,60 +715,56 @@ code, pre {
 pre {
   padding: 1rem 1.2rem;
   overflow-x: auto;
-  background: var(--surface-2);
+  background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
 }
-code { background: color-mix(in srgb, var(--line) 40%, transparent); padding: 0.08em 0.35em; border-radius: 3px; }
+code { background: rgba(127, 108, 80, 0.12); padding: 0.08em 0.35em; }
+html[data-time="night"] code { background: rgba(203, 185, 148, 0.12); }
 pre code { background: none; padding: 0; }
 
 table { border-collapse: collapse; width: 100%; margin: 1.2rem 0; }
 th, td { padding: 0.5rem 0.8rem; border: 1px solid var(--line); text-align: left; }
-th { background: var(--surface-2); font-variant-caps: all-small-caps; letter-spacing: 0.1em; }
+th { background: var(--panel); font-variant-caps: all-small-caps; letter-spacing: 0.1em; }
 
 /* --------------------------------------------------------------------------
-   10. Cards
+   12. Card grids — small framed panels (full frames, never top strips)
    -------------------------------------------------------------------------- */
 .note-list { list-style: none; margin: 0; padding: 0; }
 .note-list--grid,
 .featured-grid,
 .section--grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.2rem;
 }
 
 .note-card,
 .featured-card {
   position: relative;
-  background-color: var(--surface);
+  background-color: var(--bay);
   background-image: var(--tx-washi);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--gold);
-  border-radius: var(--radius);
-  padding: 1rem 1.1rem;
-  box-shadow: var(--shadow-1);
-  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  border: 2px solid var(--rail-mid);
+  box-shadow: inset 0 0 0 1px var(--line);
+  padding: 1.05rem 1.15rem;
 }
 .note-card:hover,
 .featured-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-2);
+  background-color: var(--panel);
+  border-color: var(--post-lo);
 }
 .note-card__title,
 .featured-card__title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.06rem;
+  font-size: 1.08rem;
   margin: 0 0 0.3em;
 }
 .featured-card__excerpt { color: var(--muted); font-size: 0.94rem; }
-.featured-card__preview { margin-top: 0.7rem; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
-.featured-card__decoration { position: absolute; inset: auto 0 0 0; height: 3px; background: var(--gold-soft); opacity: 0; transition: opacity var(--t-fast) var(--ease); }
-.featured-card:hover .featured-card__decoration { opacity: 1; }
+.featured-card__preview { position: relative; margin-top: 0.7rem; border: 1px solid var(--line); overflow: hidden; }
+.featured-card__decoration { display: none; }
 
 /* --------------------------------------------------------------------------
-   11. Posts
+   13. Posts, TOC, back link
    -------------------------------------------------------------------------- */
 .post__header { margin-bottom: 1.6rem; }
 .post__meta {
@@ -624,35 +778,102 @@ th { background: var(--surface-2); font-variant-caps: all-small-caps; letter-spa
 .post__comments { margin-top: 2.4rem; }
 .post__comments-title { font-variant-caps: all-small-caps; letter-spacing: 0.14em; }
 
-.section-toc {
-  padding: 1rem 1.2rem;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+/* tables of contents — a mokuroku slip on the wall */
+.toc, .section-toc {
+  max-width: 46rem;
+  padding: 0.85rem 1.2rem;
+  background-color: var(--panel);
+  background-image: var(--tx-washi);
+  border: 1px solid var(--line-strong);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1px 5px var(--toko-shadow);
 }
-.section-toc__list { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+.toc { margin-bottom: clamp(1.4rem, 3vw, 2rem); }
+.toc summary, .section-toc summary {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.16em;
+  font-size: 0.95rem;
+  color: var(--muted);
+  position: relative;
+  padding-left: 1.15em;
+}
+.toc summary::-webkit-details-marker,
+.section-toc summary::-webkit-details-marker { display: none; }
+.toc summary::before, .section-toc summary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 12px;
+  height: 12px;
+  background-color: var(--mon);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20387.9%20389.2'%3E%3Cpath%20d='M%20164.4,387.2%20C%20153.2,385.4%20149.9,384.6%20137.4,381.0%20C%20104.5,371.6%2071.2,349.8%2047.0,321.8%20C%2032.6,305.1%2020.6,285.5%2018.8,276.0%20C%2014.1,250.2%2016.2,223.1%2024.0,207.8%20C%2035.5,185.5%2053.6,169.5%2076.2,161.6%20C%2086.2,158.1%20104.8,157.3%20116.9,159.7%20C%20127.0,161.8%20139.3,166.2%20145.8,169.9%20C%20154.3,174.9%20165.3,184.2%20170.6,190.9%20C%20177.2,199.3%20184.2,213.3%20187.1,224.3%20C%20188.9,231.1%20189.3,235.3%20189.3,246.3%20C%20189.3,258.2%20189.0,260.8%20186.5,268.7%20C%20185.0,273.7%20182.4,280.3%20180.8,283.4%20C%20177.4,290.3%20168.8,301.9%20164.8,305.1%20C%20160.4,308.6%20161.1,310.5%20168.6,316.6%20C%20187.0,331.3%20210.7,341.3%20233.9,344.2%20C%20245.9,345.7%20265.9,345.5%20275.9,343.8%20C%20301.1,339.5%20329.2,326.2%20345.6,310.9%20C%20352.5,304.5%20353.6,304.6%20348.7,311.4%20C%20323.0,347.2%20279.2,375.4%20234.4,384.8%20C%20211.5,389.7%20184.9,390.6%20164.4,387.2%20z%20M%20276.4,328.3%20C%20260.1,326.2%20241.2,317.6%20229.8,307.1%20C%20222.6,300.6%20212.9,288.2%20209.4,281.3%20C%20200.4,263.4%20198.9,239.2%20205.4,216.8%20C%20210.2,200.3%20223.2,182.7%20237.4,173.8%20C%20240.7,171.7%20244.5,169.2%20245.9,168.2%20C%20247.4,167.3%20252.8,164.9%20258.1,162.9%20C%20272.6,157.5%20292.0,156.3%20308.0,159.9%20C%20311.3,160.6%20311.7,159.7%20313.2,146.6%20C%20315.2,128.4%20311.5,102.9%20304.3,85.3%20C%20295.1,62.5%20281.7,44.3%20264.6,30.9%20C%20254.0,22.8%20237.7,12.1%20228.9,7.7%20C%20216.9,1.7%20218.7,0.8%20235.7,4.7%20C%20279.5,14.7%20318.3,39.0%20345.9,73.8%20C%20378.0,114.3%20393.8,172.1%20385.9,220.8%20C%20381.4,248.9%20371.3,278.1%20362.7,287.9%20C%20360.9,290.0%20357.7,293.9%20355.6,296.4%20C%20349.7,303.9%20335.2,315.4%20325.9,320.0%20C%20321.2,322.4%20313.8,325.2%20309.4,326.3%20C%20300.4,328.6%20285.4,329.5%20276.4,328.3%20z%20M%2013.2,264.7%20C%2010.9,260.7%204.9,239.2%202.8,227.5%20C%20-6.5,175.5%207.4,119.2%2040.0,76.2%20C%2075.2,29.7%20132.1,0.9%20190.4,0.1%20C%20202.2,-0.1%20202.5,-0.1%20213.9,4.1%20C%20226.3,8.7%20230.9,11.1%20240.6,18.0%20C%20253.3,27.0%20267.2,45.1%20272.4,59.6%20C%20273.7,63.1%20275.5,70.8%20276.5,76.7%20C%20278.0,85.8%20278.1,88.8%20277.1,97.1%20C%20275.6,109.8%20270.9,125.3%20266.0,133.9%20C%20258.9,146.1%20239.5,162.6%20225.3,168.6%20C%20218.1,171.6%20203.8,174.9%20194.4,175.8%20C%20182.1,177.0%20161.5,172.0%20148.4,164.7%20C%20128.9,153.8%20112.0,132.5%20107.8,113.6%20C%20107.1,110.6%20105.8,107.8%20104.9,107.3%20C%20101.6,105.5%2072.0,121.6%2063.0,130.2%20C%2061.1,131.9%2057.3,135.4%2054.6,137.8%20C%2045.2,146.3%2032.0,164.5%2026.3,176.8%20C%2022.8,184.4%2018.5,196.9%2016.8,204.2%20C%2013.5,218.7%2012.0,244.7%2013.9,252.5%20C%2014.5,254.9%2014.9,259.1%2014.7,261.8%20C%2014.4,266.2%2014.3,266.5%2013.2,264.7%20z'%20fill='%23000'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20387.9%20389.2'%3E%3Cpath%20d='M%20164.4,387.2%20C%20153.2,385.4%20149.9,384.6%20137.4,381.0%20C%20104.5,371.6%2071.2,349.8%2047.0,321.8%20C%2032.6,305.1%2020.6,285.5%2018.8,276.0%20C%2014.1,250.2%2016.2,223.1%2024.0,207.8%20C%2035.5,185.5%2053.6,169.5%2076.2,161.6%20C%2086.2,158.1%20104.8,157.3%20116.9,159.7%20C%20127.0,161.8%20139.3,166.2%20145.8,169.9%20C%20154.3,174.9%20165.3,184.2%20170.6,190.9%20C%20177.2,199.3%20184.2,213.3%20187.1,224.3%20C%20188.9,231.1%20189.3,235.3%20189.3,246.3%20C%20189.3,258.2%20189.0,260.8%20186.5,268.7%20C%20185.0,273.7%20182.4,280.3%20180.8,283.4%20C%20177.4,290.3%20168.8,301.9%20164.8,305.1%20C%20160.4,308.6%20161.1,310.5%20168.6,316.6%20C%20187.0,331.3%20210.7,341.3%20233.9,344.2%20C%20245.9,345.7%20265.9,345.5%20275.9,343.8%20C%20301.1,339.5%20329.2,326.2%20345.6,310.9%20C%20352.5,304.5%20353.6,304.6%20348.7,311.4%20C%20323.0,347.2%20279.2,375.4%20234.4,384.8%20C%20211.5,389.7%20184.9,390.6%20164.4,387.2%20z%20M%20276.4,328.3%20C%20260.1,326.2%20241.2,317.6%20229.8,307.1%20C%20222.6,300.6%20212.9,288.2%20209.4,281.3%20C%20200.4,263.4%20198.9,239.2%20205.4,216.8%20C%20210.2,200.3%20223.2,182.7%20237.4,173.8%20C%20240.7,171.7%20244.5,169.2%20245.9,168.2%20C%20247.4,167.3%20252.8,164.9%20258.1,162.9%20C%20272.6,157.5%20292.0,156.3%20308.0,159.9%20C%20311.3,160.6%20311.7,159.7%20313.2,146.6%20C%20315.2,128.4%20311.5,102.9%20304.3,85.3%20C%20295.1,62.5%20281.7,44.3%20264.6,30.9%20C%20254.0,22.8%20237.7,12.1%20228.9,7.7%20C%20216.9,1.7%20218.7,0.8%20235.7,4.7%20C%20279.5,14.7%20318.3,39.0%20345.9,73.8%20C%20378.0,114.3%20393.8,172.1%20385.9,220.8%20C%20381.4,248.9%20371.3,278.1%20362.7,287.9%20C%20360.9,290.0%20357.7,293.9%20355.6,296.4%20C%20349.7,303.9%20335.2,315.4%20325.9,320.0%20C%20321.2,322.4%20313.8,325.2%20309.4,326.3%20C%20300.4,328.6%20285.4,329.5%20276.4,328.3%20z%20M%2013.2,264.7%20C%2010.9,260.7%204.9,239.2%202.8,227.5%20C%20-6.5,175.5%207.4,119.2%2040.0,76.2%20C%2075.2,29.7%20132.1,0.9%20190.4,0.1%20C%20202.2,-0.1%20202.5,-0.1%20213.9,4.1%20C%20226.3,8.7%20230.9,11.1%20240.6,18.0%20C%20253.3,27.0%20267.2,45.1%20272.4,59.6%20C%20273.7,63.1%20275.5,70.8%20276.5,76.7%20C%20278.0,85.8%20278.1,88.8%20277.1,97.1%20C%20275.6,109.8%20270.9,125.3%20266.0,133.9%20C%20258.9,146.1%20239.5,162.6%20225.3,168.6%20C%20218.1,171.6%20203.8,174.9%20194.4,175.8%20C%20182.1,177.0%20161.5,172.0%20148.4,164.7%20C%20128.9,153.8%20112.0,132.5%20107.8,113.6%20C%20107.1,110.6%20105.8,107.8%20104.9,107.3%20C%20101.6,105.5%2072.0,121.6%2063.0,130.2%20C%2061.1,131.9%2057.3,135.4%2054.6,137.8%20C%2045.2,146.3%2032.0,164.5%2026.3,176.8%20C%2022.8,184.4%2018.5,196.9%2016.8,204.2%20C%2013.5,218.7%2012.0,244.7%2013.9,252.5%20C%2014.5,254.9%2014.9,259.1%2014.7,261.8%20C%2014.4,266.2%2014.3,266.5%2013.2,264.7%20z'%20fill='%23000'/%3E%3C/svg%3E");
+  -webkit-mask-size: 12px 12px;
+  mask-size: 12px 12px;
+  transition: transform 0.26s var(--ease);
+}
+details.is-open > summary::before { transform: rotate(120deg); }
+.details-body {
+  overflow: hidden;
+  transition: max-height 300ms var(--ease);
+}
+.toc__list, .section-toc__list {
+  list-style: none;
+  margin: 0.55rem 0 0.15rem;
+  padding: 0;
+}
+.toc__list li + li, .section-toc__list li + li { border-top: 1px solid var(--line); }
+.toc__list a, .section-toc__list a {
+  display: block;
+  padding: 0.42rem 0.15rem 0.42rem 1.15em;
+  text-decoration: none;
+}
+.toc__list a:hover, .section-toc__list a:hover { color: var(--link-hover); background: rgba(127, 108, 80, 0.06); }
+/* TOC labels carry all three languages inline; show only the active one.
+   English is the default so the list still reads without JS. */
+.toc [lang="ja"], .toc [lang="zh-Hans"] { display: none; }
+html[lang="ja"] .toc [lang="en"],
+html[lang="zh-Hans"] .toc [lang="en"] { display: none; }
+html[lang="ja"] .toc [lang="ja"],
+html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
+.section-toc summary h2 { display: inline; font-size: 1.3rem; letter-spacing: 0.04em; }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  margin-bottom: 1.2rem;
+  margin: 1.4rem 0 0;
   font-size: 0.9rem;
   letter-spacing: 0.06em;
   text-decoration: none;
 }
-.back-link::before { content: "←"; color: var(--accent-2); }
+.back-link::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+  background-color: var(--mon);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20387.9%20389.2'%3E%3Cpath%20d='M%20164.4,387.2%20C%20153.2,385.4%20149.9,384.6%20137.4,381.0%20C%20104.5,371.6%2071.2,349.8%2047.0,321.8%20C%2032.6,305.1%2020.6,285.5%2018.8,276.0%20C%2014.1,250.2%2016.2,223.1%2024.0,207.8%20C%2035.5,185.5%2053.6,169.5%2076.2,161.6%20C%2086.2,158.1%20104.8,157.3%20116.9,159.7%20C%20127.0,161.8%20139.3,166.2%20145.8,169.9%20C%20154.3,174.9%20165.3,184.2%20170.6,190.9%20C%20177.2,199.3%20184.2,213.3%20187.1,224.3%20C%20188.9,231.1%20189.3,235.3%20189.3,246.3%20C%20189.3,258.2%20189.0,260.8%20186.5,268.7%20C%20185.0,273.7%20182.4,280.3%20180.8,283.4%20C%20177.4,290.3%20168.8,301.9%20164.8,305.1%20C%20160.4,308.6%20161.1,310.5%20168.6,316.6%20C%20187.0,331.3%20210.7,341.3%20233.9,344.2%20C%20245.9,345.7%20265.9,345.5%20275.9,343.8%20C%20301.1,339.5%20329.2,326.2%20345.6,310.9%20C%20352.5,304.5%20353.6,304.6%20348.7,311.4%20C%20323.0,347.2%20279.2,375.4%20234.4,384.8%20C%20211.5,389.7%20184.9,390.6%20164.4,387.2%20z%20M%20276.4,328.3%20C%20260.1,326.2%20241.2,317.6%20229.8,307.1%20C%20222.6,300.6%20212.9,288.2%20209.4,281.3%20C%20200.4,263.4%20198.9,239.2%20205.4,216.8%20C%20210.2,200.3%20223.2,182.7%20237.4,173.8%20C%20240.7,171.7%20244.5,169.2%20245.9,168.2%20C%20247.4,167.3%20252.8,164.9%20258.1,162.9%20C%20272.6,157.5%20292.0,156.3%20308.0,159.9%20C%20311.3,160.6%20311.7,159.7%20313.2,146.6%20C%20315.2,128.4%20311.5,102.9%20304.3,85.3%20C%20295.1,62.5%20281.7,44.3%20264.6,30.9%20C%20254.0,22.8%20237.7,12.1%20228.9,7.7%20C%20216.9,1.7%20218.7,0.8%20235.7,4.7%20C%20279.5,14.7%20318.3,39.0%20345.9,73.8%20C%20378.0,114.3%20393.8,172.1%20385.9,220.8%20C%20381.4,248.9%20371.3,278.1%20362.7,287.9%20C%20360.9,290.0%20357.7,293.9%20355.6,296.4%20C%20349.7,303.9%20335.2,315.4%20325.9,320.0%20C%20321.2,322.4%20313.8,325.2%20309.4,326.3%20C%20300.4,328.6%20285.4,329.5%20276.4,328.3%20z%20M%2013.2,264.7%20C%2010.9,260.7%204.9,239.2%202.8,227.5%20C%20-6.5,175.5%207.4,119.2%2040.0,76.2%20C%2075.2,29.7%20132.1,0.9%20190.4,0.1%20C%20202.2,-0.1%20202.5,-0.1%20213.9,4.1%20C%20226.3,8.7%20230.9,11.1%20240.6,18.0%20C%20253.3,27.0%20267.2,45.1%20272.4,59.6%20C%20273.7,63.1%20275.5,70.8%20276.5,76.7%20C%20278.0,85.8%20278.1,88.8%20277.1,97.1%20C%20275.6,109.8%20270.9,125.3%20266.0,133.9%20C%20258.9,146.1%20239.5,162.6%20225.3,168.6%20C%20218.1,171.6%20203.8,174.9%20194.4,175.8%20C%20182.1,177.0%20161.5,172.0%20148.4,164.7%20C%20128.9,153.8%20112.0,132.5%20107.8,113.6%20C%20107.1,110.6%20105.8,107.8%20104.9,107.3%20C%20101.6,105.5%2072.0,121.6%2063.0,130.2%20C%2061.1,131.9%2057.3,135.4%2054.6,137.8%20C%2045.2,146.3%2032.0,164.5%2026.3,176.8%20C%2022.8,184.4%2018.5,196.9%2016.8,204.2%20C%2013.5,218.7%2012.0,244.7%2013.9,252.5%20C%2014.5,254.9%2014.9,259.1%2014.7,261.8%20C%2014.4,266.2%2014.3,266.5%2013.2,264.7%20z'%20fill='%23000'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20387.9%20389.2'%3E%3Cpath%20d='M%20164.4,387.2%20C%20153.2,385.4%20149.9,384.6%20137.4,381.0%20C%20104.5,371.6%2071.2,349.8%2047.0,321.8%20C%2032.6,305.1%2020.6,285.5%2018.8,276.0%20C%2014.1,250.2%2016.2,223.1%2024.0,207.8%20C%2035.5,185.5%2053.6,169.5%2076.2,161.6%20C%2086.2,158.1%20104.8,157.3%20116.9,159.7%20C%20127.0,161.8%20139.3,166.2%20145.8,169.9%20C%20154.3,174.9%20165.3,184.2%20170.6,190.9%20C%20177.2,199.3%20184.2,213.3%20187.1,224.3%20C%20188.9,231.1%20189.3,235.3%20189.3,246.3%20C%20189.3,258.2%20189.0,260.8%20186.5,268.7%20C%20185.0,273.7%20182.4,280.3%20180.8,283.4%20C%20177.4,290.3%20168.8,301.9%20164.8,305.1%20C%20160.4,308.6%20161.1,310.5%20168.6,316.6%20C%20187.0,331.3%20210.7,341.3%20233.9,344.2%20C%20245.9,345.7%20265.9,345.5%20275.9,343.8%20C%20301.1,339.5%20329.2,326.2%20345.6,310.9%20C%20352.5,304.5%20353.6,304.6%20348.7,311.4%20C%20323.0,347.2%20279.2,375.4%20234.4,384.8%20C%20211.5,389.7%20184.9,390.6%20164.4,387.2%20z%20M%20276.4,328.3%20C%20260.1,326.2%20241.2,317.6%20229.8,307.1%20C%20222.6,300.6%20212.9,288.2%20209.4,281.3%20C%20200.4,263.4%20198.9,239.2%20205.4,216.8%20C%20210.2,200.3%20223.2,182.7%20237.4,173.8%20C%20240.7,171.7%20244.5,169.2%20245.9,168.2%20C%20247.4,167.3%20252.8,164.9%20258.1,162.9%20C%20272.6,157.5%20292.0,156.3%20308.0,159.9%20C%20311.3,160.6%20311.7,159.7%20313.2,146.6%20C%20315.2,128.4%20311.5,102.9%20304.3,85.3%20C%20295.1,62.5%20281.7,44.3%20264.6,30.9%20C%20254.0,22.8%20237.7,12.1%20228.9,7.7%20C%20216.9,1.7%20218.7,0.8%20235.7,4.7%20C%20279.5,14.7%20318.3,39.0%20345.9,73.8%20C%20378.0,114.3%20393.8,172.1%20385.9,220.8%20C%20381.4,248.9%20371.3,278.1%20362.7,287.9%20C%20360.9,290.0%20357.7,293.9%20355.6,296.4%20C%20349.7,303.9%20335.2,315.4%20325.9,320.0%20C%20321.2,322.4%20313.8,325.2%20309.4,326.3%20C%20300.4,328.6%20285.4,329.5%20276.4,328.3%20z%20M%2013.2,264.7%20C%2010.9,260.7%204.9,239.2%202.8,227.5%20C%20-6.5,175.5%207.4,119.2%2040.0,76.2%20C%2075.2,29.7%20132.1,0.9%20190.4,0.1%20C%20202.2,-0.1%20202.5,-0.1%20213.9,4.1%20C%20226.3,8.7%20230.9,11.1%20240.6,18.0%20C%20253.3,27.0%20267.2,45.1%20272.4,59.6%20C%20273.7,63.1%20275.5,70.8%20276.5,76.7%20C%20278.0,85.8%20278.1,88.8%20277.1,97.1%20C%20275.6,109.8%20270.9,125.3%20266.0,133.9%20C%20258.9,146.1%20239.5,162.6%20225.3,168.6%20C%20218.1,171.6%20203.8,174.9%20194.4,175.8%20C%20182.1,177.0%20161.5,172.0%20148.4,164.7%20C%20128.9,153.8%20112.0,132.5%20107.8,113.6%20C%20107.1,110.6%20105.8,107.8%20104.9,107.3%20C%20101.6,105.5%2072.0,121.6%2063.0,130.2%20C%2061.1,131.9%2057.3,135.4%2054.6,137.8%20C%2045.2,146.3%2032.0,164.5%2026.3,176.8%20C%2022.8,184.4%2018.5,196.9%2016.8,204.2%20C%2013.5,218.7%2012.0,244.7%2013.9,252.5%20C%2014.5,254.9%2014.9,259.1%2014.7,261.8%20C%2014.4,266.2%2014.3,266.5%2013.2,264.7%20z'%20fill='%23000'/%3E%3C/svg%3E");
+  -webkit-mask-size: 11px 11px;
+  mask-size: 11px 11px;
+  transform: scaleX(-1) rotate(30deg);
+  transition: transform 0.2s var(--ease);
+}
+.back-link:hover::before { transform: scaleX(-1) rotate(150deg); }
 
 /* --------------------------------------------------------------------------
-   12. Embeds
+   14. Embeds
    -------------------------------------------------------------------------- */
 .embed-container, .pdf-frame, .gif-frame {
   position: relative;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
+  border: 2px solid var(--rail-mid);
+  box-shadow: inset 0 0 0 1px var(--line);
   overflow: hidden;
-  background: var(--surface-2);
-  box-shadow: var(--shadow-1);
+  background: var(--panel);
 }
 .embed-frame, .pdf-frame iframe { width: 100%; border: 0; display: block; }
 .pdf-download, .gif-download, .download-list a { font-size: 0.9rem; }
@@ -663,144 +884,468 @@ th { background: var(--surface-2); font-variant-caps: all-small-caps; letter-spa
   align-items: center;
   justify-content: center;
   width: 2.1rem; height: 2.1rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--surface) 85%, transparent);
-  color: var(--ink);
-  cursor: pointer;
+  padding: 0;
 }
-.embed-fullscreen:hover { background: var(--surface); color: var(--accent-2); }
 .embed-fullscreen__icon { width: 1rem; height: 1rem; }
 .embed-fullscreen__icon--exit { display: none; }
 
 /* --------------------------------------------------------------------------
-   13. Footer — a clean sill: gold hairline on the lower beam
+   15. Footer — shikii sill, then the engawa floor
    -------------------------------------------------------------------------- */
 .site-footer {
   position: relative;
-  margin-top: 2rem;
-  padding: 2rem 0 1.6rem;
-  background-color: var(--beam);
-  background-image: var(--tx-wood), linear-gradient(0deg, color-mix(in srgb, var(--beam) 72%, black), var(--beam) 48%, var(--beam-hi) 100%);
-  border-top: 1px solid var(--gold-soft);
-  color: color-mix(in srgb, var(--beam-ink) 88%, transparent);
-  transition: background-color var(--t-theme) var(--ease);
+  margin-top: 0;
+  padding: 1.9rem 0 1.5rem;
+  background-color: var(--beam-mid);
+  background-image: var(--tx-engawa);
+  color: var(--beam-ink-dim);
 }
+/* the sill: a slightly raised beam closing the wall above the floor */
 .site-footer::before {
   content: "";
   position: absolute;
-  left: 0; right: 0; top: 2px;
-  height: 1px;
-  background: color-mix(in srgb, var(--gold) 40%, transparent);
+  left: 0; right: 0; top: 0;
+  height: var(--rail-minor);
+  background: linear-gradient(180deg, var(--rail-hi), var(--rail-lo));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
-.site-footer .container { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.site-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
 .site-footer p { margin: 0; font-size: 0.88rem; letter-spacing: 0.06em; }
 
 /* --------------------------------------------------------------------------
-   14. Language & time controls
+   16. Controls — wooden tablets
    -------------------------------------------------------------------------- */
 .lang-overlay { position: relative; display: inline-flex; align-items: center; gap: 0.6rem; }
-.lang-toggle, .time-toggle {
+
+/* controls are small wooden tablets (木札): grain, chamfered light, carved text */
+.lang-toggle, .time-toggle, .nav-toggle, .embed-fullscreen {
   font: inherit;
   font-size: 0.8rem;
   letter-spacing: 0.14em;
   font-variant-caps: all-small-caps;
   color: var(--beam-ink);
-  background: color-mix(in srgb, var(--beam-hi) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--beam-ink) 35%, transparent);
-  border-radius: var(--radius);
-  padding: 0.42rem 0.9rem;
+  background-color: var(--beam-mid);
+  background-image:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.14) 0 1.5px,
+      transparent 1.5px calc(100% - 2.5px),
+      rgba(0, 0, 0, 0.4) calc(100% - 2.5px)),
+    var(--tx-grain-h);
+  border: 1px solid var(--beam-lo);
+  border-radius: 1px;
+  padding: 0.44rem 1.05rem;
   cursor: pointer;
-  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.3);
 }
-.lang-toggle:hover, .time-toggle:hover { color: var(--gold-on-wood); border-color: var(--gold-on-wood); }
+.lang-toggle:hover, .time-toggle:hover, .nav-toggle:hover, .embed-fullscreen:hover {
+  color: var(--plaque);
+  border-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--beam-hi);
+}
+.lang-toggle:active, .time-toggle:active, .nav-toggle:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45);
+}
+/* the language list is a small wooden drawer that slides open */
 .lang-list {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
   min-width: 10rem;
-  margin: 0; padding: 0.35rem;
+  margin: 0; padding: 0.3rem;
   list-style: none;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-2);
-  display: none;
+  background-color: var(--beam-mid);
+  background-image:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.12) 0 1.5px,
+      transparent 1.5px calc(100% - 2.5px),
+      rgba(0, 0, 0, 0.42) calc(100% - 2.5px)),
+    var(--tx-grain-h);
+  border: 1px solid var(--beam-lo);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 10px 26px rgba(0, 0, 0, 0.38);
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: transform 200ms var(--ease), visibility 0s 200ms;
   z-index: 60;
 }
-.lang-overlay.open .lang-list { display: block; }
+.lang-overlay.open .lang-list {
+  visibility: visible;
+  transform: none;
+  transition: transform 230ms cubic-bezier(0.2, 0.75, 0.3, 1);
+}
 .lang-option {
   display: block;
   width: 100%;
   text-align: left;
   font: inherit;
   font-size: 0.92rem;
-  color: var(--ink);
+  color: var(--beam-ink);
   background: none;
   border: 0;
-  border-radius: 2px;
-  padding: 0.45rem 0.7rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
 }
-.lang-option:hover { background: color-mix(in srgb, var(--gold) 14%, transparent); color: var(--accent-2); }
-
-.time-toggle .time-icon { margin-right: 0.4em; }
+.lang-option:hover,
+.lang-option[aria-pressed="true"] { color: var(--plaque); background: rgba(0, 0, 0, 0.22); }
+.time-toggle { padding: 0.5rem 0.72rem; }
+.time-toggle .time-icon { margin-right: 0; display: inline-flex; }
+.time-icon svg, .collapse-indicator svg {
+  display: inline-block;
+  vertical-align: -0.1em;
+  fill: currentColor;
+}
+.collapse-indicator svg { width: 1.1em; height: 1.1em; }
+.time-icon svg { width: 1.4em; height: 1.4em; vertical-align: -0.24em; }
 
 /* --------------------------------------------------------------------------
-   15. Collapsible panels (enhancements.js adds button semantics)
+   17. Collapsible bays (enhancements.js adds button semantics)
    -------------------------------------------------------------------------- */
 .section[data-collapsible="true"] > h2,
-.list-card[data-collapsible="true"] > h2 { cursor: pointer; user-select: none; }
-.collapse-indicator { color: var(--accent); }
+.list-card[data-collapsible="true"] > h2 {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 1.8em;
+}
+.collapse-indicator {
+  color: var(--mon);
+  position: absolute;
+  right: 0;
+  top: 0.3em;
+}
 
 /* --------------------------------------------------------------------------
-   16. Responsive
+   18. Koushi sliding doors — the page transition (restored)
+   Motion only: the doors move; nothing fades.
    -------------------------------------------------------------------------- */
-@media (max-width: 860px) {
+.kdoor-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  pointer-events: none;
+  overflow: hidden;
+}
+.kdoor {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background-color: var(--post-mid);
+  transition: transform var(--t-door) var(--door-ease);
+  overflow: hidden;
+}
+.kdoor--l { border-right: 8px solid var(--post-lo); }
+.kdoor--r { border-left: 8px solid var(--post-lo); }
+
+
+/* the koushi lattice of the original doors, kept 1:1 —
+   100px square cells, 5px bars, verticals set out from the meeting edge,
+   a hairline of raking light beside each bar — rendered in today's tokens */
+.kdoor__paper {
+  position: absolute;
+  inset: 0;
+  background-color: var(--panel);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.24);
+}
+/* horizontal bars: lit top arris, shaded lower arris, shadow cast down onto paper */
+.kdoor--l .kdoor__paper,
+.kdoor--r .kdoor__paper {
+  background-image:
+    var(--paper-glow),
+    repeating-linear-gradient(180deg,
+      var(--rail-hi) 0 1px,
+      var(--rail-mid) 1px 4.5px,
+      var(--rail-lo) 4.5px 6px,
+      rgba(0, 0, 0, 0.16) 6px 7.5px,
+      rgba(0, 0, 0, 0.05) 7.5px 9px,
+      transparent 9px 100px),
+    repeating-linear-gradient(270deg,
+      var(--rail-hi) 0 1px,
+      var(--rail-mid) 1px 4.5px,
+      var(--rail-lo) 4.5px 6px,
+      rgba(0, 0, 0, 0.13) 6px 7.5px,
+      transparent 7.5px 96.5px,
+      rgba(255, 255, 255, 0.22) 96.5px 97.5px,
+      transparent 97.5px 100px),
+    var(--tx-washi);
+}
+/* right leaf: verticals set out from ITS meeting edge (the left side) */
+.kdoor--r .kdoor__paper {
+  background-image:
+    var(--paper-glow),
+    repeating-linear-gradient(180deg,
+      var(--rail-hi) 0 1px,
+      var(--rail-mid) 1px 4.5px,
+      var(--rail-lo) 4.5px 6px,
+      rgba(0, 0, 0, 0.16) 6px 7.5px,
+      rgba(0, 0, 0, 0.05) 7.5px 9px,
+      transparent 9px 100px),
+    repeating-linear-gradient(90deg,
+      var(--rail-hi) 0 1px,
+      var(--rail-mid) 1px 4.5px,
+      var(--rail-lo) 4.5px 6px,
+      rgba(0, 0, 0, 0.13) 6px 7.5px,
+      transparent 7.5px 96.5px,
+      rgba(255, 255, 255, 0.22) 96.5px 97.5px,
+      transparent 97.5px 100px),
+    var(--tx-washi);
+}
+/* wood grain lives only on the bars: a grain layer masked to the grid */
+.kdoor__paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--tx-grain-h);
+  -webkit-mask-image:
+    repeating-linear-gradient(180deg, #000 0 6px, transparent 6px 100px),
+    repeating-linear-gradient(270deg, #000 0 6px, transparent 6px 100px);
+  mask-image:
+    repeating-linear-gradient(180deg, #000 0 6px, transparent 6px 100px),
+    repeating-linear-gradient(270deg, #000 0 6px, transparent 6px 100px);
+  pointer-events: none;
+}
+.kdoor--r .kdoor__paper::before {
+  -webkit-mask-image:
+    repeating-linear-gradient(180deg, #000 0 6px, transparent 6px 100px),
+    repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 100px);
+  mask-image:
+    repeating-linear-gradient(180deg, #000 0 6px, transparent 6px 100px),
+    repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 100px);
+}
+/* meeting stile catches a sliver of light beside its dark edge */
+.kdoor--l { box-shadow: inset -2px 0 0 rgba(255, 255, 255, 0.07); }
+.kdoor--r { box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.07); }
+
+.kdoor-overlay.closing .kdoor { transform: translateX(0); pointer-events: auto; }
+.kdoor-overlay.opening .kdoor--l,
+.kdoor-overlay:not(.closing):not(.opening) .kdoor--l { transform: translateX(-101%); }
+.kdoor-overlay.opening .kdoor--r,
+.kdoor-overlay:not(.closing):not(.opening) .kdoor--r { transform: translateX(101%); }
+
+/* --------------------------------------------------------------------------
+   19. Tang palace overrides — html[lang="zh-Hans"]
+   Vermilion lacquer columns under black-lacquer beams with gold characters
+   (金字黑匾), qing mineral accents. Colors from 中国色 references:
+   zhongguose.com (S1), colors.ichuantong.cn (S2), colortools.cn (S3),
+   vivacolor.art 故宫《中国传统色》(S4). "derived" = tint/shade of those.
+   -------------------------------------------------------------------------- */
+html[lang="zh-Hans"],
+html[lang="zh-Hans"][data-time="day"] {
+  --ground: #ece2cc;             /* derived shade of 缟 gǎo #f2ecde, undyed silk */
+  --bay: #f6f0e2;                /* derived tint of 缟 */
+  --panel: #eee3cb;              /* derived of 缟 */
+  --ink: #332b2b;                /* derived tint of 缁色 zī #493131, silk-black */
+  --ink-strong: #161823;         /* 漆黑 qīhēi, lacquer black */
+  --muted: #5e4c48;              /* derived of 缁色 */
+  --link: #9d2933;               /* 胭脂 yānzhi */
+  --link-hover: #c3272b;         /* 赤 chì */
+  --gold: #f2be45;               /* 赤金 chìjīn */
+  --gold-quiet: rgba(240, 194, 57, 0.4);  /* 缃色 xiāng */
+  --gold-ground: #d8b054;        /* derived matte of 缃色 #f0c239 */
+
+  --post-lo: #7c1823;            /* 枣红 zǎohóng — column shadow */
+  --post-mid: #b32a26;           /* derived between 赤 #c3272b and 枣红 */
+  --post-hi: #c9432a;            /* derived of 朱红 zhūhóng #ed5126 — lit lacquer */
+  --rail-lo: #55100f;            /* derived shade of 殷红 #82111f */
+  --rail-mid: #8e1f1d;           /* derived between 赤 #c3272b and 殷红 */
+  --rail-hi: #b03226;            /* derived tint of 赤 */
+  --beam-lo: #4a0d12;            /* derived shade of 枣红 #7c1823 */
+  --beam-mid: #7c1823;           /* 枣红 zǎohóng — cinnabar timber */
+  --beam-hi: #a02b20;            /* derived toward 赤 */
+  --beam-ink: #f2be45;           /* 赤金 — gold characters on cinnabar */
+  --beam-ink-dim: rgba(242, 190, 69, 0.82);
+  --plaque: rgba(255, 198, 75, 0.95);    /* 雌黄 cíhuáng */
+
+  --lattice: rgba(125, 42, 40, 0.52);    /* derived of 胭脂 for the transom */
+  --line: rgba(38, 32, 35, 0.17);
+  --line-strong: rgba(38, 32, 35, 0.36);
+  --shoji-grid: rgba(98, 42, 29, 0.22);  /* 玄色-cast grid */
+  --toko-shadow: rgba(22, 24, 35, 0.12);
+  --eave: var(--tx-eave-zh-day);         /* lotus-rosette 瓦当, not tomoe */
+  --mon: #9d2933;                 /* 胭脂 yānzhi — the crest on silk */
+}
+
+html[lang="zh-Hans"][data-time="dusk"] {
+  --ground: #e6d6b4;             /* derived, silk in low sun */
+  --bay: #f4ead2;                /* derived */
+  --panel: #ecddbd;              /* derived */
+  --gold-quiet: rgba(240, 194, 57, 0.5);
+  --post-lo: #6e1520;            /* derived */
+  --post-mid: #a52422;           /* derived */
+  --post-hi: #cc4429;            /* derived */
+  --rail-lo: #470d0e; --rail-mid: #7d1a19; --rail-hi: #a02b20;
+  --beam-lo: #3f0b0f; --beam-mid: #6e1520; --beam-hi: #92251d;
+  --img-filter: sepia(0.14) saturate(1.06) brightness(0.97);
+  --mon: #a82f36;                 /* derived tint of 胭脂 */
+}
+
+html[lang="zh-Hans"][data-time="night"] {
+  --ground: #170807;             /* derived shade of 玄色 xuán #622a1d — the "red-black" lacquer */
+  --bay: #281210;                /* derived of 玄色 — an oxblood room, not a brown one */
+  --panel: #341a17;              /* derived tint of 玄色 */
+  --ink: #ecdfc8;                /* derived of 缟 */
+  --ink-strong: #fdf6e5;        /* derived of 象牙白 #fffbf0 */
+  --muted: #c4ab84;              /* derived of 金色 jīnsè #eacd76 */
+  --link: #ff6a3d;               /* derived tint of 朱砂 zhūshā #ff461f */
+  --link-hover: #ffc64b;         /* 雌黄 */
+  --gold-ground: #a5862f;        /* derived of 乌金 wūjīn #a78e44, warm */
+
+  --post-lo: #40090f;            /* derived of 殷红 yānhóng #82111f */
+  --post-mid: #82111f;           /* 殷红 — lacquer red by lantern light */
+  --post-hi: #b02524;            /* derived */
+  --rail-lo: #260607;            /* derived */
+  --rail-mid: #46100f;           /* derived */
+  --rail-hi: #631613;            /* derived */
+  --beam-lo: #200507;            /* derived */
+  --beam-mid: #3a0b10;           /* derived of 枣红 in darkness */
+  --beam-hi: #571016;            /* derived */
+  --beam-ink: #f2be45;
+  --beam-ink-dim: rgba(242, 190, 69, 0.66);
+
+  --lattice: rgba(242, 190, 69, 0.38);   /* gilt fret against the night */
+  --line: rgba(236, 223, 200, 0.15);
+  --line-strong: rgba(236, 223, 200, 0.30);
+  --shoji-grid: rgba(242, 190, 69, 0.14);
+  --toko-shadow: rgba(0, 0, 0, 0.5);
+  --eave: var(--tx-eave-zh-night);
+  --mon: #f2be45;                 /* 赤金 chìjīn — gilt against the night */
+}
+
+/* a simplified dougong course carries the eave — the Tang signature */
+html[lang="zh-Hans"] .site-header { padding-top: 50px; }
+html[lang="zh-Hans"] .site-header::before {
+  content: "";
+  position: absolute;
+  top: 37px; left: 0; right: 0;
+  height: 14px;
+  background-color: rgba(0, 0, 0, 0.38);
+  -webkit-mask-image: var(--tx-dougong);
+  mask-image: var(--tx-dougong);
+  -webkit-mask-size: 48px 14px;
+  mask-size: 48px 14px;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: 50% 0;
+  mask-position: 50% 0;
+  pointer-events: none;
+}
+
+/* transom: a scrolling-vine (卷草) band — the Tang ornament proper */
+html[lang="zh-Hans"] .ranma {
+  -webkit-mask-image: var(--tx-kusa);
+  mask-image: var(--tx-kusa);
+  -webkit-mask-size: 36px 22px;
+  mask-size: 36px 22px;
+  -webkit-mask-position: 50% 50%;
+  mask-position: 50% 50%;
+  height: 28px;
+  opacity: 0.85;
+}
+/* rails carry a gilt hairline — 鎏金 fittings on lacquer */
+html[lang="zh-Hans"] .frame > * + .section::before,
+html[lang="zh-Hans"] .frame > * + .list-card::before,
+html[lang="zh-Hans"] .frame > * + .hero::before {
+  box-shadow: 0 2px 5px var(--toko-shadow), inset 0 1px 0 rgba(242, 190, 69, 0.28), inset 0 -1px 0 rgba(242, 190, 69, 0.18);
+}
+/* scroll mounting brocade: meander weave instead of shippō */
+/* zh: no tokonoma — the scroll hangs flat on the wall, 中堂 fashion */
+html[lang="zh-Hans"] .hero__image {
+  border: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+html[lang="zh-Hans"] .hero__scroll .hero__mount {
+  -webkit-mask-image: var(--tx-kusa);
+  mask-image: var(--tx-kusa);
+  -webkit-mask-size: 36px 22px;
+  mask-size: 36px 22px;
+  opacity: 0.22;
+}
+
+/* lacquered columns: brush streaks and a soft sheen instead of open grain */
+/* Tang columns are round (梭柱): cylindrical turning, lacquer sheen */
+html[lang="zh-Hans"] .frame::before,
+html[lang="zh-Hans"] .frame::after {
+  background-image:
+    linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.12) 46%, transparent 64%),
+    var(--tx-lacquer-v),
+    linear-gradient(90deg, var(--post-lo), var(--post-mid) 26%, var(--post-hi) 45%, var(--post-mid) 68%, var(--post-lo));
+}
+
+/* zh doors: the same koushi door — the Tang tokens recolor it */
+
+/* --------------------------------------------------------------------------
+   20. Responsive
+   -------------------------------------------------------------------------- */
+html[data-time="night"] .site-main img { filter: var(--img-filter); }
+
+@media (max-width: 880px) {
   .hero { grid-template-columns: 1fr; }
-  .hero__image { max-width: 420px; }
+  .hero__image { max-width: 460px; justify-self: center; }
 }
 
 @media (max-width: 720px) {
+  :root { --hashira: 14px; --nageshi: 12px; }
   .site-header .container { align-items: center; }
-  .nav-toggle { display: inline-block; }
-  .site-nav { width: 100%; }
+  .nav-toggle { display: inline-block; margin-left: auto; }
+  .site-nav { display: contents; }
   .site-nav ul {
-    display: none;
+    display: flex;
+    width: 100%;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    padding: 0.4rem 0 0.8rem;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 260ms var(--ease), padding 260ms var(--ease);
   }
-  .site-nav ul.open { display: flex; }
-  .site-nav a { display: block; padding: 0.6rem 0.2rem; border-bottom: 0; }
-  .site-nav li.active a { border-left: 3px solid var(--accent-2); padding-left: 0.7rem; }
-  .definition-list { grid-template-columns: 1fr; gap: 0.1rem 0; }
-  .definition-list dt { margin-top: 0.5rem; }
+  .site-nav ul.open { max-height: 420px; padding: 0.3rem 0 0.8rem; }
+  .site-nav a { display: block; padding: 0.6rem 0.4rem; }
+  .site-nav li.active a { border-left: 3px solid var(--plaque); }
+  .lang-list { left: auto; right: 0; }
+  .definition-list { grid-template-columns: 1fr; gap: 0; }
+  .definition-list dt { border-bottom: 0; padding-bottom: 0; margin-top: 0.5rem; }
 }
 
 /* --------------------------------------------------------------------------
-   17. Motion & print
+   21. Motion & print
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
+  .kdoor-overlay { display: none !important; }
 }
 
 @media print {
   :root, html[data-time="day"], html[data-time="dusk"], html[data-time="night"] {
-    --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff;
-    --ink: #000000; --muted: #333333; --faint: #444444;
-    --accent: #000000; --accent-2: #000000;
+    --ground: #ffffff; --bay: #ffffff; --panel: #ffffff;
+    --ink: #000000; --ink-strong: #000000; --muted: #333333;
+    --link: #000000; --link-hover: #000000;
   }
   .site-header, .site-footer, .nav-toggle, .lang-overlay, .time-toggle,
-  .collapse-indicator { display: none !important; }
-  body, .site-body, .section, .list-card, .hero {
+  .collapse-indicator, .eave, .ranma-wrap, .kdoor-overlay { display: none !important; }
+  body, .site-body, .frame, .section, .list-card, .hero {
     background: #fff !important;
     background-image: none !important;
     color: #000;
     box-shadow: none !important;
   }
-  .section, .list-card, .hero { border: 1px solid #bbb; }
+  .frame::before, .frame::after { display: none !important; }
+  .frame > * + .section::before, .frame > * + .list-card::before,
+  .frame > * + .hero::before { display: none !important; }
   a { color: #000; text-decoration: none; }
 }

@@ -11,7 +11,7 @@ permalink: /teaching/
     <figcaption>A cover image for <a href="https://sites.google.com/view/uwmath583cintersectiontheory">MATH583 Intersection Theory</a>, made using various stock images.</figcaption>
   </figure>
   <h3>Writing Milestone Seminar</h3>
-  In Spring 2025, I helped organize the <a href="https://sites.math.washington.edu/~zawadx/milestone_sem.html">Writing Milestone Seminar</a> with <a href="https://sites.math.washington.edu/~zawadx/">Zawad Chowdhury</a>. This seminar gives beginning graduate students working on their <a href="https://math.washington.edu/writing-milestone">writing milestone</a> a chance to speak about the math topics that they have been working so closely on, and to discuss this new and emerging mutual experience with fellow graduate students. 
+  <p>In Spring 2025, I helped organize the <a href="https://sites.math.washington.edu/~zawadx/milestone_sem.html">Writing Milestone Seminar</a> with <a href="https://sites.math.washington.edu/~zawadx/">Zawad Chowdhury</a>. This seminar gives beginning graduate students working on their <a href="https://math.washington.edu/writing-milestone">writing milestone</a> a chance to speak about the math topics that they have been working so closely on, and to discuss this new and emerging mutual experience with fellow graduate students.</p>
 
   <h3>Algebraic Curves</h3>
   <p>In Winter 2025, I organized a graduate reading course on algebraic curves, supervised by <a href="https://math.washington.edu/people/giovanni-inchiostro">Giovanni Inchiostro</a>. More details at <a href="https://sites.google.com/uw.edu/algebraic-curves-seminar/home">Algebraic Curves Learning Seminar</a>.</p>
@@ -23,10 +23,10 @@ permalink: /teaching/
 <section class="section">
   <h2>Teaching at the UW</h2>
   <h3>MATH 208 Linear Algebra</h3>
-  I was the instructor of record for <a href="https://sites.math.washington.edu/~m208/">MATH 208 C: Linear Algebra</a> in Summer 2025. I taught a hybrid course with zoom recording. The class size was 83.
+  <p>I was the instructor of record for <a href="https://sites.math.washington.edu/~m208/">MATH 208 C: Linear Algebra</a> in Summer 2025. I taught a hybrid course with zoom recording. The class size was 83.</p>
 
 
-  Here is a list of my TA/grading duties. 
+  <p>Here is a list of my TA/grading duties.</p>
 
 
   <h3>2025 &ndash; 2026</h3>
@@ -59,21 +59,21 @@ permalink: /teaching/
     <figcaption>A slide from my WDRP talk.</figcaption>
   </figure>
 
-  I have partaken in the UW Math AI Lab, the Washington eXperiental Math Lab (WXML), and the Washington Directed Reading Program (WDRP).
+  <p>I have partaken in the UW Math AI Lab, the Washington eXperiental Math Lab (WXML), and the Washington Directed Reading Program (WDRP).</p>
 
   <h3><a href="https://sites.math.washington.edu/ai/">UW Math AI Lab</a></h3>
 
-  I am a mentor on the project <a href="https://github.com/uw-math-ai/PolyArithmeticCircuitsRL/tree/rohan-new-branch">Reinforcement Learning for Polynomials</a>. Together with <a href="https://sites.math.washington.edu//~jarod/">Jarod Alper</a> and other group members, we try to train a AlphaZero-style reinforcement learning agent to efficiently compute polynomial circuits. This can be viewed as an extremely simplified version of auto-proof generation. This project has produced an ICLR workshop paper titled <a href="https://arxiv.org/abs/2603.17075">CircuitBuilder: From Polynomials to Circuits via Reinforcement Learning</a>. 
+  <p>I am a mentor on the project <a href="https://github.com/uw-math-ai/PolyArithmeticCircuitsRL/tree/rohan-new-branch">Reinforcement Learning for Polynomials</a>. Together with <a href="https://sites.math.washington.edu//~jarod/">Jarod Alper</a> and other group members, we try to train a AlphaZero-style reinforcement learning agent to efficiently compute polynomial circuits. This can be viewed as an extremely simplified version of auto-proof generation. This project has produced an ICLR workshop paper titled <a href="https://arxiv.org/abs/2603.17075">CircuitBuilder: From Polynomials to Circuits via Reinforcement Learning</a>.</p>
 
-  I am a mentor on the project <a href="https://github.com/uw-math-ai/cayley-py">CayleyPy: Advancing Group Theory with AI</a>. 
+  <p>I am a mentor on the project <a href="https://github.com/uw-math-ai/cayley-py">CayleyPy: Advancing Group Theory with AI</a>.</p>
 
-  I served as a mentor on the project "What mathematical functions can neural networks learn?" in the 2024-2025 iteration of the Math AI Lab. 
+  <p>I served as a mentor on the project "What mathematical functions can neural networks learn?" in the 2024-2025 iteration of the Math AI Lab.</p>
 
   <h3><a href="https://wxml.math.washington.edu/">Washington eXperimental Mathematics Lab - WXML</a></h3>
   
-  I am a mentor on the Spring 2026 project <i>"Calculus Visuals – Interactive modeling with Desmos, 3D prints, and other tools"</i>. 
+  <p>I am a mentor on the Spring 2026 project <i>"Calculus Visuals – Interactive modeling with Desmos, 3D prints, and other tools"</i>.</p>
   
-  I served as a mentor on the Spring 2025 project <i>"Creating 3D Prints and Animations to Help Teach Calculus."</i> With <a href="https://sites.math.washington.edu/~aloveles/">Andy Loveless</a> and other group members, we created 3D prints of mathematical objects as teaching aids for the calculus sequence, and geometric thinking in general. Here is an <a href="https://sites.math.washington.edu/~aloveles/CalcVisuals/">ever-growing <i>Gallery of Shapes</i></a> that we've made so far. I like the following prints in particular:
+  <p>I served as a mentor on the Spring 2025 project <i>"Creating 3D Prints and Animations to Help Teach Calculus."</i> With <a href="https://sites.math.washington.edu/~aloveles/">Andy Loveless</a> and other group members, we created 3D prints of mathematical objects as teaching aids for the calculus sequence, and geometric thinking in general. Here is an <a href="https://sites.math.washington.edu/~aloveles/CalcVisuals/">ever-growing <i>Gallery of Shapes</i></a> that we've made so far. I like the following prints in particular:</p>
 
   <div style="display: flex; gap: 1.5rem; align-items: flex-start; justify-content: center; margin: 2rem 0;">
     <figure style="margin: 0; height: 150px; border-radius: 4px; box-shadow: var(--shadow); overflow: hidden;">
@@ -87,7 +87,7 @@ permalink: /teaching/
 
   <h3><a href="https://sites.uw.edu/wdrp/">Washington Directed Reading Program - WDRP</a></h3>
 
-  I served as a mentor for the following WDRP projects. 
+  <p>I served as a mentor for the following WDRP projects.</p>
 
   <ul>
     <li>(SP25) An Excursion in Representation Theory</li>
@@ -95,6 +95,6 @@ permalink: /teaching/
     <li>(WI24) Lie groups are not a lie: they are everywhere.</li>
   </ul>
 
-  I gave a talk at the Spring 2025 WDRP Seminar, where graduate students give intro-level talks related to their research. <a href="{{ '/notes/2025/04/23/WDRP-talk/' | relative_url }}">View the slides here</a>.
+  <p>I gave a talk at the Spring 2025 WDRP Seminar, where graduate students give intro-level talks related to their research. <a href="{{ '/notes/2025/04/23/WDRP-talk/' | relative_url }}">View the slides here</a>.</p>
 
 </section>

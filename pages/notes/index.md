@@ -6,11 +6,11 @@ permalink: /notes/
 
 <nav class="toc">
   <details class="toc__details">
-    <summary class="toc__summary"><span lang="ja">目次</span><span lang="zh-Hans">目录</span><span class="toc__divider"> · </span>Table of Contents</summary>
+    <summary class="toc__summary"><span lang="ja">目次</span><span lang="zh-Hans">目录</span><span lang="en">Table of Contents</span></summary>
     <ul class="toc__list">
-      <li><a href="#code-tools"><span lang="ja">コード</span><span lang="zh-Hans">代码</span><span class="toc__divider"> · </span>Code &amp; interactive tools</a></li>
-      <li><a href="#notes-translations"><span lang="ja">ノート</span><span lang="zh-Hans">笔记</span><span class="toc__divider"> · </span>Notes &amp; translations</a></li>
-      <li><a href="#blog-projects"><span lang="ja">ブログ</span><span lang="zh-Hans">博客</span><span class="toc__divider"> · </span>Blog &amp; ongoing projects</a></li>
+      <li><a href="#code-tools"><span lang="ja">コード</span><span lang="zh-Hans">代码</span><span lang="en">Code &amp; interactive tools</span></a></li>
+      <li><a href="#notes-translations"><span lang="ja">ノート</span><span lang="zh-Hans">笔记</span><span lang="en">Notes &amp; translations</span></a></li>
+      <li><a href="#blog-projects"><span lang="ja">ブログ</span><span lang="zh-Hans">博客</span><span lang="en">Blog &amp; ongoing projects</span></a></li>
     </ul>
   </details>
 </nav>
