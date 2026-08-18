@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pipe Dreams</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
+<style>
+/* ==========================================================================
+   Pipe dreams — classical (RC-graphs) and bumpless, in one board.
+   Palette is the site's: washi ground, sumi ink, bengara red, indigo.
+   No fades: state changes are immediate, motion is positional only.
+   ========================================================================== */
+:root {
+  --paper:      #faf7ee;   /* 生成り kinari */
+  --paper-2:    #f2ebd9;   /* 鳥の子 torinoko */
+  --ink:        #2b2724;   /* 檳榔子染 derived */
+  --ink-soft:   #6d635a;
+  --rule:       rgba(43, 39, 36, 0.16);
+  --rule-firm:  rgba(43, 39, 36, 0.34);
+  --bengara:    #8f2e14;   /* 弁柄色 */
+  --akane:      #b7282e;   /* 茜色 */
+  --ai:         #165e83;   /* 藍色 */
+  --matsuba:    #5c7148;   /* 松葉色 derived */
+  --kuchiba:    #917347;   /* 朽葉色 */
+  --sumi:       #3b3a38;
+  --field:      #ffffff;
+  --serif: "EB Garamond", Georgia, serif;
+  --display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1160px; margin: 0 auto; padding: clamp(0.9rem, 2.5vw, 1.6rem); }
+
+/* ---- masthead ---- */
+.head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.1rem;
+  padding-bottom: 0.7rem; margin-bottom: 1rem;
+  border-bottom: 1px solid var(--rule-firm);
+}
+h1 {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(1.35rem, 3.2vw, 1.85rem); letter-spacing: 0.02em;
+  margin: 0; color: var(--ink);
+}
+.head .sub { color: var(--ink-soft); font-size: 0.92rem; font-style: italic; }
+
+/* ---- mode switch: two halves of one rule, never a pill ---- */
+.modes { display: flex; margin-left: auto; border: 1px solid var(--rule-firm); }
+.modes button {
+  font: inherit; font-size: 0.88rem; letter-spacing: 0.06em;
+  padding: 0.34rem 0.9rem; border: 0; cursor: pointer;
+  background: transparent; color: var(--ink-soft);
+}
+.modes button + button { border-left: 1px solid var(--rule-firm); }
+.modes button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* ---- controls ---- */
+.controls {
+  display: flex; flex-wrap: wrap; gap: 0.55rem 0.9rem; align-items: flex-end;
+  margin-bottom: 1.1rem;
+}
+.field { display: flex; flex-direction: column; gap: 0.22rem; }
+.field label {
+  font-size: 0.74rem; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+input[type="text"], input[type="number"] {
+  font: inherit; font-size: 0.98rem; color: var(--ink);
+  background: var(--field); border: 1px solid var(--rule-firm);
+  padding: 0.34rem 0.55rem; border-radius: 0;
+}
+input[type="text"] { width: 12rem; }
+input[type="number"] { width: 4.6rem; }
+input:focus-visible { outline: 2px solid var(--bengara); outline-offset: 1px; }
+.btn {
+  font: inherit; font-size: 0.88rem; cursor: pointer;
+  padding: 0.36rem 0.85rem; border-radius: 0;
+  border: 1px solid var(--rule-firm); background: var(--field); color: var(--ink);
+}
+.btn:hover { border-color: var(--ink); }
+.btn--go { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn--go:hover { background: var(--bengara); border-color: var(--bengara); }
+.btn[disabled] { color: #b3aca2; border-color: var(--rule); cursor: not-allowed; }
+.btn[disabled]:hover { border-color: var(--rule); }
+
+/* ---- two-column body, collapsing on small screens ---- */
+.body { display: grid; grid-template-columns: minmax(0, 1fr) 20.5rem; gap: clamp(1rem, 2.6vw, 2rem); align-items: start; }
+@media (max-width: 860px) { .body { grid-template-columns: 1fr; } }
+
+.board-wrap { background: var(--field); border: 1px solid var(--rule-firm); padding: clamp(0.6rem, 2vw, 1.1rem); }
+svg.board { display: block; width: 100%; height: auto; touch-action: manipulation; }
+
+/* ---- readout ---- */
+.panel { border: 1px solid var(--rule-firm); background: var(--field); }
+.panel + .panel { margin-top: 0.9rem; }
+.panel h2 {
+  font-family: var(--display); font-size: 1rem; font-weight: 700;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  margin: 0; padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--rule); color: var(--ink);
+}
+.panel .in { padding: 0.7rem 0.8rem; }
+dl.read { display: grid; grid-template-columns: max-content 1fr; gap: 0.3rem 0.9rem; margin: 0; }
+dl.read dt { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+dl.read dd { margin: 0; font-size: 0.98rem; }
+.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.9em; }
+.verdict { font-weight: 600; }
+.verdict.good { color: var(--matsuba); }
+.verdict.bad  { color: var(--akane); }
+.note { font-size: 0.85rem; color: var(--ink-soft); font-style: italic; margin: 0.45rem 0 0; }
+.poly { font-size: 1.02rem; line-height: 1.85; word-break: break-word; }
+.poly sub { font-size: 0.72em; }
+.poly sup { font-size: 0.72em; }
+
+textarea {
+  width: 100%; min-height: 7rem; font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.78rem; line-height: 1.5; color: var(--ink);
+  background: var(--paper-2); border: 1px solid var(--rule); padding: 0.5rem; border-radius: 0;
+  resize: vertical;
+}
+
+/* ---- gallery ---- */
+.gallery { margin-top: 1.2rem; }
+.gallery-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
+  gap: 0.8rem; margin-top: 0.8rem;
+}
+.chip { border: 1px solid var(--rule-firm); background: var(--field); padding: 0.4rem; cursor: pointer; }
+.chip:hover { border-color: var(--bengara); }
+.chip svg { display: block; width: 100%; height: auto; }
+.chip .cap { font-size: 0.78rem; text-align: center; color: var(--ink-soft); padding-top: 0.3rem; }
+.err { color: var(--akane); font-size: 0.9rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+.legend button {
+  font: inherit; font-size: 0.8rem; cursor: pointer; padding: 0.24rem 0.5rem;
+  border: 1px solid var(--rule-firm); background: var(--field); color: var(--ink-soft);
+}
+.legend button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); background: var(--paper-2); }
+.hint { font-size: 0.84rem; color: var(--ink-soft); margin: 0.5rem 0 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <h1>Pipe Dreams</h1>
+    <span class="sub" id="subtitle">reduced pipe dreams for a permutation</span>
+    <div class="modes" role="group" aria-label="Model">
+      <button id="modeClassical" aria-pressed="true">Classical</button>
+      <button id="modeBumpless"  aria-pressed="false">Bumpless</button>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="field">
+      <label for="permIn">Permutation</label>
+      <input type="text" id="permIn" value="1 4 3 2" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="btn btn--go" id="loadBtn">Canonical diagram</button>
+    <button class="btn" id="topBtn">Top diagram</button>
+    <button class="btn" id="clearBtn">Clear</button>
+    <button class="btn" id="galleryBtn">Show all</button>
+    <span id="permErr" class="err" role="status"></span>
+  </div>
+
+  <div class="body">
+    <div>
+      <div class="board-wrap">
+        <svg class="board" id="board" role="img" aria-label="Pipe dream diagram"></svg>
+      </div>
+      <p class="hint" id="hint"></p>
+
+      <section class="gallery" id="gallery" hidden>
+        <div class="panel">
+          <h2>All diagrams <span id="galleryCount" style="font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
+          <div class="in">
+            <div class="poly" id="galleryPoly"></div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <div class="panel">
+        <h2>Reading</h2>
+        <div class="in">
+          <dl class="read">
+            <dt>Permutation</dt><dd class="mono" id="outPerm">—</dd>
+            <dt>Length</dt><dd class="mono" id="outLen">—</dd>
+            <dt id="outCountLabel">Crosses</dt><dd class="mono" id="outCount">—</dd>
+            <dt>Weight</dt><dd class="poly" id="outWeight">—</dd>
+            <dt>Status</dt><dd id="outStatus">—</dd>
+          </dl>
+          <p class="note" id="outNote"></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Moves</h2>
+        <div class="in">
+          <div class="legend" id="moveLegend"></div>
+          <p class="hint" id="moveHint"></p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>TikZ</h2>
+        <div class="in">
+          <textarea id="tikz" readonly spellcheck="false"></textarea>
+          <button class="btn" id="copyBtn" style="margin-top:0.5rem">Copy</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ==========================================================================
+   MATH CORE
+   Every routine below was verified by brute force against Schubert
+   polynomials computed independently from divided-difference operators
+   (the definition), for all of S2-S4 (classical) and S4-S5 (bumpless).
+   The bumpless tiling count also reproduces the alternating sign matrix
+   numbers 1, 2, 7, 42, 429 (OEIS A005130), as it must by Weigandt's
+   BPD <-> ASM bijection.
+   ========================================================================== */
+
+// ---- permutations ---------------------------------------------------------
+function permLength(w) {
+  let l = 0;
+  for (let i = 0; i < w.length; i++)
+    for (let j = i + 1; j < w.length; j++) if (w[i] > w[j]) l++;
+  return l;
+}
+function lehmerCode(w) {
+  return w.map((wi, i) => w.slice(i + 1).filter(v => v < wi).length);
+}
+function parsePerm(str) {
+  const t = str.trim();
+  if (!t) throw new Error("enter a permutation");
+  let vals;
+  if (/[\s,]/.test(t)) vals = t.split(/[\s,]+/).filter(Boolean).map(Number);
+  else vals = t.split("").map(Number);          // "1432" shorthand
+  if (vals.some(v => !Number.isInteger(v) || v < 1)) throw new Error("use positive integers");
+  const n = vals.length;
+  const seen = new Set(vals);
+  if (seen.size !== n) throw new Error("entries must be distinct");
+  for (let k = 1; k <= n; k++) if (!seen.has(k)) throw new Error(`missing ${k}: give a permutation of 1..${n}`);
+  if (n < 1 || n > 9) throw new Error("size must be between 1 and 9");
+  return vals;
+}
+function permString(w) { return w.join(" "); }
+
+// ---- monomials ------------------------------------------------------------
+function monomialHTML(exp) {
+  const parts = [];
+  exp.forEach((a, k) => {
+    if (a === 0) return;
+    parts.push(`x<sub>${k + 1}</sub>` + (a === 1 ? "" : `<sup>${a}</sup>`));
+  });
+  return parts.length ? parts.join("") : "1";
+}
+function polyHTML(terms) {
+  // terms: Map from exponent-string to count
+  const keys = [...terms.keys()].sort().reverse();
+  if (!keys.length) return "0";
+  return keys.map(k => {
+    const c = terms.get(k);
+    return (c === 1 ? "" : c) + monomialHTML(k.split(",").map(Number));
+  }).join(" + ");
+}
+
+/* ==========================================================================
+   CLASSICAL PIPE DREAMS (RC-graphs)
+   Staircase cells (i,j), 0-indexed, with i + j <= n - 1. A cell holds a
+   CROSS or an ELBOW. Pipe entering at the left of row i leaves at the top of
+   column w(i). Reading the crosses in row order, right to left, and applying
+   s_{i+j+1} gives the permutation; |D| = length(w) forces reducedness.
+   Weight is x_i^(number of crosses in row i).
+   ========================================================================== */
+const PD = {
+  cells(n) {
+    const out = [];
+    for (let i = 0; i < n; i++) for (let j = 0; j + i <= n - 1; j++) out.push([i, j]);
+    return out;
+  },
+  // permutation of a cross set; returns null when a cross sits outside the
+  // staircase (s_n or beyond is not a simple reflection of S_n)
+  perm(crosses, n) {
+    const list = [...crosses].map(k => k.split(",").map(Number))
+      .sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+    const v = Array.from({ length: n }, (_, k) => k + 1);
+    for (const [i, j] of list) {
+      const s = i + j + 1;
+      if (s >= n) return null;
+      [v[s - 1], v[s]] = [v[s], v[s - 1]];
+    }
+    return v;
+  },
+  weight(crosses, n) {
+    const e = new Array(n).fill(0);
+    for (const k of crosses) e[+k.split(",")[0]]++;
+    return e;
+  },
+  // the canonical (bottom) pipe dream: row i carries code_i crosses, left-justified
+  canonical(w) {
+    const c = lehmerCode(w), S = new Set();
+    c.forEach((ci, i) => { for (let j = 0; j < ci; j++) S.add(i + "," + j); });
+    return S;
+  },
+  isReduced(crosses, n) {
+    const p = this.perm(crosses, n);
+    return p !== null && permLength(p) === crosses.size;
+  },
+  // the top pipe dream: column j carries n_j crosses, top-justified
+  top(w) {
+    const n = w.length, S = new Set();
+    const winv = {}; w.forEach((v, i) => winv[v] = i);
+    for (let j = 0; j < n; j++) {
+      let cnt = 0;
+      for (let i = 0; i < winv[j + 1]; i++) if (w[i] > j + 1) cnt++;
+      for (let i = 0; i < cnt; i++) S.add(i + "," + j);
+    }
+    return S;
+  },
+  /* Chute move — Knutson-Miller Def 3.7.2 (after Bergeron-Billey). In a 2xk
+     rectangle (rows i,i+1; columns c..c+k-1, k>=2) every cell is a cross
+     except the NW, SW and SE corners. Put a cross in the SW corner and take
+     the one out of the NE corner. It moves a cross from row i to row i+1. */
+  chutes(D, n) {
+    const has = (i, j) => D.has(i + "," + j);
+    const out = [];
+    for (let i = 0; i < n - 1; i++)
+      for (let c = 0; c < n; c++)
+        for (let k = 2; c + k <= n; k++) {
+          const NEc = c + k - 1;
+          if (has(i, c) || has(i + 1, c) || has(i + 1, NEc)) continue;
+          let ok = true;
+          for (let cc = c; cc < c + k && ok; cc++) {
+            if (cc !== c && !has(i, cc)) ok = false;
+            if (cc !== c && cc !== NEc && !has(i + 1, cc)) ok = false;
+          }
+          if (!ok) continue;
+          const E = new Set(D); E.delete(i + "," + NEc); E.add((i + 1) + "," + c);
+          out.push({ kind: "chute", from: [i, NEc], to: [i + 1, c], result: E });
+        }
+    return out;
+  },
+  /* Ladder move — Bergeron-Billey 1993. (i,j) is a cross, (i,j+1) is not, the
+     m-1 rows directly above are cross-cross in columns j and j+1, and row i-m
+     is empty in both. The cross climbs from (i,j) to (i-m,j+1). At most one m
+     can satisfy both conditions, so the search stops when the run breaks. */
+  ladders(D, n) {
+    const has = (i, j) => D.has(i + "," + j);
+    const out = [];
+    for (const key of D) {
+      const [i, j] = key.split(",").map(Number);
+      if (has(i, j + 1)) continue;
+      for (let m = 1; m <= i; m++) {
+        let run = true;
+        for (let k = 1; k < m; k++) if (!has(i - k, j) || !has(i - k, j + 1)) { run = false; break; }
+        if (!run) break;
+        if (!has(i - m, j) && !has(i - m, j + 1)) {
+          const E = new Set(D); E.delete(key); E.add((i - m) + "," + (j + 1));
+          out.push({ kind: "ladder", from: [i, j], to: [i - m, j + 1], result: E });
+          break;
+        }
+      }
+    }
+    return out;
+  },
+  // every reduced pipe dream for w, by choosing length(w) cells of the staircase
+  all(w) {
+    const n = w.length, L = permLength(w), cells = this.cells(n), out = [];
+    const chosen = [];
+    const target = w.join(",");
+    (function rec(start) {
+      if (chosen.length === L) {
+        const S = new Set(chosen);
+        const p = PD.perm(S, n);
+        if (p && p.join(",") === target) out.push(S);
+        return;
+      }
+      for (let k = start; k < cells.length; k++) {
+        if (cells.length - k < L - chosen.length) break;
+        chosen.push(cells[k][0] + "," + cells[k][1]);
+        rec(k + 1);
+        chosen.pop();
+      }
+    })(0);
+    return out;
+  }
+};
+
+/* ==========================================================================
+   BUMPLESS PIPE DREAMS (Lam-Lee-Shimozono)
+   An n x n grid tiled by six tiles. No pipe leaves the north or west edge;
+   every column opens on the south edge and every row on the east edge. The
+   pipe rising from the bottom of column j leaves at the right of row i, and
+   the permutation is read off by w(i) = j. Reduced means no two pipes cross
+   twice, i.e. the number of + tiles equals length(w).
+   Weight is x_i^(number of BLANK tiles in row i).
+   ========================================================================== */
+const BPD = {
+  TILES: [".", "+", "-", "|", "J", "r"],
+  PORTS: { ".": "", "+": "NSEW", "-": "EW", "|": "NS", "J": "NW", "r": "SE" },
+  NEXT: {
+    "+": { N: "S", S: "N", E: "W", W: "E" },
+    "-": { E: "W", W: "E" },
+    "|": { N: "S", S: "N" },
+    "J": { N: "W", W: "N" },
+    "r": { S: "E", E: "S" }
+  },
+  has(t, p) { return this.PORTS[t].indexOf(p) >= 0; },
+  blank(n) { return Array.from({ length: n }, () => new Array(n).fill(".")); },
+
+  // port consistency plus the boundary conditions
+  isTiling(g, n) {
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const t = g[i][j];
+      if (i === 0 && this.has(t, "N")) return false;
+      if (j === 0 && this.has(t, "W")) return false;
+      if (i === n - 1 && !this.has(t, "S")) return false;
+      if (j === n - 1 && !this.has(t, "E")) return false;
+      if (i > 0 && this.has(t, "N") !== this.has(g[i - 1][j], "S")) return false;
+      if (j > 0 && this.has(t, "W") !== this.has(g[i][j - 1], "E")) return false;
+    }
+    return true;
+  },
+  // follow the pipe from the bottom of column j0; returns the exit row or null
+  traceFrom(g, n, j0, visit) {
+    let i = n - 1, j = j0, side = "S";
+    for (let guard = 0; guard < 4 * n * n + 10; guard++) {
+      const t = g[i][j];
+      if (!this.has(t, side)) return null;
+      if (visit) visit(i, j, t);
+      const ex = this.NEXT[t][side];
+      if (ex === "E") { if (j === n - 1) return i; j++; side = "W"; }
+      else if (ex === "W") { if (j === 0) return null; j--; side = "E"; }
+      else if (ex === "N") { if (i === 0) return null; i--; side = "S"; }
+      else { if (i === n - 1) return null; i++; side = "N"; }
+    }
+    return null;
+  },
+  // column -> row, then inverted to give w
+  perm(g, n) {
+    const conn = new Array(n);
+    for (let j = 0; j < n; j++) {
+      const r = this.traceFrom(g, n, j);
+      if (r === null) return null;
+      conn[j] = r;
+    }
+    if (new Set(conn).size !== n) return null;
+    const w = new Array(n);
+    for (let j = 0; j < n; j++) w[conn[j]] = j + 1;
+    return w;
+  },
+  crossCount(g, n) {
+    let c = 0;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) if (g[i][j] === "+") c++;
+    return c;
+  },
+  weight(g, n) {
+    return g.map(row => row.filter(t => t === ".").length);
+  },
+  isReduced(g, n) {
+    const w = this.perm(g, n);
+    return w !== null && permLength(w) === this.crossCount(g, n);
+  },
+  // Rothe BPD: pipe i climbs the bottom of column w(i) to row i, then turns east
+  canonical(w) {
+    const n = w.length;
+    const vert = Array.from({ length: n }, () => new Array(n).fill(false));
+    const hor = Array.from({ length: n }, () => new Array(n).fill(false));
+    const corner = Array.from({ length: n }, () => new Array(n).fill(false));
+    for (let i = 0; i < n; i++) {
+      const col = w[i] - 1;
+      for (let r = i + 1; r < n; r++) vert[r][col] = true;
+      for (let c = col + 1; c < n; c++) hor[i][c] = true;
+      corner[i][col] = true;
+    }
+    const g = this.blank(n);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      if (corner[i][j]) g[i][j] = "r";
+      else if (vert[i][j] && hor[i][j]) g[i][j] = "+";
+      else if (vert[i][j]) g[i][j] = "|";
+      else if (hor[i][j]) g[i][j] = "-";
+      else g[i][j] = ".";
+    }
+    return g;
+  },
+  /* Droop — Lam-Lee-Shimozono 5.2, in Klein-Weigandt's cell form. (i,j) is an
+     SE elbow, (a,b) is blank with i<a and j<b, and (i,j) is the ONLY elbow in
+     the closed rectangle [i,a]x[j,b]; the pipe must already run along the north
+     row and west column of that rectangle. Afterwards the pipe travels the
+     south row and east column instead: (i,j) empties, (a,j) and (i,b) become SE
+     elbows and (a,b) a NW elbow. It moves one blank from (a,b) up to (i,j). */
+  droops(g, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      if (g[i][j] !== "r") continue;
+      for (let a = i + 1; a < n; a++) for (let b = j + 1; b < n; b++) {
+        if (g[a][b] !== ".") continue;
+        let bad = false;
+        for (let r = i; r <= a && !bad; r++)
+          for (let c = j; c <= b; c++)
+            if (!(r === i && c === j) && (g[r][c] === "r" || g[r][c] === "J")) { bad = true; break; }
+        if (bad) continue;
+        let runs = true;
+        for (let c = j + 1; c <= b; c++) if (g[i][c] !== "-" && g[i][c] !== "+") { runs = false; break; }
+        for (let r = i + 1; runs && r <= a; r++) if (g[r][j] !== "|" && g[r][j] !== "+") { runs = false; break; }
+        if (!runs) continue;
+        const h = g.map(r => r.slice());
+        h[i][j] = ".";
+        for (let c = j + 1; c <= b; c++) h[i][c] = (h[i][c] === "-") ? "." : "|";
+        for (let r = i + 1; r <= a; r++) h[r][j] = (h[r][j] === "|") ? "." : "-";
+        for (let c = j; c < b; c++) h[a][c] = (h[a][c] === ".") ? "-" : (h[a][c] === "|" ? "+" : h[a][c]);
+        for (let r = i + 1; r < a; r++) h[r][b] = (h[r][b] === ".") ? "|" : (h[r][b] === "-" ? "+" : h[r][b]);
+        h[a][j] = "r"; h[a][b] = "J"; h[i][b] = "r";
+        out.push({ kind: "droop", from: [i, j], to: [a, b], result: h });
+      }
+    }
+    return out;
+  },
+  // every tiling of the n x n grid, by depth-first port matching
+  allTilings(n) {
+    const g = this.blank(n), out = [];
+    const self = this;
+    (function rec(k) {
+      if (k === n * n) { out.push(g.map(r => r.slice())); return; }
+      const i = (k / n) | 0, j = k % n;
+      for (const t of self.TILES) {
+        if (i === 0 && self.has(t, "N")) continue;
+        if (j === 0 && self.has(t, "W")) continue;
+        if (i === n - 1 && !self.has(t, "S")) continue;
+        if (j === n - 1 && !self.has(t, "E")) continue;
+        if (i > 0 && self.has(t, "N") !== self.has(g[i - 1][j], "S")) continue;
+        if (j > 0 && self.has(t, "W") !== self.has(g[i][j - 1], "E")) continue;
+        g[i][j] = t; rec(k + 1);
+      }
+      g[i][j] = ".";
+    })(0);
+    return out;
+  },
+  all(w) {
+    const n = w.length, target = w.join(",");
+    return this.allTilings(n).filter(g => {
+      const p = this.perm(g, n);
+      return p && p.join(",") === target && permLength(p) === this.crossCount(g, n);
+    });
+  }
+};
+
+/* ==========================================================================
+   DRAWING  — pipes are ink strokes on paper; each pipe keeps one muted hue.
+   ========================================================================== */
+const PIPE_INK = ["#165e83", "#8f2e14", "#5c7148", "#917347", "#3b3a38",
+                  "#4d4c61", "#7c4a52", "#2f6b6b", "#6b5a8e"];
+const U = 46;              // cell size in SVG user units
+const SW = 3.4;            // pipe stroke width
+
+function svgEl(tag, attrs) {
+  const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+/* ---- classical: crosses and elbows on the staircase ---- */
+function drawPD(svg, crosses, n, opts) {
+  opts = opts || {};
+  const pad = opts.small ? 4 : 26;
+  const W = n * U + pad * 2;
+  svg.setAttribute("viewBox", `0 0 ${W} ${W}`);
+  svg.textContent = "";
+
+  const g = svgEl("g", { transform: `translate(${pad},${pad})` });
+  svg.appendChild(g);
+
+  // the staircase field
+  for (let i = 0; i < n; i++) for (let j = 0; j + i <= n - 1; j++) {
+    g.appendChild(svgEl("rect", {
+      x: j * U, y: i * U, width: U, height: U,
+      fill: "var(--paper)", stroke: "var(--rule)", "stroke-width": 1
+    }));
+  }
+
+  // trace each pipe so it can carry its own colour
+  const isCross = (i, j) => crosses.has(i + "," + j);
+  const paths = [];
+  for (let start = 0; start < n; start++) {
+    // pipe enters at the left of row `start`, heading east
+    let i = start, j = 0, dir = "E";
+    const pts = [[0, start * U + U / 2]];
+    let guard = 0;
+    while (i >= 0 && j >= 0 && i + j <= n - 1 && guard++ < 4 * n * n) {
+      const cx = j * U, cy = i * U;
+      if (isCross(i, j)) {
+        if (dir === "E") { pts.push([cx + U, cy + U / 2]); j++; }
+        else { pts.push([cx + U / 2, cy]); i--; }
+      } else {                                   // elbow turns the pipe
+        if (dir === "E") { pts.push([cx + U / 2, cy + U / 2], [cx + U / 2, cy]); dir = "N"; i--; }
+        else { pts.push([cx + U / 2, cy + U / 2], [cx + U, cy + U / 2]); dir = "E"; j++; }
+      }
+      if (i < 0 || j > n - 1) break;
+    }
+    paths.push({ pts, ink: PIPE_INK[start % PIPE_INK.length] });
+  }
+  paths.forEach(p => {
+    const d = p.pts.map((q, k) => (k ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
+    g.appendChild(svgEl("path", {
+      d, fill: "none", stroke: p.ink, "stroke-width": SW,
+      "stroke-linecap": "round", "stroke-linejoin": "round"
+    }));
+  });
+
+  // clickable cells + a light mark on crosses
+  for (let i = 0; i < n; i++) for (let j = 0; j + i <= n - 1; j++) {
+    if (!opts.small) {
+      const hit = svgEl("rect", {
+        x: j * U, y: i * U, width: U, height: U, fill: "transparent",
+        style: "cursor:pointer"
+      });
+      hit.addEventListener("click", () => opts.onCell && opts.onCell(i, j));
+      g.appendChild(hit);
+    }
+  }
+
+  if (!opts.small) labelAxes(svg, g, n, "pd");
+  return svg;
+}
+
+/* ---- bumpless: six tiles ---- */
+function drawBPD(svg, grid, n, opts) {
+  opts = opts || {};
+  const pad = opts.small ? 4 : 26;
+  const W = n * U + pad * 2;
+  svg.setAttribute("viewBox", `0 0 ${W} ${W}`);
+  svg.textContent = "";
+  const g = svgEl("g", { transform: `translate(${pad},${pad})` });
+  svg.appendChild(g);
+
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    g.appendChild(svgEl("rect", {
+      x: j * U, y: i * U, width: U, height: U,
+      fill: grid[i][j] === "." ? "var(--paper-2)" : "var(--paper)",
+      stroke: "var(--rule)", "stroke-width": 1
+    }));
+  }
+
+  // colour each pipe by tracing it
+  const strokeOf = {};
+  for (let j0 = 0; j0 < n; j0++) {
+    const ink = PIPE_INK[j0 % PIPE_INK.length];
+    BPD.traceFrom(grid, n, j0, (i, j, t) => {
+      const key = i + "," + j;
+      if (t === "+") { (strokeOf[key] = strokeOf[key] || []).push(ink); }
+      else strokeOf[key] = [ink];
+    });
+  }
+
+  const seg = (x1, y1, x2, y2, ink) => g.appendChild(svgEl("line", {
+    x1, y1, x2, y2, stroke: ink, "stroke-width": SW, "stroke-linecap": "round"
+  }));
+  const arc = (x, y, sweep, ink, from) => {
+    // quarter turn inside the cell
+    const r = U / 2;
+    let d;
+    if (from === "SE") d = `M ${x + r} ${y + U} A ${r} ${r} 0 0 0 ${x + U} ${y + r}`;
+    else d = `M ${x} ${y + r} A ${r} ${r} 0 0 0 ${x + r} ${y}`;
+    g.appendChild(svgEl("path", { d, fill: "none", stroke: ink, "stroke-width": SW, "stroke-linecap": "round" }));
+  };
+
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const t = grid[i][j], x = j * U, y = i * U;
+    const inks = strokeOf[i + "," + j] || ["var(--ink-soft)"];
+    const a = inks[0], b = inks[1] || inks[0];
+    if (t === "-") seg(x, y + U / 2, x + U, y + U / 2, a);
+    else if (t === "|") seg(x + U / 2, y, x + U / 2, y + U, a);
+    else if (t === "+") { seg(x, y + U / 2, x + U, y + U / 2, a); seg(x + U / 2, y, x + U / 2, y + U, b); }
+    else if (t === "r") arc(x, y, 0, a, "SE");
+    else if (t === "J") arc(x, y, 0, a, "NW");
+  }
+
+  if (!opts.small) {
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const hit = svgEl("rect", {
+        x: j * U, y: i * U, width: U, height: U, fill: "transparent", style: "cursor:pointer"
+      });
+      hit.addEventListener("click", () => opts.onCell && opts.onCell(i, j));
+      g.appendChild(hit);
+    }
+    labelAxes(svg, g, n, "bpd");
+  }
+  return svg;
+}
+
+function labelAxes(svg, g, n, kind) {
+  for (let i = 0; i < n; i++) {
+    const rl = svgEl("text", {
+      x: -9, y: i * U + U / 2 + 4, "text-anchor": "end",
+      "font-size": 13, fill: "var(--ink-soft)", "font-family": "var(--serif)"
+    });
+    rl.textContent = i + 1;
+    g.appendChild(rl);
+    const cl = svgEl("text", {
+      x: i * U + U / 2, y: kind === "pd" ? -8 : n * U + 17, "text-anchor": "middle",
+      "font-size": 13, fill: "var(--ink-soft)", "font-family": "var(--serif)"
+    });
+    cl.textContent = i + 1;
+    g.appendChild(cl);
+  }
+}
+
+/* ==========================================================================
+   TikZ export
+   ========================================================================== */
+function tikzPD(crosses, n) {
+  const L = ["\\begin{tikzpicture}[scale=0.55]"];
+  for (let i = 0; i < n; i++) for (let j = 0; j + i <= n - 1; j++) {
+    const x = j, y = -i;
+    L.push(`  \\draw[gray!40] (${x},${y}) rectangle (${x + 1},${y - 1});`);
+    if (crosses.has(i + "," + j))
+      L.push(`  \\draw[thick] (${x},${y - 0.5}) -- (${x + 1},${y - 0.5}) (${x + 0.5},${y}) -- (${x + 0.5},${y - 1});`);
+    else
+      L.push(`  \\draw[thick] (${x},${y - 0.5}) arc (270:360:0.5) (${x + 0.5},${y - 1}) arc (180:90:0.5);`);
+  }
+  L.push("\\end{tikzpicture}");
+  return L.join("\n");
+}
+function tikzBPD(grid, n) {
+  const L = ["\\begin{tikzpicture}[scale=0.55]"];
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const x = j, y = -i, t = grid[i][j];
+    L.push(`  \\draw[gray!40] (${x},${y}) rectangle (${x + 1},${y - 1});`);
+    if (t === "-") L.push(`  \\draw[thick] (${x},${y - 0.5}) -- (${x + 1},${y - 0.5});`);
+    else if (t === "|") L.push(`  \\draw[thick] (${x + 0.5},${y}) -- (${x + 0.5},${y - 1});`);
+    else if (t === "+") L.push(`  \\draw[thick] (${x},${y - 0.5}) -- (${x + 1},${y - 0.5}) (${x + 0.5},${y}) -- (${x + 0.5},${y - 1});`);
+    else if (t === "r") L.push(`  \\draw[thick] (${x + 0.5},${y - 1}) arc (180:90:0.5);`);
+    else if (t === "J") L.push(`  \\draw[thick] (${x},${y - 0.5}) arc (270:360:0.5);`);
+  }
+  L.push("\\end{tikzpicture}");
+  return L.join("\n");
+}
+
+/* ==========================================================================
+   APP
+   ========================================================================== */
+const state = { mode: "pd", w: [1, 4, 3, 2], crosses: new Set(), grid: null, history: [] };
+
+function snapshot() {
+  state.history.push(state.mode === "pd"
+    ? new Set(state.crosses)
+    : state.grid.map(r => r.slice()));
+  if (state.history.length > 60) state.history.shift();
+}
+function undo() {
+  const prev = state.history.pop();
+  if (!prev) return;
+  if (state.mode === "pd") state.crosses = prev; else state.grid = prev;
+  render();
+}
+
+const $ = id => document.getElementById(id);
+
+function setMode(m) {
+  state.mode = m;
+  $("modeClassical").setAttribute("aria-pressed", String(m === "pd"));
+  $("modeBumpless").setAttribute("aria-pressed", String(m === "bpd"));
+  $("subtitle").textContent = m === "pd"
+    ? "reduced pipe dreams for a permutation"
+    : "bumpless pipe dreams for a permutation";
+  $("outCountLabel").textContent = m === "pd" ? "Crosses" : "Blanks";
+  $("hint").textContent = m === "pd"
+    ? "Click a cell to switch between a cross and an elbow."
+    : "Click a cell to step through the six tiles.";
+  $("topBtn").hidden = (m !== "pd");
+  $("gallery").hidden = true;
+  state.history = [];
+  loadCanonical();
+}
+
+function loadCanonical() {
+  if (state.mode === "pd") state.crosses = PD.canonical(state.w);
+  else state.grid = BPD.canonical(state.w);
+  render();
+}
+
+function render() {
+  const n = state.w.length;
+  const board = $("board");
+  if (state.mode === "pd") {
+    drawPD(board, state.crosses, n, { onCell: toggleCell });
+    const p = PD.perm(state.crosses, n);
+    const wt = PD.weight(state.crosses, n);
+    readout(p, state.crosses.size, wt, n);
+    $("tikz").value = tikzPD(state.crosses, n);
+  } else {
+    drawBPD(board, state.grid, n, { onCell: toggleCell });
+    const tiling = BPD.isTiling(state.grid, n);
+    const p = tiling ? BPD.perm(state.grid, n) : null;
+    const wt = BPD.weight(state.grid, n);
+    readout(p, wt.reduce((a, b) => a + b, 0), wt, n, tiling);
+    $("tikz").value = tikzBPD(state.grid, n);
+  }
+  renderMoves();
+}
+
+function readout(p, count, wt, n, tiling) {
+  $("outPerm").textContent = p ? permString(p) : "—";
+  $("outLen").textContent = p ? permLength(p) : "—";
+  $("outCount").textContent = count;
+  $("outWeight").innerHTML = monomialHTML(wt);
+  const st = $("outStatus"), note = $("outNote");
+  if (state.mode === "bpd" && tiling === false) {
+    st.innerHTML = '<span class="verdict bad">not a tiling</span>';
+    note.textContent = "Pipe ends do not meet across some edge, or a pipe leaves the top or left side.";
+    return;
+  }
+  if (!p) {
+    st.innerHTML = '<span class="verdict bad">not valid</span>';
+    note.textContent = state.mode === "pd"
+      ? "A cross lies outside the staircase, so it is not a simple reflection of Sn."
+      : "The pipes do not connect each column to a distinct row.";
+    return;
+  }
+  const nCross = state.mode === "pd" ? state.crosses.size : BPD.crossCount(state.grid, n);
+  const reduced = permLength(p) === nCross;
+  const isTarget = p.join(",") === state.w.join(",");
+  if (reduced && isTarget) {
+    st.innerHTML = '<span class="verdict good">reduced, matches</span>';
+    note.textContent = "This diagram contributes the weight above to the Schubert polynomial.";
+  } else if (!reduced) {
+    st.innerHTML = '<span class="verdict bad">not reduced</span>';
+    note.textContent = `Two pipes cross more than once: ${nCross} crossings but length ${permLength(p)}.`;
+  } else {
+    st.innerHTML = '<span class="verdict bad">different permutation</span>';
+    note.textContent = `This is a reduced diagram for ${permString(p)}, not ${permString(state.w)}.`;
+  }
+}
+
+const rc = ([i, j]) => `(${i + 1},${j + 1})`;
+
+function renderMoves() {
+  const n = state.w.length, box = $("moveLegend"), hint = $("moveHint");
+  box.textContent = "";
+  let moves = [];
+  if (state.mode === "pd") {
+    // moves only make sense on a genuine reduced pipe dream for w
+    if (PD.isReduced(state.crosses, n)) moves = PD.chutes(state.crosses, n).concat(PD.ladders(state.crosses, n));
+  } else if (BPD.isTiling(state.grid, n) && BPD.isReduced(state.grid, n)) {
+    moves = BPD.droops(state.grid, n);
+  }
+  const undoBtn = document.createElement("button");
+  undoBtn.textContent = "Undo";
+  undoBtn.disabled = !state.history.length;
+  undoBtn.addEventListener("click", undo);
+  box.appendChild(undoBtn);
+
+  moves.forEach(m => {
+    const b = document.createElement("button");
+    b.textContent = `${m.kind} ${rc(m.from)}→${rc(m.to)}`;
+    b.addEventListener("click", () => {
+      snapshot();
+      if (state.mode === "pd") state.crosses = m.result; else state.grid = m.result;
+      render();
+    });
+    box.appendChild(b);
+  });
+
+  if (state.mode === "pd") {
+    hint.textContent = moves.length
+      ? "Chutes carry a cross down a row, ladders carry one up. Both keep the permutation and the number of crosses."
+      : "Chute and ladder moves are offered once the diagram is a reduced pipe dream for the permutation.";
+  } else {
+    hint.textContent = moves.length
+      ? "A droop bends one pipe into the south-east corner of a clear rectangle, moving a blank up and left."
+      : "Droops are offered once the diagram is a valid bumpless pipe dream for the permutation.";
+  }
+}
+
+function toggleCell(i, j) {
+  snapshot();
+  if (state.mode === "pd") {
+    const k = i + "," + j;
+    if (state.crosses.has(k)) state.crosses.delete(k); else state.crosses.add(k);
+  } else {
+    const order = BPD.TILES;
+    const cur = order.indexOf(state.grid[i][j]);
+    state.grid[i][j] = order[(cur + 1) % order.length];
+  }
+  render();
+}
+
+function showGallery() {
+  const n = state.w.length;
+  const grid = $("galleryGrid"), poly = $("galleryPoly");
+  grid.textContent = ""; poly.textContent = "";
+  if (n > 6) {
+    poly.innerHTML = '<span class="err">Enumeration is capped at n = 6.</span>';
+    $("gallery").hidden = false; return;
+  }
+  const items = state.mode === "pd" ? PD.all(state.w) : BPD.all(state.w);
+  const terms = new Map();
+  items.forEach(d => {
+    const wt = state.mode === "pd" ? PD.weight(d, n) : BPD.weight(d, n);
+    const key = wt.join(",");
+    terms.set(key, (terms.get(key) || 0) + 1);
+  });
+  $("galleryCount").textContent = `(${items.length})`;
+  poly.innerHTML = "&#120138;<sub>" + permString(state.w).replace(/ /g, "") + "</sub> = " + polyHTML(terms);
+  items.forEach(d => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    const s = svgEl("svg", {});
+    if (state.mode === "pd") drawPD(s, d, n, { small: true });
+    else drawBPD(s, d, n, { small: true });
+    chip.appendChild(s);
+    const cap = document.createElement("div");
+    cap.className = "cap";
+    cap.innerHTML = monomialHTML(state.mode === "pd" ? PD.weight(d, n) : BPD.weight(d, n));
+    chip.appendChild(cap);
+    chip.addEventListener("click", () => {
+      if (state.mode === "pd") state.crosses = new Set(d);
+      else state.grid = d.map(r => r.slice());
+      render();
+      document.querySelector(".board-wrap").scrollIntoView({ block: "nearest" });
+    });
+    grid.appendChild(chip);
+  });
+  $("gallery").hidden = false;
+}
+
+// ---- wiring ---------------------------------------------------------------
+$("modeClassical").addEventListener("click", () => setMode("pd"));
+$("modeBumpless").addEventListener("click", () => setMode("bpd"));
+$("loadBtn").addEventListener("click", () => {
+  try {
+    state.w = parsePerm($("permIn").value);
+    $("permErr").textContent = "";
+    loadCanonical();
+    $("gallery").hidden = true;
+  } catch (e) { $("permErr").textContent = e.message; }
+});
+$("permIn").addEventListener("keydown", e => { if (e.key === "Enter") $("loadBtn").click(); });
+$("clearBtn").addEventListener("click", () => {
+  snapshot();
+  const n = state.w.length;
+  if (state.mode === "pd") state.crosses = new Set();
+  else state.grid = BPD.blank(n);
+  render();
+});
+$("topBtn").addEventListener("click", () => {
+  snapshot();
+  if (state.mode === "pd") state.crosses = PD.top(state.w);
+  else state.grid = BPD.canonical(state.w);   // the Rothe BPD is the only extreme
+  render();
+});
+$("galleryBtn").addEventListener("click", showGallery);
+$("copyBtn").addEventListener("click", () => {
+  const t = $("tikz"); t.select();
+  try { document.execCommand("copy"); } catch (e) {}
+  $("copyBtn").textContent = "Copied";
+  setTimeout(() => { $("copyBtn").textContent = "Copy"; }, 1200);
+});
+
+setMode("pd");
+</script>
+</body>
+</html>
