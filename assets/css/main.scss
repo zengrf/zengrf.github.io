@@ -48,10 +48,35 @@
   --bay-pad-x: clamp(1.5rem, 3.6vw, 2.8rem);
   --bay-pad-y: clamp(1.9rem, 4vw, 2.8rem);
 
-  --arris-lit: rgba(255, 255, 255, 0.17);
-  --arris-lit2: rgba(255, 255, 255, 0.05);
-  --arris-sh1: rgba(0, 0, 0, 0.22);
-  --arris-sh2: rgba(0, 0, 0, 0.42);
+  /* One chamfer ramp, shared by every timber member. Planed wood falls off
+     continuously from the lit arris across the face to the shaded one;
+     stepped stops read as painted stripes, so every stop here interpolates. */
+  --bevel-v: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.19) 0, rgba(255, 255, 255, 0.115) 1.1px,
+    rgba(255, 255, 255, 0.052) 2.6px, rgba(255, 255, 255, 0.014) 4.6px,
+    rgba(255, 255, 255, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 10px), rgba(0, 0, 0, 0.05) calc(100% - 7px),
+    rgba(0, 0, 0, 0.13) calc(100% - 4.4px), rgba(0, 0, 0, 0.26) calc(100% - 2.2px),
+    rgba(0, 0, 0, 0.38) calc(100% - 0.9px), rgba(0, 0, 0, 0.46) 100%);
+  --bevel-v-r: linear-gradient(270deg,
+    rgba(255, 255, 255, 0.19) 0, rgba(255, 255, 255, 0.115) 1.1px,
+    rgba(255, 255, 255, 0.052) 2.6px, rgba(255, 255, 255, 0.014) 4.6px,
+    rgba(255, 255, 255, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 10px), rgba(0, 0, 0, 0.05) calc(100% - 7px),
+    rgba(0, 0, 0, 0.13) calc(100% - 4.4px), rgba(0, 0, 0, 0.26) calc(100% - 2.2px),
+    rgba(0, 0, 0, 0.38) calc(100% - 0.9px), rgba(0, 0, 0, 0.46) 100%);
+  --bevel-h: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.19) 0, rgba(255, 255, 255, 0.115) 1.1px,
+    rgba(255, 255, 255, 0.052) 2.6px, rgba(255, 255, 255, 0.014) 4.6px,
+    rgba(255, 255, 255, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 10px), rgba(0, 0, 0, 0.05) calc(100% - 7px),
+    rgba(0, 0, 0, 0.13) calc(100% - 4.4px), rgba(0, 0, 0, 0.26) calc(100% - 2.2px),
+    rgba(0, 0, 0, 0.38) calc(100% - 0.9px), rgba(0, 0, 0, 0.46) 100%);
+  /* lit from above only — the beam, whose top lies in the eave's shadow */
+  --bevel-under: linear-gradient(180deg,
+    rgba(0, 0, 0, 0) calc(100% - 11px), rgba(0, 0, 0, 0.05) calc(100% - 7.5px),
+    rgba(0, 0, 0, 0.14) calc(100% - 4.6px), rgba(0, 0, 0, 0.28) calc(100% - 2.3px),
+    rgba(0, 0, 0, 0.4) calc(100% - 1px), rgba(0, 0, 0, 0.48) 100%);
 
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --door-ease: cubic-bezier(0.76, 0, 0.24, 1);
@@ -179,10 +204,32 @@ html[data-time="night"] {
   --shoji-grid: rgba(203, 185, 148, 0.16);
   --toko-shadow: rgba(0, 0, 0, 0.5);
   --img-filter: brightness(0.78) sepia(0.12) saturate(0.9);
-  --arris-lit: rgba(255, 231, 186, 0.27);
-  --arris-lit2: rgba(255, 231, 186, 0.08);
-  --arris-sh1: rgba(0, 0, 0, 0.35);
-  --arris-sh2: rgba(0, 0, 0, 0.62);
+  /* lantern light rakes harder; the shadow side falls away deeper */
+  --bevel-v: linear-gradient(90deg,
+    rgba(255, 231, 186, 0.30) 0, rgba(255, 231, 186, 0.18) 1.1px,
+    rgba(255, 231, 186, 0.082) 2.6px, rgba(255, 231, 186, 0.022) 4.6px,
+    rgba(255, 231, 186, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 11px), rgba(0, 0, 0, 0.08) calc(100% - 7.5px),
+    rgba(0, 0, 0, 0.2) calc(100% - 4.6px), rgba(0, 0, 0, 0.4) calc(100% - 2.3px),
+    rgba(0, 0, 0, 0.56) calc(100% - 1px), rgba(0, 0, 0, 0.66) 100%);
+  --bevel-v-r: linear-gradient(270deg,
+    rgba(255, 231, 186, 0.30) 0, rgba(255, 231, 186, 0.18) 1.1px,
+    rgba(255, 231, 186, 0.082) 2.6px, rgba(255, 231, 186, 0.022) 4.6px,
+    rgba(255, 231, 186, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 11px), rgba(0, 0, 0, 0.08) calc(100% - 7.5px),
+    rgba(0, 0, 0, 0.2) calc(100% - 4.6px), rgba(0, 0, 0, 0.4) calc(100% - 2.3px),
+    rgba(0, 0, 0, 0.56) calc(100% - 1px), rgba(0, 0, 0, 0.66) 100%);
+  --bevel-h: linear-gradient(180deg,
+    rgba(255, 231, 186, 0.30) 0, rgba(255, 231, 186, 0.18) 1.1px,
+    rgba(255, 231, 186, 0.082) 2.6px, rgba(255, 231, 186, 0.022) 4.6px,
+    rgba(255, 231, 186, 0) 7px,
+    rgba(0, 0, 0, 0) calc(100% - 11px), rgba(0, 0, 0, 0.08) calc(100% - 7.5px),
+    rgba(0, 0, 0, 0.2) calc(100% - 4.6px), rgba(0, 0, 0, 0.4) calc(100% - 2.3px),
+    rgba(0, 0, 0, 0.56) calc(100% - 1px), rgba(0, 0, 0, 0.66) 100%);
+  --bevel-under: linear-gradient(180deg,
+    rgba(0, 0, 0, 0) calc(100% - 12px), rgba(0, 0, 0, 0.08) calc(100% - 8px),
+    rgba(0, 0, 0, 0.2) calc(100% - 4.8px), rgba(0, 0, 0, 0.42) calc(100% - 2.4px),
+    rgba(0, 0, 0, 0.58) calc(100% - 1px), rgba(0, 0, 0, 0.68) 100%);
   --eave: var(--tx-eave-night);
   --paper-glow: radial-gradient(ellipse 60% 46% at 50% 42%, rgba(230, 180, 34, 0.10), transparent 70%);
   color-scheme: dark;
@@ -199,9 +246,10 @@ html[data-time="night"] {
   --tx-renji: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='14'%20height='18'%20viewBox='0%200%2014%2018'%3E%3Crect%20x='0'%20width='3.48'%20height='18'%20fill='%23000'/%3E%3Crect%20x='3.48'%20width='2.52'%20height='18'%20fill='%23000'%20fill-opacity='0.55'/%3E%3C/svg%3E\")"};
   --tx-meander: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%3E%3Cpath%20d='M%200%2017%20H%203%20V%203%20H%2015%20V%2011%20H%208%20V%207%20H%2011'%20fill='none'%20stroke='%23000'%20stroke-width='1.5'/%3E%3Cpath%20d='M%2015%2017%20H%2020%20M%2015%2017%20V%2015'%20fill='none'%20stroke='%23000'%20stroke-width='1.5'/%3E%3C/svg%3E\")"};
   --tx-shippo: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='44'%20height='44'%20viewBox='0%200%2044%2044'%3E%3Ccircle%20cx='0'%20cy='0'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='44'%20cy='0'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='0'%20cy='44'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='44'%20cy='44'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3Ccircle%20cx='22'%20cy='22'%20r='22'%20fill='none'%20stroke='%23000'%20stroke-width='0.8'/%3E%3C/svg%3E\")"};
-  --tx-grain-v: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.02%200.09'%20numOctaves='2'%20seed='41'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='4'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.5%200.03'%20numOctaves='2'%20seed='48'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='44'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='0.22'%20y1='-10'%20x2='0.22'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.04'/%3E%3Cline%20x1='164.68'%20y1='-10'%20x2='164.68'%20y2='250'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.03'/%3E%3Cline%20x1='187'%20y1='-10'%20x2='187'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.06'/%3E%3Cline%20x1='209.14'%20y1='-10'%20x2='209.14'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.06'/%3E%3Cline%20x1='226.08'%20y1='-10'%20x2='226.08'%20y2='250'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.04'/%3E%3Cline%20x1='43.49'%20y1='-10'%20x2='43.49'%20y2='250'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.05'/%3E%3Cline%20x1='231.1'%20y1='-10'%20x2='231.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.1'%20stroke-opacity='0.03'/%3E%3Cline%20x1='43.35'%20y1='-10'%20x2='43.35'%20y2='250'%20stroke='%23000'%20stroke-width='1.99'%20stroke-opacity='0.06'/%3E%3Cline%20x1='155.21'%20y1='-10'%20x2='155.21'%20y2='250'%20stroke='%23000'%20stroke-width='1.81'%20stroke-opacity='0.07'/%3E%3Cline%20x1='61.15'%20y1='-10'%20x2='61.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.73'%20stroke-opacity='0.05'/%3E%3Cline%20x1='237.33'%20y1='-10'%20x2='237.33'%20y2='250'%20stroke='%23000'%20stroke-width='0.97'%20stroke-opacity='0.04'/%3E%3Cline%20x1='45.04'%20y1='-10'%20x2='45.04'%20y2='250'%20stroke='%23000'%20stroke-width='1.25'%20stroke-opacity='0.05'/%3E%3Cline%20x1='40.3'%20y1='-10'%20x2='40.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.85'%20stroke-opacity='0.04'/%3E%3Cline%20x1='68.3'%20y1='-10'%20x2='68.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.05'/%3E%3Cline%20x1='238.22'%20y1='-10'%20x2='238.22'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.05'/%3E%3Cline%20x1='158.25'%20y1='-10'%20x2='158.25'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.05'/%3E%3Cline%20x1='164.9'%20y1='-10'%20x2='164.9'%20y2='250'%20stroke='%23000'%20stroke-width='1.88'%20stroke-opacity='0.06'/%3E%3Cline%20x1='27.09'%20y1='-10'%20x2='27.09'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.03'/%3E%3Cline%20x1='177.52'%20y1='-10'%20x2='177.52'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.05'/%3E%3Cline%20x1='33.79'%20y1='-10'%20x2='33.79'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.05'/%3E%3Cline%20x1='72.1'%20y1='-10'%20x2='72.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.05'/%3E%3Cline%20x1='122.95'%20y1='-10'%20x2='122.95'%20y2='250'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.03'/%3E%3Cline%20x1='44.89'%20y1='-10'%20x2='44.89'%20y2='250'%20stroke='%23000'%20stroke-width='1.11'%20stroke-opacity='0.03'/%3E%3Cline%20x1='183.05'%20y1='-10'%20x2='183.05'%20y2='250'%20stroke='%23000'%20stroke-width='1.72'%20stroke-opacity='0.06'/%3E%3Cline%20x1='60.26'%20y1='-10'%20x2='60.26'%20y2='250'%20stroke='%23000'%20stroke-width='0.96'%20stroke-opacity='0.05'/%3E%3Cline%20x1='30.87'%20y1='-10'%20x2='30.87'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.05'/%3E%3Cline%20x1='39.86'%20y1='-10'%20x2='39.86'%20y2='250'%20stroke='%23000'%20stroke-width='0.94'%20stroke-opacity='0.03'/%3E%3Cline%20x1='207.92'%20y1='-10'%20x2='207.92'%20y2='250'%20stroke='%23000'%20stroke-width='1.9'%20stroke-opacity='0.06'/%3E%3Cline%20x1='108.82'%20y1='-10'%20x2='108.82'%20y2='250'%20stroke='%23000'%20stroke-width='1.07'%20stroke-opacity='0.05'/%3E%3Cline%20x1='234.15'%20y1='-10'%20x2='234.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.03'/%3E%3Cline%20x1='166.92'%20y1='-10'%20x2='166.92'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.08'/%3E%3Cline%20x1='30.85'%20y1='-10'%20x2='30.85'%20y2='250'%20stroke='%23000'%20stroke-width='0.58'%20stroke-opacity='0.05'/%3E%3Cline%20x1='95.15'%20y1='-10'%20x2='95.15'%20y2='250'%20stroke='%23000'%20stroke-width='2.57'%20stroke-opacity='0.08'/%3E%3Cline%20x1='239.23'%20y1='-10'%20x2='239.23'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.07'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
-  --tx-grain-h: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.09%200.02'%20numOctaves='2'%20seed='87'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='4'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.03%200.5'%20numOctaves='2'%20seed='94'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='90'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='-10'%20y1='0.47'%20x2='250'%20y2='0.47'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='50.92'%20x2='250'%20y2='50.92'%20stroke='%23000'%20stroke-width='1.14'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='209.48'%20x2='250'%20y2='209.48'%20stroke='%23000'%20stroke-width='1.13'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='156.96'%20x2='250'%20y2='156.96'%20stroke='%23000'%20stroke-width='0.9'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='64.12'%20x2='250'%20y2='64.12'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='203.5'%20x2='250'%20y2='203.5'%20stroke='%23000'%20stroke-width='1.86'%20stroke-opacity='0.08'/%3E%3Cline%20x1='-10'%20y1='104.04'%20x2='250'%20y2='104.04'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='214.91'%20x2='250'%20y2='214.91'%20stroke='%23000'%20stroke-width='0.86'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='200.58'%20x2='250'%20y2='200.58'%20stroke='%23000'%20stroke-width='0.82'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='229.27'%20x2='250'%20y2='229.27'%20stroke='%23000'%20stroke-width='0.93'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='6.04'%20x2='250'%20y2='6.04'%20stroke='%23000'%20stroke-width='0.63'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='200.94'%20x2='250'%20y2='200.94'%20stroke='%23000'%20stroke-width='0.69'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='108.93'%20x2='250'%20y2='108.93'%20stroke='%23000'%20stroke-width='0.74'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='156.63'%20x2='250'%20y2='156.63'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='43.05'%20x2='250'%20y2='43.05'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='48.97'%20x2='250'%20y2='48.97'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='156.74'%20x2='250'%20y2='156.74'%20stroke='%23000'%20stroke-width='0.66'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='104.31'%20x2='250'%20y2='104.31'%20stroke='%23000'%20stroke-width='1.19'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='89.85'%20x2='250'%20y2='89.85'%20stroke='%23000'%20stroke-width='0.6'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='106.83'%20x2='250'%20y2='106.83'%20stroke='%23000'%20stroke-width='0.98'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='94.45'%20x2='250'%20y2='94.45'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='32.6'%20x2='250'%20y2='32.6'%20stroke='%23000'%20stroke-width='0.84'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='30.86'%20x2='250'%20y2='30.86'%20stroke='%23000'%20stroke-width='0.91'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='2.09'%20x2='250'%20y2='2.09'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='116.17'%20x2='250'%20y2='116.17'%20stroke='%23000'%20stroke-width='0.81'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='211.85'%20x2='250'%20y2='211.85'%20stroke='%23000'%20stroke-width='1.08'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='8.48'%20x2='250'%20y2='8.48'%20stroke='%23000'%20stroke-width='1.18'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='37.3'%20x2='250'%20y2='37.3'%20stroke='%23000'%20stroke-width='1'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='225.06'%20x2='250'%20y2='225.06'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='192.47'%20x2='250'%20y2='192.47'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='143.46'%20x2='250'%20y2='143.46'%20stroke='%23000'%20stroke-width='2.43'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='53.77'%20x2='250'%20y2='53.77'%20stroke='%23000'%20stroke-width='0.52'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='61.41'%20x2='250'%20y2='61.41'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='214.95'%20x2='250'%20y2='214.95'%20stroke='%23000'%20stroke-width='1.24'%20stroke-opacity='0.05'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
+  --tx-grain-v: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.02%200.09'%20numOctaves='2'%20seed='41'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='2.2'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.5%200.03'%20numOctaves='2'%20seed='48'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='44'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='0.22'%20y1='-10'%20x2='0.22'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.03'/%3E%3Cline%20x1='164.68'%20y1='-10'%20x2='164.68'%20y2='250'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.03'/%3E%3Cline%20x1='187'%20y1='-10'%20x2='187'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.04'/%3E%3Cline%20x1='209.14'%20y1='-10'%20x2='209.14'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.04'/%3E%3Cline%20x1='226.08'%20y1='-10'%20x2='226.08'%20y2='250'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.04'/%3E%3Cline%20x1='43.49'%20y1='-10'%20x2='43.49'%20y2='250'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.04'/%3E%3Cline%20x1='231.1'%20y1='-10'%20x2='231.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.1'%20stroke-opacity='0.02'/%3E%3Cline%20x1='43.35'%20y1='-10'%20x2='43.35'%20y2='250'%20stroke='%23000'%20stroke-width='1.99'%20stroke-opacity='0.05'/%3E%3Cline%20x1='155.21'%20y1='-10'%20x2='155.21'%20y2='250'%20stroke='%23000'%20stroke-width='1.81'%20stroke-opacity='0.05'/%3E%3Cline%20x1='61.15'%20y1='-10'%20x2='61.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.73'%20stroke-opacity='0.04'/%3E%3Cline%20x1='237.33'%20y1='-10'%20x2='237.33'%20y2='250'%20stroke='%23000'%20stroke-width='0.97'%20stroke-opacity='0.04'/%3E%3Cline%20x1='45.04'%20y1='-10'%20x2='45.04'%20y2='250'%20stroke='%23000'%20stroke-width='1.25'%20stroke-opacity='0.04'/%3E%3Cline%20x1='40.3'%20y1='-10'%20x2='40.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.85'%20stroke-opacity='0.03'/%3E%3Cline%20x1='68.3'%20y1='-10'%20x2='68.3'%20y2='250'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.04'/%3E%3Cline%20x1='238.22'%20y1='-10'%20x2='238.22'%20y2='250'%20stroke='%23000'%20stroke-width='0.71'%20stroke-opacity='0.04'/%3E%3Cline%20x1='158.25'%20y1='-10'%20x2='158.25'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.04'/%3E%3Cline%20x1='164.9'%20y1='-10'%20x2='164.9'%20y2='250'%20stroke='%23000'%20stroke-width='1.88'%20stroke-opacity='0.05'/%3E%3Cline%20x1='27.09'%20y1='-10'%20x2='27.09'%20y2='250'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.02'/%3E%3Cline%20x1='177.52'%20y1='-10'%20x2='177.52'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.04'/%3E%3Cline%20x1='33.79'%20y1='-10'%20x2='33.79'%20y2='250'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.04'/%3E%3Cline%20x1='72.1'%20y1='-10'%20x2='72.1'%20y2='250'%20stroke='%23000'%20stroke-width='1.02'%20stroke-opacity='0.04'/%3E%3Cline%20x1='122.95'%20y1='-10'%20x2='122.95'%20y2='250'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.02'/%3E%3Cline%20x1='44.89'%20y1='-10'%20x2='44.89'%20y2='250'%20stroke='%23000'%20stroke-width='1.11'%20stroke-opacity='0.03'/%3E%3Cline%20x1='183.05'%20y1='-10'%20x2='183.05'%20y2='250'%20stroke='%23000'%20stroke-width='1.72'%20stroke-opacity='0.05'/%3E%3Cline%20x1='60.26'%20y1='-10'%20x2='60.26'%20y2='250'%20stroke='%23000'%20stroke-width='0.96'%20stroke-opacity='0.04'/%3E%3Cline%20x1='30.87'%20y1='-10'%20x2='30.87'%20y2='250'%20stroke='%23000'%20stroke-width='1.01'%20stroke-opacity='0.04'/%3E%3Cline%20x1='39.86'%20y1='-10'%20x2='39.86'%20y2='250'%20stroke='%23000'%20stroke-width='0.94'%20stroke-opacity='0.02'/%3E%3Cline%20x1='207.92'%20y1='-10'%20x2='207.92'%20y2='250'%20stroke='%23000'%20stroke-width='1.9'%20stroke-opacity='0.05'/%3E%3Cline%20x1='108.82'%20y1='-10'%20x2='108.82'%20y2='250'%20stroke='%23000'%20stroke-width='1.07'%20stroke-opacity='0.04'/%3E%3Cline%20x1='234.15'%20y1='-10'%20x2='234.15'%20y2='250'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.03'/%3E%3Cline%20x1='166.92'%20y1='-10'%20x2='166.92'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.07'/%3E%3Cline%20x1='30.85'%20y1='-10'%20x2='30.85'%20y2='250'%20stroke='%23000'%20stroke-width='0.58'%20stroke-opacity='0.04'/%3E%3Cline%20x1='95.15'%20y1='-10'%20x2='95.15'%20y2='250'%20stroke='%23000'%20stroke-width='2.57'%20stroke-opacity='0.07'/%3E%3Cline%20x1='239.23'%20y1='-10'%20x2='239.23'%20y2='250'%20stroke='%23000'%20stroke-width='2.6'%20stroke-opacity='0.06'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
+  --tx-grain-h: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%20x='-10%25'%20y='-10%25'%20width='120%25'%20height='120%25'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.09%200.02'%20numOctaves='2'%20seed='87'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='2.2'/%3E%3C/filter%3E%3Cfilter%20id='p'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.03%200.5'%20numOctaves='2'%20seed='94'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.035%200'/%3E%3C/filter%3E%3Cfilter%20id='v'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.012'%20numOctaves='2'%20seed='90'/%3E%3CfeColorMatrix%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.05%200'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='-10'%20y1='0.47'%20x2='250'%20y2='0.47'%20stroke='%23000'%20stroke-width='0.75'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='50.92'%20x2='250'%20y2='50.92'%20stroke='%23000'%20stroke-width='1.14'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='209.48'%20x2='250'%20y2='209.48'%20stroke='%23000'%20stroke-width='1.13'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='156.96'%20x2='250'%20y2='156.96'%20stroke='%23000'%20stroke-width='0.9'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='64.12'%20x2='250'%20y2='64.12'%20stroke='%23000'%20stroke-width='0.64'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='203.5'%20x2='250'%20y2='203.5'%20stroke='%23000'%20stroke-width='1.86'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='104.04'%20x2='250'%20y2='104.04'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='214.91'%20x2='250'%20y2='214.91'%20stroke='%23000'%20stroke-width='0.86'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='200.58'%20x2='250'%20y2='200.58'%20stroke='%23000'%20stroke-width='0.82'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='229.27'%20x2='250'%20y2='229.27'%20stroke='%23000'%20stroke-width='0.93'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='6.04'%20x2='250'%20y2='6.04'%20stroke='%23000'%20stroke-width='0.63'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='200.94'%20x2='250'%20y2='200.94'%20stroke='%23000'%20stroke-width='0.69'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='108.93'%20x2='250'%20y2='108.93'%20stroke='%23000'%20stroke-width='0.74'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='156.63'%20x2='250'%20y2='156.63'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='43.05'%20x2='250'%20y2='43.05'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='48.97'%20x2='250'%20y2='48.97'%20stroke='%23000'%20stroke-width='1.12'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='156.74'%20x2='250'%20y2='156.74'%20stroke='%23000'%20stroke-width='0.66'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='104.31'%20x2='250'%20y2='104.31'%20stroke='%23000'%20stroke-width='1.19'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='89.85'%20x2='250'%20y2='89.85'%20stroke='%23000'%20stroke-width='0.6'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='106.83'%20x2='250'%20y2='106.83'%20stroke='%23000'%20stroke-width='0.98'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='94.45'%20x2='250'%20y2='94.45'%20stroke='%23000'%20stroke-width='1.2'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='32.6'%20x2='250'%20y2='32.6'%20stroke='%23000'%20stroke-width='0.84'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='30.86'%20x2='250'%20y2='30.86'%20stroke='%23000'%20stroke-width='0.91'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='2.09'%20x2='250'%20y2='2.09'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='116.17'%20x2='250'%20y2='116.17'%20stroke='%23000'%20stroke-width='0.81'%20stroke-opacity='0.02'/%3E%3Cline%20x1='-10'%20y1='211.85'%20x2='250'%20y2='211.85'%20stroke='%23000'%20stroke-width='1.08'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='8.48'%20x2='250'%20y2='8.48'%20stroke='%23000'%20stroke-width='1.18'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='37.3'%20x2='250'%20y2='37.3'%20stroke='%23000'%20stroke-width='1'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='225.06'%20x2='250'%20y2='225.06'%20stroke='%23000'%20stroke-width='0.5'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='192.47'%20x2='250'%20y2='192.47'%20stroke='%23000'%20stroke-width='0.68'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='143.46'%20x2='250'%20y2='143.46'%20stroke='%23000'%20stroke-width='2.43'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='53.77'%20x2='250'%20y2='53.77'%20stroke='%23000'%20stroke-width='0.52'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='61.41'%20x2='250'%20y2='61.41'%20stroke='%23000'%20stroke-width='0.56'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='214.95'%20x2='250'%20y2='214.95'%20stroke='%23000'%20stroke-width='1.24'%20stroke-opacity='0.04'/%3E%3C/g%3E%3Crect%20width='240'%20height='240'%20filter='url(%23p)'/%3E%3Crect%20width='240'%20height='240'%20filter='url(%23v)'/%3E%3C/svg%3E\")"};
   --tx-engawa: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='240'%20height='240'%3E%3Cdefs%3E%3Cfilter%20id='d'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.09%200.02'%20numOctaves='2'%20seed='61'%20result='n'/%3E%3CfeDisplacementMap%20in='SourceGraphic'%20in2='n'%20scale='3.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20y='0'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='28.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='27.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='0'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='44.88'%20y='0'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='46.08'%20y='0'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='30'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.03'/%3E%3Crect%20y='58.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='57.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='30'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='93.19'%20y='30'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='94.39'%20y='30'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='60'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='88.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='87.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='60'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='137.06'%20y='60'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='138.26'%20y='60'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='90'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='118.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='117.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='90'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='66.84'%20y='90'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='68.04'%20y='90'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='120'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='148.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='147.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='120'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='85.02'%20y='120'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='86.22'%20y='120'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='150'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='178.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='177.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='150'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='44.11'%20y='150'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='45.31'%20y='150'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='180'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0.02'/%3E%3Crect%20y='208.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='207.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='180'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='92.06'%20y='180'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='93.26'%20y='180'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Crect%20y='210'%20width='240'%20height='30'%20fill='%23000'%20fill-opacity='0'/%3E%3Crect%20y='238.4'%20width='240'%20height='1.6'%20fill='%23000'%20fill-opacity='0.45'/%3E%3Crect%20y='237.4'%20width='240'%20height='1'%20fill='%23000'%20fill-opacity='0.18'/%3E%3Crect%20y='210'%20width='240'%20height='1'%20fill='%23fff'%20fill-opacity='0.07'/%3E%3Crect%20x='51.47'%20y='210'%20width='1.2'%20height='30'%20fill='%23000'%20fill-opacity='0.28'/%3E%3Crect%20x='52.67'%20y='210'%20width='0.8'%20height='30'%20fill='%23fff'%20fill-opacity='0.05'/%3E%3Cg%20filter='url(%23d)'%3E%3Cline%20x1='-10'%20y1='113.92'%20x2='250'%20y2='113.92'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='231.19'%20x2='250'%20y2='231.19'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='208.65'%20x2='250'%20y2='208.65'%20stroke='%23000'%20stroke-width='1.08'%20stroke-opacity='0.07'/%3E%3Cline%20x1='-10'%20y1='156.84'%20x2='250'%20y2='156.84'%20stroke='%23000'%20stroke-width='0.53'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='76.2'%20x2='250'%20y2='76.2'%20stroke='%23000'%20stroke-width='1.15'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='70.4'%20x2='250'%20y2='70.4'%20stroke='%23000'%20stroke-width='1.07'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='29.09'%20x2='250'%20y2='29.09'%20stroke='%23000'%20stroke-width='0.62'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='48.15'%20x2='250'%20y2='48.15'%20stroke='%23000'%20stroke-width='0.6'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='42.85'%20x2='250'%20y2='42.85'%20stroke='%23000'%20stroke-width='0.76'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='129.74'%20x2='250'%20y2='129.74'%20stroke='%23000'%20stroke-width='0.52'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='89.13'%20x2='250'%20y2='89.13'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='144.57'%20x2='250'%20y2='144.57'%20stroke='%23000'%20stroke-width='0.59'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='148.44'%20x2='250'%20y2='148.44'%20stroke='%23000'%20stroke-width='0.73'%20stroke-opacity='0.03'/%3E%3Cline%20x1='-10'%20y1='38.88'%20x2='250'%20y2='38.88'%20stroke='%23000'%20stroke-width='1.04'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='106.14'%20x2='250'%20y2='106.14'%20stroke='%23000'%20stroke-width='0.87'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='239.82'%20x2='250'%20y2='239.82'%20stroke='%23000'%20stroke-width='0.93'%20stroke-opacity='0.05'/%3E%3Cline%20x1='-10'%20y1='192.66'%20x2='250'%20y2='192.66'%20stroke='%23000'%20stroke-width='0.95'%20stroke-opacity='0.06'/%3E%3Cline%20x1='-10'%20y1='155.03'%20x2='250'%20y2='155.03'%20stroke='%23000'%20stroke-width='1.16'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='180.95'%20x2='250'%20y2='180.95'%20stroke='%23000'%20stroke-width='0.86'%20stroke-opacity='0.04'/%3E%3Cline%20x1='-10'%20y1='29.01'%20x2='250'%20y2='29.01'%20stroke='%23000'%20stroke-width='0.99'%20stroke-opacity='0.03'/%3E%3C/g%3E%3C/svg%3E\")"};
+  --tx-kugikakushi: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='190'%20height='18'%20viewBox='0%200%20190%2018'%3E%3Cdefs%3E%3CradialGradient%20id='b'%20cx='0.36'%20cy='0.32'%20r='0.8'%3E%3Cstop%20offset='0'%20stop-color='%23f7e3a4'/%3E%3Cstop%20offset='0.55'%20stop-color='%23d9ae3d'/%3E%3Cstop%20offset='1'%20stop-color='%238c6716'/%3E%3C/radialGradient%3E%3CradialGradient%20id='c'%20cx='0.36'%20cy='0.3'%20r='0.75'%3E%3Cstop%20offset='0'%20stop-color='%23fff3cd'/%3E%3Cstop%20offset='1'%20stop-color='%23b98d24'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cg%20opacity='0.24'%3E%3Ccircle%20cx='95.5'%20cy='9.9'%20r='6.4'%20fill='%23000'/%3E%3C/g%3E%3Cellipse%20cx='95'%20cy='5.03'%20rx='2.94'%20ry='2.18'%20transform='rotate(0%2095%205.03)'%20fill='url(%23b)'/%3E%3Cellipse%20cx='98.44'%20cy='7.02'%20rx='2.94'%20ry='2.18'%20transform='rotate(60%2098.44%207.02)'%20fill='url(%23b)'/%3E%3Cellipse%20cx='98.44'%20cy='10.98'%20rx='2.94'%20ry='2.18'%20transform='rotate(120%2098.44%2010.98)'%20fill='url(%23b)'/%3E%3Cellipse%20cx='95'%20cy='12.97'%20rx='2.94'%20ry='2.18'%20transform='rotate(180%2095%2012.97)'%20fill='url(%23b)'/%3E%3Cellipse%20cx='91.56'%20cy='10.98'%20rx='2.94'%20ry='2.18'%20transform='rotate(240%2091.56%2010.98)'%20fill='url(%23b)'/%3E%3Cellipse%20cx='91.56'%20cy='7.02'%20rx='2.94'%20ry='2.18'%20transform='rotate(300%2091.56%207.02)'%20fill='url(%23b)'/%3E%3Ccircle%20cx='95'%20cy='9'%20r='2.69'%20fill='url(%23c)'/%3E%3Ccircle%20cx='95'%20cy='9'%20r='2.69'%20fill='none'%20stroke='%238c6716'%20stroke-width='0.4'%20stroke-opacity='0.8'/%3E%3Ccircle%20cx='94.23'%20cy='8.1'%20r='0.83'%20fill='%23fff8e0'%20fill-opacity='0.85'/%3E%3C/svg%3E\")"};
   --tx-dougong: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='48'%20height='14'%20viewBox='0%200%2048%2014'%3E%3Cg%20fill='%23000'%3E%3Crect%20x='2'%20y='0'%20width='44'%20height='4'/%3E%3Crect%20x='8'%20y='4'%20width='32'%20height='4'/%3E%3Crect%20x='18'%20y='8'%20width='12'%20height='6'/%3E%3C/g%3E%3C/svg%3E\")"};
   --tx-kusa: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='36'%20height='22'%20viewBox='0%200%2036%2022'%3E%3Cg%20stroke='%23000'%20stroke-width='1.7'%20stroke-linecap='round'%3E%3Cpath%20d='M0%2011%20C%206%204%2011%204%2018%2011%20C%2025%2018%2030%2018%2036%2011'%20fill='none'/%3E%3Cpath%20d='M18%2011%20c%203%20-2.6%206.6%20-1.4%206%202%20c%20-0.4%202.4%20-3.4%202.8%20-4.4%200.7'%20fill='none'/%3E%3Cpath%20d='M36%2011%20c%20-3%202.6%20-6.6%201.4%20-6%20-2%20c%200.4%20-2.4%203.4%20-2.8%204.4%20-0.7'%20fill='none'/%3E%3Cpath%20d='M9%207.6%20c%201.6%20-2%204%20-1.2%203.6%200.9'%20fill='none'/%3E%3Cpath%20d='M27%2014.4%20c%20-1.6%202%20-4%201.2%20-3.6%20-0.9'%20fill='none'/%3E%3C/g%3E%3C/svg%3E\")"};
   --tx-eave-zh-night: #{"url(\"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='38'%20viewBox='0%200%2056%2038'%3E%3Cdefs%3E%3ClinearGradient%20id='fg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23211f1c'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='rg'%20x1='0'%20y1='0'%20x2='1'%20y2='0'%3E%3Cstop%20offset='0'%20stop-color='%23121110'/%3E%3Cstop%20offset='0.5'%20stop-color='%232a2824'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/linearGradient%3E%3ClinearGradient%20id='sg'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23292824'/%3E%3Cstop%20offset='1'%20stop-color='%23181714'/%3E%3C/linearGradient%3E%3CradialGradient%20id='dg'%20cx='0.38'%20cy='0.30'%20r='0.9'%3E%3Cstop%20offset='0'%20stop-color='%232e2c27'/%3E%3Cstop%20offset='1'%20stop-color='%23121110'/%3E%3C/radialGradient%3E%3Cfilter%20id='ds'%20x='-40%25'%20y='-40%25'%20width='180%25'%20height='180%25'%3E%3CfeDropShadow%20dx='0.4'%20dy='1.8'%20stdDeviation='1.3'%20flood-color='%23000'%20flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width='56'%20height='12.5'%20fill='url(%23fg)'/%3E%3Crect%20x='20'%20width='16'%20height='12.5'%20fill='url(%23rg)'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%230a0a09'%20stroke-width='6'%20stroke-opacity='0.35'/%3E%3Cpath%20d='M28%200V12.5'%20stroke='%232a2824'%20stroke-width='2.6'/%3E%3Crect%20y='11.6'%20width='56'%20height='1'%20fill='%23080807'/%3E%3Crect%20y='12.5'%20width='56'%20height='12'%20fill='url(%23sg)'/%3E%3Cg%20transform='translate(0,13.6)'%3E%3Cg%20stroke='%23454239'%20stroke-width='0.9'%20fill='none'%20stroke-linecap='round'%3E%3Cpath%20d='M%200%205%20C%207%202%2012%202%2014%205%20C%2016%208%2021%208%2028%205%20C%2035%202%2040%202%2042%205%20C%2044%208%2049%208%2056%205%20'/%3E%3Cpath%20d='M%2014%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2028%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3Cpath%20d='M%2042%205%20c%202%20-1.9%204.6%20-1.1%204.2%201.4%20c%20-0.3%201.7%20-2.5%202%20-3.2%200.5'%20fill='none'/%3E%3Cpath%20d='M%2056%205%20c%20-2%201.9%20-4.6%201.1%20-4.2%20-1.4%20c%200.3%20-1.7%202.5%20-2%203.2%20-0.5'%20fill='none'/%3E%3C/g%3E%3C/g%3E%3Cpath%20d='M0%2024.5%20Q%2014%2027%2028%2024.5%20Q%2042%2027%2056%2024.5%20L%2056%2023.3%20L%200%2023.3%20Z'%20fill='%23080807'/%3E%3Cg%20filter='url(%23ds)'%3E%3Ccircle%20cx='28'%20cy='24'%20r='12.5'%20fill='url(%23dg)'/%3E%3C/g%3E%3Cpath%20d='M%2020.25%2016.25%20A%2011%2011%200%200%201%2034.88%2015.25'%20stroke='%235a564c'%20stroke-width='1.1'%20fill='none'%20stroke-linecap='round'%20stroke-opacity='0.55'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='11'%20fill='none'%20stroke='%234b4840'%20stroke-width='1'%20stroke-opacity='0.9'/%3E%3Ccircle%20cx='28'%20cy='24'%20r='1.67'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2025.72%2021.11%20Q%2028%2019.67%2028%2016.78%20Q%2029.14%2020.39%2030.28%2021.11%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2028.43%2020.35%20Q%2031.06%2020.94%2033.11%2018.89%20Q%2031.36%2022.25%2031.65%2023.57%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2030.89%2021.72%20Q%2032.33%2024%2035.22%2024%20Q%2031.61%2025.14%2030.89%2026.28%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2031.65%2024.43%20Q%2031.06%2027.06%2033.11%2029.11%20Q%2029.75%2027.36%2028.43%2027.65%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2030.28%2026.89%20Q%2028%2028.33%2028%2031.22%20Q%2026.86%2027.61%2025.72%2026.89%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2027.57%2027.65%20Q%2024.94%2027.06%2022.89%2029.11%20Q%2024.64%2025.75%2024.35%2024.43%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2025.11%2026.28%20Q%2023.67%2024%2020.78%2024%20Q%2024.39%2022.86%2025.11%2021.72%20Z'%20fill='%230a0a09'/%3E%3Cpath%20d='M%2024.35%2023.57%20Q%2024.94%2020.94%2022.89%2018.89%20Q%2026.25%2020.64%2027.57%2020.35%20Z'%20fill='%230a0a09'/%3E%3C/svg%3E\")"};
@@ -297,9 +345,7 @@ h4 {
   background-color: var(--beam-mid);
   background-image:
     linear-gradient(180deg, rgba(0, 0, 0, 0.45) 30px, rgba(0, 0, 0, 0.06) 56px, rgba(0, 0, 0, 0) 76px),
-    linear-gradient(180deg,
-      transparent calc(100% - 5px),
-      rgba(0, 0, 0, 0.22) calc(100% - 5px) calc(100% - 2.5px), rgba(0, 0, 0, 0.45) calc(100% - 2.5px)),
+    var(--bevel-under),
     var(--tx-grain-h);
   color: var(--beam-ink);
   padding-top: 34px; /* room for the eave */
@@ -423,15 +469,19 @@ html[data-time="dusk"] .eave::after {
   width: var(--hashira);
   background-color: var(--post-mid);
   background-image:
-    linear-gradient(90deg,
-      var(--arris-lit) 0 2px, var(--arris-lit2) 2px 4px,
-      transparent 4px calc(100% - 4px),
-      var(--arris-sh1) calc(100% - 4px) calc(100% - 2px), var(--arris-sh2) calc(100% - 2px)),
+    var(--bevel-v),
     var(--tx-grain-v);
   z-index: 3;
 }
 .frame::before { left: 0; box-shadow: 4px 0 10px -3px rgba(0, 0, 0, 0.28); }
-.frame::after { right: 0; box-shadow: -4px 0 10px -3px rgba(0, 0, 0, 0.28); }
+/* The elevation is symmetric: each post takes its light on the OUTER arris
+   and its inner reveal falls into shadow, giving the bay depth. The right
+   member therefore mirrors the left instead of repeating it. */
+.frame::after {
+  right: 0;
+  box-shadow: -4px 0 10px -3px rgba(0, 0, 0, 0.28);
+  background-image: var(--bevel-v-r), var(--tx-grain-v);
+}
 
 /* ranma — the single ornament zone: asanoha transom under the beam */
 .ranma {
@@ -479,10 +529,7 @@ html[data-time="dusk"] .eave::after {
   height: var(--nageshi);
   background-color: var(--rail-mid);
   background-image:
-    linear-gradient(180deg,
-      var(--arris-lit) 0 2px, var(--arris-lit2) 2px 3.5px,
-      transparent 3.5px calc(100% - 4px),
-      var(--arris-sh1) calc(100% - 4px) calc(100% - 2px), var(--arris-sh2) calc(100% - 2px)),
+    var(--bevel-h),
     var(--tx-grain-h);
   box-shadow: 0 4px 9px -1px rgba(0, 0, 0, 0.24);
   z-index: 4;
@@ -931,7 +978,7 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   position: absolute;
   left: 0; right: 0; top: 0;
   height: var(--rail-minor);
-  background: linear-gradient(180deg, var(--rail-hi), var(--rail-lo));
+  background: linear-gradient(180deg, var(--rail-hi) 0, var(--rail-mid) 45%, var(--rail-lo) 100%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 .site-footer .container {
@@ -958,9 +1005,10 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   background-color: var(--beam-mid);
   background-image:
     linear-gradient(180deg,
-      rgba(255, 255, 255, 0.14) 0 1.5px,
-      transparent 1.5px calc(100% - 2.5px),
-      rgba(0, 0, 0, 0.4) calc(100% - 2.5px)),
+      rgba(255, 255, 255, 0.16) 0, rgba(255, 255, 255, 0.05) 1.4px,
+      rgba(255, 255, 255, 0) 2.8px,
+      rgba(0, 0, 0, 0) calc(100% - 4.5px), rgba(0, 0, 0, 0.16) calc(100% - 2.4px),
+      rgba(0, 0, 0, 0.42) 100%),
     var(--tx-grain-h);
   border: 1px solid var(--beam-lo);
   border-radius: 1px;
@@ -995,9 +1043,10 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   background-color: var(--beam-mid);
   background-image:
     linear-gradient(180deg,
-      rgba(255, 255, 255, 0.12) 0 1.5px,
-      transparent 1.5px calc(100% - 2.5px),
-      rgba(0, 0, 0, 0.42) calc(100% - 2.5px)),
+      rgba(255, 255, 255, 0.14) 0, rgba(255, 255, 255, 0.045) 1.4px,
+      rgba(255, 255, 255, 0) 2.8px,
+      rgba(0, 0, 0, 0) calc(100% - 4.5px), rgba(0, 0, 0, 0.17) calc(100% - 2.4px),
+      rgba(0, 0, 0, 0.44) 100%),
     var(--tx-grain-h);
   border: 1px solid var(--beam-lo);
   box-shadow:
@@ -1094,20 +1143,14 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   background-image:
     var(--paper-glow),
     repeating-linear-gradient(180deg,
-      var(--rail-hi) 0 1px,
-      var(--rail-mid) 1px 4.5px,
-      var(--rail-lo) 4.5px 6px,
-      rgba(0, 0, 0, 0.16) 6px 7.5px,
-      rgba(0, 0, 0, 0.05) 7.5px 9px,
-      transparent 9px 100px),
+      var(--rail-hi) 0, var(--rail-mid) 1.7px, var(--rail-lo) 4.6px,
+      rgba(0, 0, 0, 0.17) 6.1px, rgba(0, 0, 0, 0.05) 8.3px,
+      transparent 10px, transparent 100px),
     repeating-linear-gradient(270deg,
-      var(--rail-hi) 0 1px,
-      var(--rail-mid) 1px 4.5px,
-      var(--rail-lo) 4.5px 6px,
-      rgba(0, 0, 0, 0.13) 6px 7.5px,
-      transparent 7.5px 96.5px,
-      rgba(255, 255, 255, 0.22) 96.5px 97.5px,
-      transparent 97.5px 100px),
+      var(--rail-hi) 0, var(--rail-mid) 1.7px, var(--rail-lo) 4.6px,
+      rgba(0, 0, 0, 0.14) 6.1px, rgba(0, 0, 0, 0.04) 8.3px,
+      transparent 10px, transparent 95.5px,
+      rgba(255, 255, 255, 0.2) 97px, transparent 98.6px, transparent 100px),
     var(--tx-washi);
 }
 /* right leaf: verticals set out from ITS meeting edge (the left side) */
@@ -1115,20 +1158,14 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   background-image:
     var(--paper-glow),
     repeating-linear-gradient(180deg,
-      var(--rail-hi) 0 1px,
-      var(--rail-mid) 1px 4.5px,
-      var(--rail-lo) 4.5px 6px,
-      rgba(0, 0, 0, 0.16) 6px 7.5px,
-      rgba(0, 0, 0, 0.05) 7.5px 9px,
-      transparent 9px 100px),
+      var(--rail-hi) 0, var(--rail-mid) 1.7px, var(--rail-lo) 4.6px,
+      rgba(0, 0, 0, 0.17) 6.1px, rgba(0, 0, 0, 0.05) 8.3px,
+      transparent 10px, transparent 100px),
     repeating-linear-gradient(90deg,
-      var(--rail-hi) 0 1px,
-      var(--rail-mid) 1px 4.5px,
-      var(--rail-lo) 4.5px 6px,
-      rgba(0, 0, 0, 0.13) 6px 7.5px,
-      transparent 7.5px 96.5px,
-      rgba(255, 255, 255, 0.22) 96.5px 97.5px,
-      transparent 97.5px 100px),
+      var(--rail-hi) 0, var(--rail-mid) 1.7px, var(--rail-lo) 4.6px,
+      rgba(0, 0, 0, 0.14) 6.1px, rgba(0, 0, 0, 0.04) 8.3px,
+      transparent 10px, transparent 95.5px,
+      rgba(255, 255, 255, 0.2) 97px, transparent 98.6px, transparent 100px),
     var(--tx-washi);
 }
 /* wood grain lives only on the bars: a grain layer masked to the grid */
@@ -1164,7 +1201,165 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
 .kdoor-overlay:not(.closing):not(.opening) .kdoor--r { transform: translateX(101%); }
 
 /* --------------------------------------------------------------------------
-   19. Tang palace overrides — html[lang="zh-Hans"]
+   19. Kuro-urushi world — html[lang="ja"]
+   The gilded inner sanctuary (内陣): the same shoin structure, but the
+   timber is ebony lacquer and the fittings are gold. Beams carry gold
+   characters as a temple plaque (金字) does; the lacquer is a nashiji
+   (梨子地) ground — gold flakes suspended in black urushi.
+   和色大辞典 / irocore; "derived" = a tint or shade of the named color.
+   -------------------------------------------------------------------------- */
+html[lang="ja"],
+html[lang="ja"][data-time="day"] {
+  --ground: #ebe3ce;             /* derived shade of 鳥の子色 #fff1cf */
+  --bay: #f8f1de;                /* derived tint of 鳥の子色 */
+  --panel: #f0e6cc;              /* derived of 鳥の子色 */
+  --ink: #2b2724;                /* derived tint of 檳榔子染 #433d3c */
+  --ink-strong: #14100d;         /* derived shade of 檳榔子染 */
+  --muted: #57504a;              /* derived of 檳榔子染 */
+  --link: #8f2e14;               /* 弁柄色 bengara — the lacquer triad's red */
+  --link-hover: #b7282e;         /* 茜色 akane */
+  --gold: #e6b422;               /* 金色 konjiki */
+  --gold-quiet: rgba(230, 180, 34, 0.5);
+  --gold-ground: #cfa948;        /* derived: 金色 toward 朽葉色 #917347 */
+  --seal: #d9341d;               /* 真朱 shinshu */
+  --mon: #856a34;                /* derived shade of 朽葉色 — dull gold on paper */
+
+  --post-lo: #0b0908;            /* derived shade of 呂色 roiro #0c0c0c */
+  --post-mid: #1d1815;           /* derived of 檳榔子染 — the ebony face */
+  --post-hi: #342c25;            /* derived tint */
+  --rail-lo: #0c0a09;
+  --rail-mid: #221c18;
+  --rail-hi: #3a3128;
+  --beam-lo: #0a0807;
+  --beam-mid: #191411;
+  --beam-hi: #2c251e;
+  --beam-ink: #e6b422;           /* 金字 — gold characters on black lacquer */
+  --beam-ink-dim: rgba(230, 180, 34, 0.78);
+  --plaque: rgba(248, 181, 0, 0.95);     /* 山吹色 yamabuki */
+
+  --lattice: rgba(133, 106, 52, 0.62);   /* 朽葉色-derived, reads on light paper */
+  --line: rgba(43, 39, 36, 0.16);
+  --line-strong: rgba(43, 39, 36, 0.34);
+  --shoji-grid: rgba(133, 106, 52, 0.22);
+  --toko-shadow: rgba(20, 16, 13, 0.17);
+  --img-filter: sepia(0.05) saturate(0.97);
+}
+
+html[lang="ja"][data-time="dusk"] {
+  --ground: #e2d2ab;             /* derived of 鳥の子色 under a low sun */
+  --bay: #f3e7c6;
+  --panel: #ead9b0;
+  --gold-quiet: rgba(230, 180, 34, 0.58);
+  --gold-ground: #d2a63f;
+  --mon: #8a6a2e;                /* derived of 朽葉色, warmed */
+  --post-lo: #0c0907; --post-mid: #201913; --post-hi: #392e22;
+  --rail-lo: #0d0a08; --rail-mid: #251d15; --rail-hi: #3f3325;
+  --beam-lo: #0b0806; --beam-mid: #1c150f; --beam-hi: #30271b;
+  --img-filter: sepia(0.14) saturate(1.05) brightness(0.98);
+  --paper-glow: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(230, 180, 34, 0.09), transparent 72%);
+}
+
+html[lang="ja"][data-time="night"] {
+  --ground: #080706;             /* derived warm of 呂色 roiro #0c0c0c */
+  --bay: #141110;
+  --panel: #1c1815;
+  --ink: #ece1c5;                /* derived tint of 練色 #ede4cd */
+  --ink-strong: #f8f0d9;
+  --muted: #bda87e;              /* derived of 金色, dulled */
+  --link: #e8a838;               /* derived tint of 山吹色 #f8b500 — gilt link */
+  --link-hover: #f8b500;         /* 山吹色 */
+  --gold-quiet: rgba(230, 180, 34, 0.42);
+  --gold-ground: #9d7c2b;        /* derived: leaf by lantern light */
+  --mon: #e6b422;                /* 金色 — the crest gilds at night */
+
+  /* the timber sits proud of the darker room */
+  --post-lo: #0b0908; --post-mid: #1f1a15; --post-hi: #3a3025;
+  --rail-lo: #0c0a08; --rail-mid: #241d16; --rail-hi: #3f3427;
+  --beam-lo: #090706; --beam-mid: #191410; --beam-hi: #2e261c;
+  --lattice: rgba(230, 180, 34, 0.5);
+  --line: rgba(236, 225, 197, 0.15);
+  --line-strong: rgba(236, 225, 197, 0.30);
+  --shoji-grid: rgba(230, 180, 34, 0.16);
+  --toko-shadow: rgba(0, 0, 0, 0.55);
+  --paper-glow: radial-gradient(ellipse 60% 46% at 50% 42%, rgba(230, 180, 34, 0.12), transparent 70%);
+  --img-filter: brightness(0.8) sepia(0.12) saturate(0.92);
+}
+
+/* Gilt fittings (金具) — the gold is hardware on the boundaries, never a
+   pattern across the face: the timber itself stays plain lacquered wood.
+   Posts take a struck collar where they meet beam and sill; the nageshi
+   takes kugikakushi (釘隠し), the six-leaf nail covers that punctuate a
+   shoin rail at intervals, over a fine gilt fillet. */
+html[lang="ja"] .frame::before,
+html[lang="ja"] .frame::after {
+  background-image:
+    var(--bevel-v),
+    linear-gradient(180deg, #8c6716 0, #f4dc93 1.1px, #d9ab3c 2.2px, #8a681a 3.3px, rgba(111, 84, 19, 0) 4.4px),
+    linear-gradient(0deg, #8c6716 0, #f4dc93 1.1px, #d9ab3c 2.2px, #8a681a 3.3px, rgba(111, 84, 19, 0) 4.4px),
+    var(--tx-grain-v);
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  background-size: auto, 100% 4px, 100% 4px, auto;
+  background-position: 0 0, top, bottom, 0 0;
+}
+html[lang="ja"] .frame::after {
+  background-image:
+    var(--bevel-v-r),
+    linear-gradient(180deg, #8c6716 0, #f4dc93 1.1px, #d9ab3c 2.2px, #8a681a 3.3px, rgba(111, 84, 19, 0) 4.4px),
+    linear-gradient(0deg, #8c6716 0, #f4dc93 1.1px, #d9ab3c 2.2px, #8a681a 3.3px, rgba(111, 84, 19, 0) 4.4px),
+    var(--tx-grain-v);
+}
+html[lang="ja"] .site-header {
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 30px, rgba(0, 0, 0, 0.06) 56px, rgba(0, 0, 0, 0) 76px),
+    linear-gradient(180deg,
+      transparent calc(100% - 9px),
+      #8c6716 calc(100% - 9px) calc(100% - 8.4px),
+      #f4dc93 calc(100% - 8.4px) calc(100% - 7.5px),
+      #a8801f calc(100% - 7.5px) calc(100% - 6.8px),
+      transparent calc(100% - 6.8px) calc(100% - 5px),
+      rgba(0, 0, 0, 0.22) calc(100% - 5px) calc(100% - 2.5px), rgba(0, 0, 0, 0.45) calc(100% - 2.5px)),
+    var(--tx-grain-h);
+}
+html[lang="ja"] .site-footer { background-image: var(--tx-engawa); }
+
+/* gilt fillets (金具): a rolled-metal edge, lit on top, shaded beneath */
+html[lang="ja"] .frame > * + .section::before,
+html[lang="ja"] .frame > * + .list-card::before,
+html[lang="ja"] .frame > * + .hero::before {
+  /* the nail covers are mounted ON the rail: they occlude its chamfer and
+     cast their own shadow, so they paint above the arris and the fillet.
+     Sized to the rail's height so no part of the casting is ever clipped. */
+  background-image:
+    var(--tx-kugikakushi),
+    var(--bevel-h),
+    linear-gradient(180deg,
+      transparent 0 calc(100% - 6px),
+      #8c6716 calc(100% - 6px) calc(100% - 5.4px),
+      #f0d68b calc(100% - 5.4px) calc(100% - 4.6px),
+      transparent calc(100% - 4.6px)),
+    var(--tx-grain-h);
+  background-repeat: repeat-x, no-repeat, no-repeat, repeat;
+  background-size: auto 100%, auto, auto, auto;
+  background-position: center, 0 0, 0 0, 0 0;
+  box-shadow: 0 4px 9px -1px rgba(0, 0, 0, 0.28);
+}
+html[lang="ja"] .site-header { box-shadow: inset 0 -3px 6px -2px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.3); }
+html[lang="ja"] .site-footer::before {
+  background: linear-gradient(180deg, rgba(245, 214, 122, 0.65) 0 1px, rgba(150, 111, 27, 0.8) 1px 2.5px, var(--rail-lo) 2.5px);
+}
+
+/* the fittings continue as a hairline of leaf on panels and frames */
+html[lang="ja"] .section figure,
+html[lang="ja"] .post__content figure,
+html[lang="ja"] .embed-container,
+html[lang="ja"] .pdf-frame,
+html[lang="ja"] .gif-frame {
+  box-shadow: inset 0 0 0 1px rgba(230, 180, 34, 0.32), 0 2px 8px var(--toko-shadow);
+}
+html[lang="ja"] .note-card,
+html[lang="ja"] .featured-card { box-shadow: inset 0 0 0 1px rgba(230, 180, 34, 0.26); }
+/* --------------------------------------------------------------------------
+   20. Tang palace overrides — html[lang="zh-Hans"]
    Vermilion lacquer columns under black-lacquer beams with gold characters
    (金字黑匾), qing mineral accents. Colors from 中国色 references:
    zhongguose.com (S1), colors.ichuantong.cn (S2), colortools.cn (S3),
@@ -1312,6 +1507,13 @@ html[lang="zh-Hans"] .frame::after {
     linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.12) 46%, transparent 64%),
     var(--tx-lacquer-v),
     linear-gradient(90deg, var(--post-lo), var(--post-mid) 26%, var(--post-hi) 45%, var(--post-mid) 68%, var(--post-lo));
+}
+/* the round column's turning and its sheen mirror on the right-hand side */
+html[lang="zh-Hans"] .frame::after {
+  background-image:
+    linear-gradient(270deg, transparent 30%, rgba(255, 255, 255, 0.12) 46%, transparent 64%),
+    var(--tx-lacquer-v),
+    linear-gradient(270deg, var(--post-lo), var(--post-mid) 26%, var(--post-hi) 45%, var(--post-mid) 68%, var(--post-lo));
 }
 
 /* zh doors: the same koushi door — the Tang tokens recolor it */
