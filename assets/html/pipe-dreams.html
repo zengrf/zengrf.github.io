@@ -595,31 +595,43 @@ function drawPD(svg, crosses, n, opts) {
     }));
   }
 
-  // trace each pipe so it can carry its own colour
+  /* Trace each pipe so it can carry its own colour. Elbow corners reuse the
+     exact curves the earlier builders drew, in their 100x100 cell:
+       north-west strand   M50 0   C 50 32  32 50  0 50
+       south-east strand   M50 100 C 50 68  68 50  100 50
+     written here in the direction of travel and scaled to this cell size. */
+  const q = U / 100;
   const isCross = (i, j) => crosses.has(i + "," + j);
   const paths = [];
   for (let start = 0; start < n; start++) {
-    // pipe enters at the left of row `start`, heading east
     let i = start, j = 0, dir = "E";
-    const pts = [[0, start * U + U / 2]];
+    let d = `M 0 ${(start * U + U / 2).toFixed(2)}`;
     let guard = 0;
     while (i >= 0 && j >= 0 && i + j <= n - 1 && guard++ < 4 * n * n) {
       const cx = j * U, cy = i * U;
       if (isCross(i, j)) {
-        if (dir === "E") { pts.push([cx + U, cy + U / 2]); j++; }
-        else { pts.push([cx + U / 2, cy]); i--; }
-      } else {                                   // elbow turns the pipe
-        if (dir === "E") { pts.push([cx + U / 2, cy + U / 2], [cx + U / 2, cy]); dir = "N"; i--; }
-        else { pts.push([cx + U / 2, cy + U / 2], [cx + U, cy + U / 2]); dir = "E"; j++; }
+        if (dir === "E") { d += ` L ${(cx + U).toFixed(2)} ${(cy + U / 2).toFixed(2)}`; j++; }
+        else { d += ` L ${(cx + U / 2).toFixed(2)} ${cy.toFixed(2)}`; i--; }
+      } else if (dir === "E") {
+        // entering from the west, leaving through the north
+        d += ` C ${(cx + 32 * q).toFixed(2)} ${(cy + 50 * q).toFixed(2)}`
+           + ` ${(cx + 50 * q).toFixed(2)} ${(cy + 32 * q).toFixed(2)}`
+           + ` ${(cx + 50 * q).toFixed(2)} ${cy.toFixed(2)}`;
+        dir = "N"; i--;
+      } else {
+        // entering from the south, leaving through the east
+        d += ` C ${(cx + 50 * q).toFixed(2)} ${(cy + 68 * q).toFixed(2)}`
+           + ` ${(cx + 68 * q).toFixed(2)} ${(cy + 50 * q).toFixed(2)}`
+           + ` ${(cx + U).toFixed(2)} ${(cy + 50 * q).toFixed(2)}`;
+        dir = "E"; j++;
       }
       if (i < 0 || j > n - 1) break;
     }
-    paths.push({ pts, ink: PIPE_INK[start % PIPE_INK.length] });
+    paths.push({ d, ink: PIPE_INK[start % PIPE_INK.length] });
   }
   paths.forEach(p => {
-    const d = p.pts.map((q, k) => (k ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
     g.appendChild(svgEl("path", {
-      d, fill: "none", stroke: p.ink, "stroke-width": SW,
+      d: p.d, fill: "none", stroke: p.ink, "stroke-width": SW,
       "stroke-linecap": "round", "stroke-linejoin": "round"
     }));
   });
@@ -672,13 +684,23 @@ function drawBPD(svg, grid, n, opts) {
   const seg = (x1, y1, x2, y2, ink) => g.appendChild(svgEl("line", {
     x1, y1, x2, y2, stroke: ink, "stroke-width": SW, "stroke-linecap": "round"
   }));
-  const arc = (x, y, sweep, ink, from) => {
-    // quarter turn inside the cell
-    const r = U / 2;
-    let d;
-    if (from === "SE") d = `M ${x + r} ${y + U} A ${r} ${r} 0 0 0 ${x + U} ${y + r}`;
-    else d = `M ${x} ${y + r} A ${r} ${r} 0 0 0 ${x + r} ${y}`;
-    g.appendChild(svgEl("path", { d, fill: "none", stroke: ink, "stroke-width": SW, "stroke-linecap": "round" }));
+  /* Elbow corners exactly as the earlier bumpless builder drew them, in its
+     50x50 cell:  NW  M 25 0  L 25 15  Q 25 25 15 25  L 0 25
+                  SE  M 25 50 L 25 35  Q 25 25 35 25  L 50 25
+     a straight run into a tight fillet turning about the cell centre. */
+  const e = U / 50;
+  const elbow = (x, y, kind, ink) => {
+    const d = kind === "SE"
+      ? `M ${x + 25 * e} ${y + 50 * e} L ${x + 25 * e} ${y + 35 * e}`
+        + ` Q ${x + 25 * e} ${y + 25 * e} ${x + 35 * e} ${y + 25 * e}`
+        + ` L ${x + 50 * e} ${y + 25 * e}`
+      : `M ${x + 25 * e} ${y} L ${x + 25 * e} ${y + 15 * e}`
+        + ` Q ${x + 25 * e} ${y + 25 * e} ${x + 15 * e} ${y + 25 * e}`
+        + ` L ${x} ${y + 25 * e}`;
+    g.appendChild(svgEl("path", {
+      d, fill: "none", stroke: ink, "stroke-width": SW,
+      "stroke-linecap": "round", "stroke-linejoin": "round"
+    }));
   };
 
   for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
@@ -688,8 +710,8 @@ function drawBPD(svg, grid, n, opts) {
     if (t === "-") seg(x, y + U / 2, x + U, y + U / 2, a);
     else if (t === "|") seg(x + U / 2, y, x + U / 2, y + U, a);
     else if (t === "+") { seg(x, y + U / 2, x + U, y + U / 2, a); seg(x + U / 2, y, x + U / 2, y + U, b); }
-    else if (t === "r") arc(x, y, 0, a, "SE");
-    else if (t === "J") arc(x, y, 0, a, "NW");
+    else if (t === "r") elbow(x, y, "SE", a);
+    else if (t === "J") elbow(x, y, "NW", a);
   }
 
   if (!opts.small) {
