@@ -131,7 +131,7 @@ import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
 // ---- Scene ----
 const app = document.getElementById('app');
 const renderer = new THREE.WebGLRenderer({ antialias:true });
-renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
+renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio||1)); // raymarched: cost grows with pixel count
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(0x0b1020, 1);
@@ -759,9 +759,48 @@ closeGraph?.addEventListener('click', ()=> graphWin.classList.add('hidden'));
 btnInfo?.addEventListener('click', ()=>{ infoScreen.classList.remove('hidden'); if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise(); });
 closeInfo?.addEventListener('click', ()=> infoScreen.classList.add('hidden'));
 
-function onResize(){ const w=window.innerWidth,h=window.innerHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); lineMaterials.forEach(m=>m.resolution.set(w,h)); updateSinglePlane(); updateGraphIfVisible(); }
+function onResize(){ const w=window.innerWidth,h=window.innerHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); lineMaterials.forEach(m=>m.resolution.set(w,h)); updateSinglePlane(); updateGraphIfVisible(); requestRender(); }
 window.addEventListener('resize', onResize);
-function animate(){ requestAnimationFrame(animate); controls.update(); surfaceUniforms.invProj.value.copy(camera.projectionMatrix).invert(); surfaceUniforms.invView.value.copy(camera.matrixWorld); surfaceUniforms.camPos.value.copy(camera.position); renderer.autoClear=true; renderer.render(bgScene,bgCam); renderer.autoClear=false; renderer.render(scene,camera); renderer.autoClear=true; }
+/* ---------------------------------------------------------------------
+   Render on demand.
+
+   The surface is raymarched in the fragment shader — up to `steps` samples
+   along every ray plus a bisection refine — so an unconditional 60fps loop
+   keeps a GPU busy even while the scene sits perfectly still. This one
+   draws only when something actually changed, drops the sample count while
+   the camera is being dragged, and stops completely when the canvas is
+   scrolled out of view or its tab is hidden. Damping still needs
+   controls.update() every frame, so that call stays outside the guard.
+   --------------------------------------------------------------------- */
+let needsRender = true, onScreen = true;
+const FULL_STEPS  = surfaceUniforms.steps.value;
+const DRAFT_STEPS = Math.max(40, Math.round(FULL_STEPS * 0.45));
+const requestRender = () => { needsRender = true; };
+
+controls.addEventListener('change', requestRender);
+controls.addEventListener('start', () => { surfaceUniforms.steps.value = DRAFT_STEPS; requestRender(); });
+controls.addEventListener('end',   () => { surfaceUniforms.steps.value = FULL_STEPS;  requestRender(); });
+// any control in the panel may change what is drawn; catch them all at once
+['click','input','change','pointerup','keyup','wheel'].forEach(ev =>
+  document.addEventListener(ev, requestRender, true));
+document.addEventListener('visibilitychange', () => { onScreen = !document.hidden; requestRender(); });
+if (window.IntersectionObserver){
+  new IntersectionObserver(es => { onScreen = es[0].isIntersecting && !document.hidden; requestRender(); },
+                           { threshold: 0 }).observe(renderer.domElement);
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();                    // damping must tick every frame
+  if(!onScreen || !needsRender) return;
+  needsRender = false;
+  surfaceUniforms.invProj.value.copy(camera.projectionMatrix).invert();
+  surfaceUniforms.invView.value.copy(camera.matrixWorld);
+  surfaceUniforms.camPos.value.copy(camera.position);
+  renderer.autoClear=true;  renderer.render(bgScene,bgCam);
+  renderer.autoClear=false; renderer.render(scene,camera);
+  renderer.autoClear=true;
+}
 animate();
 setTheme(!!params.lightMode);
 groupEckardt.visible=params.showEckardtPoints;
