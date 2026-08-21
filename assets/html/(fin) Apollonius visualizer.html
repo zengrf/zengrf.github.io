@@ -128,6 +128,26 @@ input[type="range"] { accent-color: #8f2e14 !important; }
 .panel { border: 1px solid rgba(43, 39, 36, 0.34) !important; }
 button, .btn { border: 1px solid rgba(43, 39, 36, 0.34) !important; background: #ffffff; color: #2b2724; }
 button:hover, .btn:hover { border-color: #2b2724 !important; }
+
+  .presets { margin-top: 14px; }
+  .presets h2 {
+    font: inherit; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 6px; font-weight: 600;
+  }
+  .presets__note, .presets__foot {
+    margin: 0 0 8px; font-size: 0.82rem; line-height: 1.45; color: var(--muted);
+  }
+  .presets__foot { margin: 8px 0 0; font-style: italic; }
+  .presets__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .presets__grid button {
+    font: inherit; font-size: 1rem; padding: 8px 0; cursor: pointer;
+    background: var(--bg); color: var(--fg);
+    border: 1px solid var(--grid);
+  }
+  .presets__grid button:hover { border-color: var(--fg); }
+  .presets__grid button[aria-pressed="true"] {
+    background: var(--accent-2); border-color: var(--accent-2); color: #faf7ee;
+  }
 </style>
 </head>
 <body data-theme="light">
@@ -149,6 +169,20 @@ button:hover, .btn:hover { border-color: #2b2724 !important; }
       <div class="stat">
         Real solutions found: <strong id="count">0</strong>
       </div>
+
+      <section class="presets">
+        <h2>Configurations</h2>
+        <p class="presets__note">
+          Apollonius' problem admits 0, 1, 2, 3, 4, 5, 6 or 8 tangent circles —
+          never 7. Each button loads three circles realising that count.
+        </p>
+        <div class="presets__grid" id="presets" role="group" aria-label="Solution count configurations"></div>
+        <p class="presets__foot">
+          The 0, 4 and 8 sets fill open regions and hold their count while you
+          drag. The rest sit on a tangency boundary, so they change the moment
+          a circle moves — that is where the odd counts live.
+        </p>
+      </section>
     </aside>
 
     <main class="canvas-wrap">
@@ -268,6 +302,7 @@ button:hover, .btn:hover { border-color: #2b2724 !important; }
   }
 
   canvas.addEventListener('pointerdown', (e) => {
+    clearPresetSelection();
     const p = getLocal(e);
     canvas.setPointerCapture?.(e.pointerId);
     if (e.shiftKey) {
@@ -414,6 +449,68 @@ button:hover, .btn:hover { border-color: #2b2724 !important; }
       uniq.push(s);
     }
     return uniq;
+  }
+
+
+  /* ---------------------------------------------------------------------
+     Configurations realising every attainable number of solutions.
+
+     Apollonius' problem has 0, 1, 2, 3, 4, 5, 6 or 8 solutions and never 7.
+     The sign pairs (s,-s) yield root sets {r1,r2} and {-r1,-r2}, so each of
+     the four pairs contributes exactly two solutions or none: generic counts
+     are even. The odd counts occur precisely on a tangency boundary, where a
+     discriminant vanishes and two solutions coincide, so those configurations
+     are exact rather than robust — nudging a circle leaves the boundary. Each
+     set below was found by search and checked against the solver.
+     --------------------------------------------------------------------- */
+  const PRESETS = [
+    { n: 0, circles: [{ cx: 0.5, cy: 1, r: 0.5 }, { cx: 0.5, cy: 0.5, r: 1.5 }, { cx: -2, cy: 0.5, r: 0.5 }] },
+    { n: 1, circles: [{ cx: -0.5, cy: -2.5, r: 0.5 }, { cx: 1.5, cy: -1, r: 0.5 }, { cx: 0, cy: 1, r: 3 }] },
+    { n: 2, circles: [{ cx: 0, cy: -3, r: 3 }, { cx: 1.5, cy: 0, r: 1.5 }, { cx: 6, cy: 1.5, r: 3 }] },
+    { n: 3, circles: [{ cx: 3, cy: 1, r: 3 }, { cx: 0.5, cy: -1, r: 0.5 }, { cx: -0.5, cy: 2, r: 0.5 }] },
+    { n: 4, circles: [{ cx: -0.5, cy: 3, r: 0.5 }, { cx: 3, cy: 0, r: 3 }, { cx: 0, cy: 0, r: 0.5 }] },
+    { n: 5, circles: [{ cx: 1, cy: -2.5, r: 1.5 }, { cx: -2, cy: 0, r: 1 }, { cx: 1, cy: 0.5, r: 1.5 }] },
+    { n: 6, circles: [{ cx: 0, cy: 0, r: 1 }, { cx: 0, cy: 3, r: 0.5 }, { cx: 3.5, cy: 0, r: 2.5 }] },
+    { n: 8, circles: [{ cx: -2, cy: 0, r: 0.5 }, { cx: 1, cy: -0.5, r: 0.5 }, { cx: 0.5, cy: 2.5, r: 0.5 }] }
+  ];
+
+  function fitView(pad = 1.35) {
+    const xs = circles.map(c => [c.cx - c.r, c.cx + c.r]).flat();
+    const ys = circles.map(c => [c.cy - c.r, c.cy + c.r]).flat();
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const { W, H } = canvasSize();
+    const spanX = Math.max(1e-6, (maxX - minX) * pad);
+    const spanY = Math.max(1e-6, (maxY - minY) * pad);
+    view.scale = Math.max(12, Math.min(W / spanX, H / spanY));
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    view.ox = -cx * view.scale;
+    view.oy =  cy * view.scale;
+  }
+
+  function applyPreset(i) {
+    const p = PRESETS[i];
+    circles = p.circles.map((c, k) => ({ id: 'C' + (k + 1), cx: c.cx, cy: c.cy, r: c.r, th: 0 }));
+    fitView();
+    drawNow();
+    [...presetHost.children].forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+  }
+
+  const presetHost = $('#presets');
+  PRESETS.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = p.n;
+    b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', p.n + (p.n === 1 ? ' solution' : ' solutions'));
+    b.title = p.n + (p.n === 1 ? ' tangent circle' : ' tangent circles');
+    b.addEventListener('click', () => applyPreset(i));
+    presetHost.appendChild(b);
+  });
+
+  // dragging a circle leaves whichever configuration was loaded
+  function clearPresetSelection() {
+    [...presetHost.children].forEach(b => b.setAttribute('aria-pressed', 'false'));
   }
 
   // Drawing
