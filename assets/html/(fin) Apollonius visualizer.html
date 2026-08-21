@@ -4,30 +4,31 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Circles of Apollonius — Interactive Visualizer (v4.2)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
 <style>
   :root {
-    --bg: #ffffff;
-    --fg: #0f172a;
-    --muted: #475569;
-    --panel: #f8fafc;
-    --accent: #2563eb;     /* given circles + handles */
-    --accent-2: #ef4444;   /* solution circles */
-    --grid: #e2e8f0;
-    --ring: rgba(37, 99, 235, .15);
-    --shadow: 0 10px 30px rgba(2, 6, 23, .08);
-    --label: #111827;
+    --bg: #faf7ee;
+    --fg: #2b2724;
+    --muted: #6d635a;
+    --panel: #ffffff;
+    --accent: #165e83;     /* given circles + handles */
+    --accent-2: #8f2e14;   /* solution circles */
+    --grid: rgba(43, 39, 36, 0.16);
+    --ring: rgba(22, 94, 131, 0.14);
+    --shadow: none;
+    --label: #2b2724;
   }
   [data-theme="dark"] {
-    --bg: #0b1020;
-    --fg: #e5e7eb;
-    --muted: #94a3b8;
-    --panel: #0f172a;
-    --accent: #60a5fa;
-    --accent-2: #f87171;
-    --grid: #1f2937;
-    --ring: rgba(96, 165, 250, .2);
-    --shadow: 0 10px 30px rgba(0,0,0,.35);
-    --label: #e5e7eb;
+    --bg: #17130f;
+    --fg: #ece1c5;
+    --muted: #b3a687;
+    --panel: #221c16;
+    --accent: #7fb2cc;
+    --accent-2: #d0703f;
+    --grid: rgba(236, 225, 197, 0.16);
+    --ring: rgba(127, 178, 204, 0.2);
+    --shadow: none;
+    --label: #ece1c5;
   }
 
   * { box-sizing: border-box; }
@@ -103,6 +104,30 @@
     border-radius: 999px; background: var(--panel); border: 1px solid var(--grid);
     color: var(--muted);
   }
+
+/* ---------------------------------------------------------------------
+   Grounding pass. Squares off the corners, drops the shadows, glass and
+   gradients, and puts the page on the site's paper-and-ink palette in a
+   serif face. Nothing here changes behaviour; opacity is never animated.
+   --------------------------------------------------------------------- */
+body, button, input, select, textarea, .panel, .dock, .legend, .info, .graph {
+  font-family: "EB Garamond", Georgia, serif !important;
+}
+h1, h2, h3, .title { font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important; }
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+*, *::before, *::after { transition-property: none !important; animation: none !important; }
+input[type="range"] { accent-color: #8f2e14 !important; }
+:focus-visible { outline: 2px solid #8f2e14 !important; outline-offset: 1px; }
+
+.panel { border: 1px solid rgba(43, 39, 36, 0.34) !important; }
+button, .btn { border: 1px solid rgba(43, 39, 36, 0.34) !important; background: #ffffff; color: #2b2724; }
+button:hover, .btn:hover { border-color: #2b2724 !important; }
 </style>
 </head>
 <body data-theme="light">
@@ -162,9 +187,20 @@
   const view = { scale: 80, ox: 0, oy: 0 };
 
   // Robust canvas sizing
+  /* Pointer events can outpace the display, and every one of them used to
+     force a synchronous redraw. draw() now batches to a single repaint per
+     animation frame; drawNow() is the immediate version. Device pixel ratio
+     is capped at 2, past which the extra pixels cost more than they show. */
+  var drawQueued = false;   // hoisted: draw() may be called before this line runs
+  function draw() {
+    if (drawQueued) return;
+    drawQueued = true;
+    requestAnimationFrame(() => { drawQueued = false; drawNow(); });
+  }
+
   function resize() {
     const rect = canvas.getBoundingClientRect();
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
     const cssW = Math.max(1, rect.width|0);
     const cssH = Math.max(1, rect.height|0);
     canvas.width = cssW * dpr;
@@ -454,7 +490,7 @@
     ctx.restore();
   }
 
-  function draw() {
+  function drawNow() {
     const { W, H } = canvasSize();
     if (W === 0 || H === 0) return;
 

@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Clebsch Cubic Explorer — single HTML file</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     html, body { height: 100%; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
@@ -41,7 +42,43 @@
     .graph .title{font-weight:600}
     .graph canvas{display:block;width:100%;height:260px;background:transparent}
     body.light .graph{background:rgba(255,255,255,.96);color:#1e2a44;border-color:rgba(0,0,0,.1)}
-  </style>
+  
+/* ---------------------------------------------------------------------
+   Grounding pass. Squares off the corners, drops the shadows, glass and
+   gradients, and puts the page on the site's paper-and-ink palette in a
+   serif face. Nothing here changes behaviour; opacity is never animated.
+   --------------------------------------------------------------------- */
+body, button, input, select, textarea, .panel, .dock, .legend, .info, .graph {
+  font-family: "EB Garamond", Georgia, serif !important;
+}
+h1, h2, h3, .title { font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important; }
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+*, *::before, *::after { transition-property: none !important; animation: none !important; }
+input[type="range"] { accent-color: #8f2e14 !important; }
+:focus-visible { outline: 2px solid #8f2e14 !important; outline-offset: 1px; }
+
+#app { background: #14110f !important; }
+.dock, .legend, .info, .graph {
+  background: rgba(20, 17, 15, 0.93) !important;
+  border: 1px solid rgba(236, 225, 197, 0.22) !important;
+  color: #ece1c5 !important;
+}
+.chip, .chip.btn, .slider, .switch { border: 1px solid rgba(236, 225, 197, 0.28) !important; }
+.chip.btn.on { background: rgba(236, 225, 197, 0.12) !important; }
+.swatch { border-radius: 0 !important; }
+body.light .dock, body.light .info, body.light .graph {
+  background: #faf7ee !important; border-color: rgba(43, 39, 36, 0.34) !important; color: #2b2724 !important;
+}
+body.light .chip, body.light .chip.btn, body.light .slider, body.light .switch {
+  border-color: rgba(43, 39, 36, 0.34) !important;
+}
+</style>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -134,7 +171,7 @@ const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio||1)); // raymarched: cost grows with pixel count
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.setClearColor(0x0b1020, 1);
+renderer.setClearColor(0x14110f, 1);
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -143,9 +180,9 @@ camera.position.set(3.5,2.2,3.2);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-const hemi = new THREE.HemisphereLight(0xbcd7ff, 0x0b0f1f, 0.9); scene.add(hemi);
+const hemi = new THREE.HemisphereLight(0xf3ead6, 0x0f0c0a, 0.9); scene.add(hemi);
 const dir  = new THREE.DirectionalLight(0xffffff, 0.9); dir.position.set(3,5,2); scene.add(dir);
-const grid = new THREE.GridHelper(10,10,0x1a2446,0x1a2446); grid.material.transparent=true; grid.material.opacity=0.35; grid.position.y=-1.5; scene.add(grid);
+const grid = new THREE.GridHelper(10,10,0x3a322a,0x3a322a); grid.material.transparent=true; grid.material.opacity=0.35; grid.position.y=-1.5; scene.add(grid);
 const axes = new THREE.AxesHelper(1.6); axes.material.transparent=true; axes.material.opacity=0.55; scene.add(axes);
 
 // ---- Surface (ray-march quad) ----
@@ -159,7 +196,7 @@ const surfaceUniforms = {
   refine:  { value: 7 },
   show:    { value: true },
   opacity: { value: 0.22 },
-  baseColor:{ value: new THREE.Color(0x6ea8ff) },
+  baseColor:{ value: new THREE.Color(0x9db9c9) },
   lightDir:{ value: new THREE.Vector3(0.6,0.8,0.4).normalize() }
 };
 const bgScene = new THREE.Scene();
@@ -228,10 +265,10 @@ function clipLineToBox(a,b,c,p,q,r,Rb){
 
 // ---- Materials & groups ----
 const materials = {
-  diagonal:   new LineMaterial({ color: 0xffd166, linewidth: 3, transparent: true, opacity: 0.95 }),
-  doubleSixA: new LineMaterial({ color: 0xff7ab6, linewidth: 3, transparent: true, opacity: 0.95 }),
-  doubleSixB: new LineMaterial({ color: 0xc77dff, linewidth: 3, transparent: true, opacity: 0.95 }),
-  all:        new LineMaterial({ color: 0x4fd1c5, linewidth: 1, transparent: true, opacity: 0.25 }),
+  diagonal:   new LineMaterial({ color: 0xd9a441, linewidth: 3, transparent: true, opacity: 0.95 }),
+  doubleSixA: new LineMaterial({ color: 0xb4626d, linewidth: 3, transparent: true, opacity: 0.95 }),
+  doubleSixB: new LineMaterial({ color: 0x8a7bb0, linewidth: 3, transparent: true, opacity: 0.95 }),
+  all:        new LineMaterial({ color: 0x7fa08c, linewidth: 1, transparent: true, opacity: 0.25 }),
   planeLine:  new LineMaterial({ color: 0xffffff, linewidth: 4, transparent: true, opacity: 0.95 })
 };
 const lineMaterials=[materials.diagonal,materials.doubleSixA,materials.doubleSixB,materials.all,materials.planeLine];
@@ -291,7 +328,7 @@ function buildTritangentPlaneMeshes(planes){
   const size=R.value*3.5; const geo=new THREE.PlaneGeometry(size,size);
   planes.forEach((rec,idx)=>{
     const n=rec.plane.n, d=rec.plane.d;
-    const mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color:0x8ec5ff, transparent:true, opacity:0.05, side:THREE.DoubleSide }));
+    const mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color:0xa8bcc8, transparent:true, opacity:0.05, side:THREE.DoubleSide }));
     const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), n);
     mesh.quaternion.copy(q);
     mesh.position.copy(n.clone().multiplyScalar(-d));
@@ -304,7 +341,7 @@ buildTritangentPlaneMeshes(TRITANGENT);
 function computeEckardtFromLinesStrict(){
   while(groupEckardt.children.length){ const c=groupEckardt.children.pop(); if(c.geometry) c.geometry.dispose(); }
   const sph=new THREE.SphereGeometry(0.035,20,14);
-  const mat=new THREE.MeshStandardMaterial({ color:0x80ffea, emissive:0x174a5b, roughness:0.2, metalness:0.0 });
+  const mat=new THREE.MeshStandardMaterial({ color:0x8fbfae, emissive:0x2f4a44, roughness:0.2, metalness:0.0 });
   const pts=[]; const n=lineReps.length;
   const distPtoL=(P,L)=> cross(new THREE.Vector3().subVectors(P, L.P), L.V).length()/Math.max(1e-9,L.V.length());
   function pass(pairTol, thirdTol){
@@ -501,17 +538,17 @@ function setTheme(light){
     materials.planeLine.color.set(0x000000);
   }
   if(!light){
-    renderer.setClearColor(0x0b1020,1);
-    hemi.color.set(0xbcd7ff);
-    hemi.groundColor.set(0x0b0f1f);
-    grid.material.color.set(0x1a2446);
+    renderer.setClearColor(0x14110f,1);
+    hemi.color.set(0xf3ead6);
+    hemi.groundColor.set(0x0f0c0a);
+    grid.material.color.set(0x3a322a);
     grid.material.opacity=0.35;
     axes.material.opacity=0.55;
-    surfaceUniforms.baseColor.value.set(0x6ea8ff);
-    materials.diagonal.color.set(0xffd166);
-    materials.doubleSixA.color.set(0xff7ab6);
-    materials.doubleSixB.color.set(0xc77dff);
-    materials.all.color.set(0x4fd1c5);
+    surfaceUniforms.baseColor.value.set(0x9db9c9);
+    materials.diagonal.color.set(0xd9a441);
+    materials.doubleSixA.color.set(0xb4626d);
+    materials.doubleSixB.color.set(0x8a7bb0);
+    materials.all.color.set(0x7fa08c);
     materials.planeLine.color.set(0xffffff);
   }
   updateGraphIfVisible();

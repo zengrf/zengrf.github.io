@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bruhat Graph for Sₙ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
   
   <!-- MathJax Configuration -->
   <script>
@@ -22,48 +23,37 @@
   <style>
     /* ========== CSS VARIABLES & RESET ========== */
     :root {
-      --bg-primary: #f5f7fa;
+      --bg-primary: #faf7ee;
       --bg-secondary: #ffffff;
-      --bg-tertiary: #e9ecef;
-      --text-primary: #1a202c;
-      --text-secondary: #4a5568;
-      --text-tertiary: #718096;
-      --accent-primary: #3182ce;
-      --accent-hover: #2c5282;
-      --accent-light: #ebf8ff;
-      --border-color: #cbd5e0;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-      --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+      --bg-tertiary: #f2ebd9;
+      --text-primary: #2b2724;
+      --text-secondary: #6d635a;
+      --text-tertiary: #8a7f74;
+      --accent-primary: #8f2e14;
+      --accent-hover: #b7282e;
+      --accent-light: #f2ebd9;
+      --border-color: rgba(43, 39, 36, 0.34);
+      --shadow-sm: none;
+      --shadow-md: none;
+      --shadow-lg: none;
       --node-bg: #ffffff;
-      --node-border: #3182ce;
-      --node-highlight: #f6ad55;
-      --edge-color: #a0aec0;
-      --edge-highlight: #f6ad55;
-      --canvas-bg: #fafbfc;
-      --glass-bg: rgba(255, 255, 255, 0.9);
-      --glass-border: rgba(255, 255, 255, 0.18);
+      --node-border: #2b2724;
+      --node-highlight: #917347;
+      --edge-color: rgba(43, 39, 36, 0.34);
+      --edge-highlight: #8f2e14;
+      --canvas-bg: #faf7ee;
+      --glass-bg: #ffffff;
+      --glass-border: rgba(43, 39, 36, 0.34);
     }
     
     [data-theme="dark"] {
-      --bg-primary: #1a202c;
-      --bg-secondary: #2d3748;
-      --bg-tertiary: #4a5568;
-      --text-primary: #f7fafc;
-      --text-secondary: #e2e8f0;
-      --text-tertiary: #cbd5e0;
-      --accent-primary: #63b3ed;
-      --accent-hover: #4299e1;
-      --accent-light: #2c5282;
-      --border-color: #4a5568;
-      --node-bg: #2d3748;
-      --node-border: #63b3ed;
-      --node-highlight: #f6ad55;
-      --edge-color: #718096;
-      --edge-highlight: #f6ad55;
-      --canvas-bg: #171923;
-      --glass-bg: rgba(45, 55, 72, 0.9);
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --bg-primary: #17130f; --bg-secondary: #221c16; --bg-tertiary: #2d251d;
+      --text-primary: #ece1c5; --text-secondary: #b3a687; --text-tertiary: #8f8271;
+      --accent-primary: #d0703f; --accent-hover: #efcd9a; --accent-light: #2d251d;
+      --border-color: rgba(236, 225, 197, 0.3);
+      --node-bg: #221c16; --node-border: #ece1c5; --node-highlight: #d9b25c;
+      --edge-color: rgba(236, 225, 197, 0.34); --edge-highlight: #d0703f;
+      --canvas-bg: #17130f; --glass-bg: #221c16; --glass-border: rgba(236, 225, 197, 0.3);
     }
     
     * {
@@ -603,7 +593,7 @@
     }
     
     #buildBtn::before {
-      content: '⚡';
+      content: none;
     }
     
     #clearBtn::before {
@@ -611,15 +601,15 @@
     }
     
     #themeBtn::before {
-      content: '🌙';
+      content: none;
     }
     
     [data-theme="dark"] #themeBtn::before {
-      content: '☀️';
+      content: none;
     }
     
     #exportBtn::before {
-      content: '📸';
+      content: none;
     }
     
     #fitBtn::before {
@@ -627,7 +617,7 @@
     }
     
     #searchBtn::before {
-      content: '🔍';
+      content: none;
     }
     
     /* Status Bar */
@@ -760,7 +750,27 @@
       white-space: nowrap;
       border: 0;
     }
-  </style>
+  
+/* ---------------------------------------------------------------------
+   Grounding pass. Squares off the corners, drops the shadows, glass and
+   gradients, and puts the page on the site's paper-and-ink palette in a
+   serif face. Nothing here changes behaviour; opacity is never animated.
+   --------------------------------------------------------------------- */
+body, button, input, select, textarea, .panel, .dock, .legend, .info, .graph {
+  font-family: "EB Garamond", Georgia, serif !important;
+}
+h1, h2, h3, .title { font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important; }
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: none !important;
+}
+*, *::before, *::after { transition-property: none !important; animation: none !important; }
+input[type="range"] { accent-color: #8f2e14 !important; }
+:focus-visible { outline: 2px solid #8f2e14 !important; outline-offset: 1px; }
+</style>
 </head>
 <body>
   <div id="app">
@@ -1306,7 +1316,21 @@
     }
     
     // Render the graph
+    /* Pan and zoom call this from pointer handlers, which on a high-rate
+       mouse or trackpad fire far more often than the display refreshes.
+       renderNodes() rebuilds every node element from scratch, so an
+       uncoalesced call meant tearing down and recreating hundreds of DOM
+       nodes several times per frame. Batch to one render per frame; use
+       renderGraphNow() where a finished frame is needed synchronously. */
+    // var, not let: renderGraph is hoisted and called during init above,
+    // which would hit the temporal dead zone of a let binding.
+    var renderQueued = false;
     function renderGraph() {
+      if (renderQueued) return;
+      renderQueued = true;
+      requestAnimationFrame(() => { renderQueued = false; renderGraphNow(); });
+    }
+    function renderGraphNow() {
       if (!STATE.permutations.length) return;
       
       // Clear canvas
