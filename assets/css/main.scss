@@ -859,11 +859,28 @@ th { background: var(--panel); font-variant-caps: all-small-caps; letter-spacing
   align-items: start;
 }
 /* the note list runs finer */
+/* The note cards vary a lot in height, and on a grid every card in a row
+   starts level with the tallest, so short ones leave a void beneath them and
+   the next row is pushed down past it. Columns instead: each card drops into
+   whichever column is currently shortest, so the bottoms stay close to level
+   and no space is left standing. The trade is reading order — down a column
+   before across — which suits a dated list of notes.
+
+   column-width, not column-count: the browser fits as many as the bay holds,
+   so this needs no breakpoints and collapses to one column on a phone.
+   Columns have no row gap, so the cards carry their own bottom margin, and
+   the list pulls the last one back so the section does not gain a step. */
 .note-list--grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr));
-  gap: 1.2rem;
-  align-items: start;
+  columns: 17rem;
+  column-gap: 1.2rem;
+  margin-bottom: -1.2rem;
+}
+.note-list--grid > li {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 1.2rem;
+  display: block;
 }
 
 .note-card,
