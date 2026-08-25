@@ -340,12 +340,76 @@
     sync();
   }
 
+
+  // ------------------------------------------------------------------
+  // Note lists pack like masonry: the grid is ruled in fine rows and each
+  // card is told how many rows it actually needs, so a card starts beside
+  // or beneath its neighbour rather than waiting for the tallest in its
+  // row. Featured cards — the ones carrying a live demo — take two columns
+  // so the demo stays readable, and dense packing lets the small cards
+  // backfill the space left around them.
+  //
+  // Only the browser knows how tall a card came out, so the spans are
+  // measured. A ResizeObserver keeps them right when a card changes height
+  // later: web fonts landing, MathJax typesetting a title, a demo loading.
+  // ------------------------------------------------------------------
+  function setupNotePacking() {
+    var lists = document.querySelectorAll('.note-list--grid');
+    if (!lists.length || !window.ResizeObserver) return;
+
+    function pack(list) {
+      var kids = Array.prototype.slice.call(list.children);
+      /* Clear the spans before counting columns. A card spanning two columns
+         makes the grid create the second column implicitly, so asking a
+         still-spanned grid how many columns it has answers "two" however
+         narrow it is — the span invents the column that justifies the span,
+         and the row overflows. Cleared first, the count is the grid's own. */
+      kids.forEach(function (li) { li.style.gridColumn = ''; li.style.gridRowEnd = ''; });
+      list.classList.remove('is-packed');
+      var cs = window.getComputedStyle(list);
+      var cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length;
+      // one column: leave it as the plain grid, where a span would overflow
+      if (cols < 2) return;
+      list.classList.add('is-packed');
+      var row = parseFloat(window.getComputedStyle(list).gridAutoRows) || 4;
+      kids.forEach(function (li) {
+        var card = li.firstElementChild;
+        if (!card) return;
+        li.style.gridColumn = card.classList.contains('note-card--featured') ? 'span 2' : '';
+        var h = card.getBoundingClientRect().height;
+        li.style.gridRowEnd = 'span ' + Math.ceil(h / row);
+      });
+    }
+
+    var queued = false;
+    function packAll() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () {
+        queued = false;
+        Array.prototype.forEach.call(lists, pack);
+      });
+    }
+
+    var ro = new ResizeObserver(packAll);
+    Array.prototype.forEach.call(lists, function (list) {
+      ro.observe(list);
+      Array.prototype.forEach.call(list.children, function (li) {
+        if (li.firstElementChild) ro.observe(li.firstElementChild);
+      });
+    });
+    window.addEventListener('resize', packAll);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(packAll);
+    packAll();
+  }
+
   function init() {
     enhanceExternalLinks();
     setupFullscreenEmbeds();
     setupCollapsibles();
     setupDetailsSlide();
     setupHeroReel();
+    setupNotePacking();
     setupDoors();
   }
 

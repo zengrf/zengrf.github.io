@@ -37,112 +37,10 @@ permalink: /notes/
 
   {% assign code_posts = site.posts | where_exp: "post", "post.tags contains 'code'" | sort: 'date' | reverse %}
   
-  {% assign featured_code = code_posts | where: "featured", true %}
-  {% assign regular_code = code_posts | where_exp: "post", "post.featured != true" %}
-  
-  {% if featured_code.size > 0 %}
-  <div class="featured-grid">
-    {% for post in featured_code %}
-    <article class="featured-card">
-      <div class="featured-card__content">
-        <h3 class="featured-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p class="featured-card__excerpt">{{ post.excerpt | strip_html }}</p>
-        {% else %}
-        <p class="featured-card__excerpt">{{ post.content | strip_html | truncate: 300 }}</p>
-        {% endif %}
-        {% if post.embed_html %}
-        {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% elsif post.embed_url %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% elsif post.downloads %}
-        {% assign first_download = post.downloads | first %}
-        {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% endif %}
-      </div>
-      <div class="featured-card__decoration"></div>
-    </article>
-    {% endfor %}
-  </div>
-  {% endif %}
-  
-  {% if regular_code.size > 0 %}
+  {% if code_posts.size > 0 %}
   <ul class="note-list note-list--grid">
-    {% for post in regular_code %}
-    <li>
-      <article class="note-card">
-        <h3 class="note-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p>{{ post.excerpt | strip_html | truncate: 200 }}</p>
-        {% else %}
-        <p>{{ post.content | strip_html | truncate: 200 }}</p>
-        {% endif %}
-        {% if post.downloads %}
-        <ul class="download-list">
-          {% for item in post.downloads %}
-          {% assign download_url = item.file | relative_url | replace: ' ', '%20' %}
-          <li><a href="{{ download_url }}" target="_blank" rel="noopener">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </article>
-    </li>
+    {% for post in code_posts %}
+      {% include note-card.html post=post %}
     {% endfor %}
   </ul>
   {% endif %}
@@ -175,109 +73,10 @@ permalink: /notes/
     {% endif %}
   </details>
   
-  {% assign featured_notes = note_posts | where: "featured", true %}
-  {% assign regular_notes = note_posts | where_exp: "post", "post.featured != true" %}
-
-  
-  {% if featured_notes.size > 0 %}
-  <div class="featured-grid">
-    {% for post in featured_notes %}
-    <article class="featured-card">
-      <div class="featured-card__content">
-        <h3 class="featured-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p class="featured-card__excerpt">{{ post.excerpt | strip_html }}</p>
-        {% endif %}
-        {% if post.embed_html %}
-        {% assign html_url = post.embed_html | relative_url | replace: ' ', '%20' %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ html_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% elsif post.embed_url %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ post.embed_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% elsif post.downloads %}
-        {% assign first_download = post.downloads | first %}
-        {% assign download_url = first_download.file | relative_url | replace: ' ', '%20' %}
-        <div class="featured-card__preview">
-          <button class="embed-fullscreen" type="button" aria-label="View interactive demo fullscreen">
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M15 3h6v6"/>
-              <path d="M9 21H3v-6"/>
-              <path d="M21 3l-7 7"/>
-              <path d="M3 21l7-7"/>
-            </svg>
-            <svg class="embed-fullscreen__icon embed-fullscreen__icon--exit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 14h6v6"/>
-              <path d="M20 10h-6V4"/>
-              <path d="M14 10l7-7"/>
-              <path d="M10 14l-7 7"/>
-            </svg>
-          </button>
-          <iframe src="{{ download_url }}" title="{{ post.title }} preview" loading="lazy" allowfullscreen></iframe>
-        </div>
-        {% endif %}
-      </div>
-      <div class="featured-card__decoration"></div>
-    </article>
-    {% endfor %}
-  </div>
-  {% endif %}
-  
-  {% if regular_notes.size > 0 %}
+  {% if note_posts.size > 0 %}
   <ul class="note-list note-list--grid">
-    {% for post in regular_notes %}
-    <li>
-      <article class="note-card">
-        <h3 class="note-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p>{{ post.excerpt | strip_html | truncate: 200 }}</p>
-        {% endif %}
-        {% if post.downloads %}
-        <ul class="download-list">
-          {% for item in post.downloads %}
-          {% assign download_url = item.file | relative_url | replace: ' ', '%20' %}
-          <li><a href="{{ download_url }}" target="_blank" rel="noopener">{{ item.label }}</a></li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </article>
-    </li>
+    {% for post in note_posts %}
+      {% include note-card.html post=post %}
     {% endfor %}
   </ul>
   {% endif %}
@@ -307,46 +106,10 @@ permalink: /notes/
     {% endif %}
   </details>
   
-  {% assign featured_projects = project_posts | where: "featured", true %}
-  {% assign regular_projects = project_posts | where_exp: "post", "post.featured != true" %}
-  
-  {% if featured_projects.size > 0 %}
-  <div class="featured-grid">
-    {% for post in featured_projects %}
-    <article class="featured-card">
-      <div class="featured-card__content">
-        <h3 class="featured-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p class="featured-card__excerpt">{{ post.excerpt | strip_html }}</p>
-        {% else %}
-        <p class="featured-card__excerpt">{{ post.content | strip_html | truncate: 300 }}</p>
-        {% endif %}
-      </div>
-      <div class="featured-card__decoration"></div>
-    </article>
-    {% endfor %}
-  </div>
-  {% endif %}
-  
-  {% if regular_projects.size > 0 %}
+  {% if project_posts.size > 0 %}
   <ul class="note-list note-list--grid">
-    {% for post in regular_projects %}
-    <li>
-      <article class="note-card">
-        <h3 class="note-card__title">
-          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-        </h3>
-        <div class="post__meta">{{ post.date | date: "%B %e, %Y" }}</div>
-        {% if post.excerpt %}
-        <p>{{ post.excerpt | strip_html | truncate: 200 }}</p>
-        {% else %}
-        <p>{{ post.content | strip_html | truncate: 200 }}</p>
-        {% endif %}
-      </article>
-    </li>
+    {% for post in project_posts %}
+      {% include note-card.html post=post %}
     {% endfor %}
   </ul>
   {% endif %}
