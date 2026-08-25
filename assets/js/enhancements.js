@@ -265,11 +265,87 @@
     });
   }
 
+
+  // ------------------------------------------------------------------
+  // The hanging scroll holds three photographs, scrolled past sideways.
+  // The crest marks below it show which is mounted and change it; the
+  // title slip carries that photograph's caption. Captions live in a
+  // hidden list so lang.js keeps translating them as usual, and the slip
+  // simply mirrors the active one — swapped outright, never faded.
+  // ------------------------------------------------------------------
+  function setupHeroReel() {
+    var reel = document.getElementById('heroReel');
+    var marks = document.getElementById('heroMarks');
+    var slip = document.getElementById('heroCaption');
+    if (!reel || !marks) return;
+
+    var frames = Array.prototype.slice.call(reel.children);
+    var caps = Array.prototype.slice.call(document.querySelectorAll('.hero__captions > *'));
+    var current = -1;
+
+    frames.forEach(function (f, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', 'false');
+      b.setAttribute('aria-label', 'Photograph ' + (i + 1) + ' of ' + frames.length);
+      b.addEventListener('click', function () {
+        reel.scrollTo({ left: f.offsetLeft - reel.offsetLeft, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      });
+      marks.appendChild(b);
+    });
+
+    function show(i) {
+      if (i === current || i < 0 || i >= frames.length) return;
+      current = i;
+      Array.prototype.forEach.call(marks.children, function (b, k) {
+        b.setAttribute('aria-selected', String(k === i));
+      });
+      if (slip && caps[i]) slip.innerHTML = caps[i].innerHTML;
+    }
+
+    // whichever frame is nearest the middle of the opening is the mounted one
+    function sync() {
+      var mid = reel.scrollLeft + reel.clientWidth / 2;
+      var best = 0, bestD = Infinity;
+      frames.forEach(function (f, i) {
+        var c = f.offsetLeft - reel.offsetLeft + f.clientWidth / 2;
+        var d = Math.abs(c - mid);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      show(best);
+    }
+
+    var ticking = false;
+    reel.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; sync(); });
+    }, { passive: true });
+
+    reel.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      var next = current + (e.key === 'ArrowRight' ? 1 : -1);
+      if (next < 0 || next >= frames.length) return;
+      marks.children[next].click();
+    });
+
+    // keep the slip in step when the language changes under it
+    window.addEventListener('site:langchange', function () {
+      var i = current; current = -1; show(i < 0 ? 0 : i);
+    });
+
+    show(0);
+    sync();
+  }
+
   function init() {
     enhanceExternalLinks();
     setupFullscreenEmbeds();
     setupCollapsibles();
     setupDetailsSlide();
+    setupHeroReel();
     setupDoors();
   }
 

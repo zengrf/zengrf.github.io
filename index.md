@@ -21,9 +21,25 @@ author_profile: true
   <figure class="hero__image">
     <div class="hero__scroll">
       <div class="hero__mount" aria-hidden="true"></div>
-      <img src="/assets/img/yu-gardens.jpg" alt="Michael at the Yu Gardens 豫园, photo by Alex Waugh" />
+      <div class="hero__reel" id="heroReel" tabindex="0" role="group" aria-label="Photographs">
+        <div class="hero__frame">
+          <img src="/assets/img/yu-gardens.jpg" alt="Michael at the Yu Gardens 豫园, Shanghai" />
+        </div>
+        <div class="hero__frame">
+          <img src="/assets/img/seattle-kerry-park.jpg" alt="Michael at Kerry Park, Seattle, with the skyline and Mount Rainier behind, photo by Ting Gong" loading="lazy" />
+        </div>
+        <div class="hero__frame">
+          <img src="/assets/img/mount-rainier.jpg" alt="Michael below Mount Rainier" loading="lazy" />
+        </div>
+      </div>
     </div>
-    <figcaption data-i18n="hero.photo.caption">Yu Gardens, Shanghai · photo by Alex Waugh</figcaption>
+    <div class="hero__marks" id="heroMarks" role="tablist" aria-label="Choose a photograph"></div>
+    <figcaption id="heroCaption" aria-live="polite"></figcaption>
+    <div class="hero__captions" hidden>
+      <span data-i18n="hero.photo.caption">Yu Gardens, Shanghai · photo by Alex Waugh</span>
+      <span data-i18n="hero.photo.caption2">Kerry Park, Seattle · photo by Ting Gong</span>
+      <span data-i18n="hero.photo.caption3">Mount Rainier · May 2026</span>
+    </div>
   </figure>
 </section>
 
