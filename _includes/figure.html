@@ -1,0 +1,6 @@
+<figure>
+  <img src="{{ include.image.file | relative_url | uri_escape | escape }}" alt="{{ include.image.alt | escape }}" />
+  {% if include.image.caption %}
+  <figcaption>{{ include.image.caption | markdownify | remove: '<p>' | remove: '</p>' }}</figcaption>
+  {% endif %}
+</figure>

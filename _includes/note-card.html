@@ -13,12 +13,12 @@
 {%- assign preview = '' -%}
 {%- if post.featured -%}
   {%- if post.embed_html -%}
-    {%- assign preview = post.embed_html | relative_url | replace: ' ', '%20' -%}
+    {%- assign preview = post.embed_html | relative_url | uri_escape -%}
   {%- elsif post.embed_url -%}
     {%- assign preview = post.embed_url -%}
   {%- elsif post.downloads -%}
     {%- assign first_download = post.downloads | first -%}
-    {%- assign preview = first_download.file | relative_url | replace: ' ', '%20' -%}
+    {%- assign preview = first_download.file | relative_url | uri_escape -%}
   {%- endif -%}
 {%- endif -%}
 <li>
@@ -42,14 +42,14 @@
           <path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M10 14l-7 7"/>
         </svg>
       </button>
-      <iframe src="{{ preview }}" title="{{ post.title | escape }} preview" loading="lazy" allowfullscreen></iframe>
+      <iframe src="{{ preview | escape }}" title="{{ post.title | escape }} preview" loading="lazy" allowfullscreen></iframe>
     </div>
     {% endif %}
     {% if post.downloads %}
     <ul class="download-list">
       {% for item in post.downloads %}
-      {% assign download_url = item.file | relative_url | replace: ' ', '%20' %}
-      <li><a href="{{ download_url }}" target="_blank" rel="noopener">{{ item.label }}</a></li>
+      {% assign download_url = item.file | relative_url | uri_escape %}
+      <li><a href="{{ download_url | escape }}" target="_blank" rel="noopener">{{ item.label | escape }}</a></li>
       {% endfor %}
     </ul>
     {% endif %}

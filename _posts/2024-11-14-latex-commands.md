@@ -9,6 +9,3 @@ downloads:
 ---
 
 A summary of LaTEX math commands I found on the internet.
-
-{% include pdf-embed.html %}
-

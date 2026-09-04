@@ -8,20 +8,20 @@ tags: [projects, collaboration]
 
 ### (Bachmann-Wickelgren) $\mathbb A^1$-EULER CLASSES: SIX FUNCTORS FORMALISMS, DUALITIES, INTEGRALITY AND LINEAR SUBSPACES OF COMPLETE INTERSECTIONS
 
-**Theorem 5.11.** <i>Suppose $X$ is smooth and proper over $\mathbb{Z}[1 / 2]$. Let $V$ be a relatively oriented vector bundle on $X$ and let $V_k$ denote the base change of $V$ to $k$ for any field $k$. Then either
+**Theorem 5.11.** *Suppose $X$ is smooth and proper over $\mathbb{Z}[1 / 2]$. Let $V$ be a relatively oriented vector bundle on $X$ and let $V_k$ denote the base change of $V$ to $k$ for any field $k$. Then either*
 
 $$
 n^{\mathrm{GS}}\left(V_k, \rho\right)=\frac{n_{\mathbb{C}}+n_{\mathbb{R}}}{2}+\frac{n_{\mathbb{C}}-n_{\mathbb{R}}}{2}\langle-1\rangle
 $$
 
-or
+*or*
 
 $$
 n^{\mathrm{GS}}\left(V_k, \rho\right)=\frac{n_{\mathbb{C}}+n_{\mathbb{R}}}{2}+\frac{n_{\mathbb{C}}-n_{\mathbb{R}}}{2}\langle-1\rangle+\langle 2\rangle-1,
 $$
 
-where the same formula holds for all fields $k$ of characteristic $\neq 2$.
-If instead $X$ is smooth proper over $\mathbb{Z}$, then (6) holds for any field $k$ (including fields $k$ of characteristic two).</i>
+*where the same formula holds for all fields $k$ of characteristic $\neq 2$.
+If instead $X$ is smooth proper over $\mathbb{Z}$, then (6) holds for any field $k$ (including fields $k$ of characteristic two).*
 
 Recall that for the last claim regarding $X$ smooth and proper over $\mathbb{Z}$, we rely on [ $\mathrm{CDH}^{+}$20]. See Remark 5.5.
 
@@ -78,7 +78,7 @@ The result follows.
 
 **2.2. Characteristic classes.** The polar correspondence leads to a simple explicit formula for the Euler class, $e\left(\operatorname{Sym}^{2 m-1}(F)\right)$, of symmetric powers of the dual tautological bundles, $F=\widetilde{\tau}_{2, n+2}^\ast$. Namely, the polar correspondence identifies $F$ with the real 2-bundle underlying complex line bundle $L=\varkappa^\ast\left(\tau_n^\ast\right)$, so, $F \otimes \mathbb{C}=L \oplus \bar{L}$, and $\operatorname{Sym}^k(F) \otimes \mathbb{C}=\operatorname{Sym}^k(F \otimes \mathbb{C})=L^k \oplus L^{k-1} \bar{L} \cdots \oplus \bar{L}^k$, for any $k \geq 1$. The complex conjugation interchanges $L^a \bar{L}^b$ with $L^b \bar{L}^a$, thus, for any odd $k=2 m-1$, the real vector bundle $\operatorname{Sym}^{2 m-1}(F)$ is the real part of $L^{2 m-1} \oplus L^{2 m-2} \bar{L} \oplus \cdots \oplus \bar{L}^{2 m-1}$. We define an isomorphism between $L^{2 m-1} \oplus L^{2 m-2} \bar{L} \oplus \cdots \oplus L^m \bar{L}^{m-1}$ and $\operatorname{Sym}^{2 m-1}(F)$ by projecting $v \mapsto \frac{1}{2}(v+\bar{v})$. It transports the complex orientation of $L^{2 m-1} \oplus L^{2 m-2} \bar{L} \oplus \cdots \oplus L^m \bar{L}^{m-1}$ to an orientation of $\operatorname{Sym}^{2 m-1}(F)$, so that the Euler class of the latter becomes well defined and equal to the Chern class of the former one.
 
-**2.2.1. Proposition.** <i>Under the above orientation convention,</i>
+**2.2.1. Proposition.** *Under the above orientation convention,*
 
 $$
 e\left(S y m^{2 m-1}(F)\right)=c_m\left(L^{2 m-1} \oplus L^{2 m-2} \bar{L} \oplus \cdots \oplus L^m \bar{L}^{m-1}\right)=(2 m-1)!!c_1(L)^m
@@ -111,5 +111,3 @@ $$
 
 
 But this number has the same parity as $\frac{s(s+1)}{2}$. This proves the first formula. The second formula is proved using the double cover $c: \tilde{G}_2(V) \rightarrow G_2(V)$, the functoriality of the Euler class (formula (1)), and the obvious equality $c^\ast\left(\left[G_2(V)\right]^{\prime}\right)= 2\left[\tilde{G}_2(V)\right]^{\prime}$ where $\left[G_2(V)\right]^{\prime},\left[\tilde{G}_2(V)\right]^{\prime}$ are the canonical generators of the cyclic groups $H^{2(n-2)}\left(G_2(V), \mathcal{O}_{S^k(U)}\right), H^{2(n-2)}\left(\tilde{G}_2(V), \mathbb{Z}\right)$.
-
-

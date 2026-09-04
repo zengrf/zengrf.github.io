@@ -1699,3 +1699,27 @@ html[data-time="night"] .hero__image img { filter: var(--portrait-filter, var(--
   .frame > * + .hero::before { display: none !important; }
   a { color: #000; text-decoration: none; }
 }
+
+/* Shared content components: author content in Markdown and YAML. */
+.publications { line-height: 2; margin-bottom: 2.5em; }
+.publications:last-child { margin-bottom: 5em; }
+.print-gallery {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.print-gallery figure {
+  margin: 0;
+  height: 150px;
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.print-gallery figure img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}

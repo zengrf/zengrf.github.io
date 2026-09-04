@@ -8,6 +8,4 @@ downloads:
     file: "/assets/pdf/(02:24) Degeneracy Loci and Double Schubert Polynomials.pdf"
 ---
 
-Notes for a seminar talk on degeneracy loci formulas and double Schubert polynomials, based on Section 5.4 of [*Introduction to the Cohomology of the Flag Variety*](https://arxiv.org/abs/2506.21064) (Billey-Gao-Pawlowski 2025). 
-
-{% include pdf-embed.html %}
+Notes for a seminar talk on degeneracy loci formulas and double Schubert polynomials, based on Section 5.4 of [*Introduction to the Cohomology of the Flag Variety*](https://arxiv.org/abs/2506.21064) (Billey-Gao-Pawlowski 2025).

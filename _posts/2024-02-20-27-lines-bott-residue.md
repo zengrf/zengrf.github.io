@@ -6,4 +6,3 @@ layout: post
 ---
 
 Counting the 27 lines on a smooth cubic surface using Atiyah-Bott localization. Includes a 3D model of the Clebsch cubic surface.
-

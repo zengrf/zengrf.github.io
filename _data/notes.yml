@@ -1,0 +1,33 @@
+- id: code-tools
+  title: Code & interactive tools
+  nav:
+    ja: コード
+    zh-Hans: 代码
+    en: Code & interactive tools
+  tags:
+  - code
+  description: Coding stuff, and some tools I built as a vibe engineer. 🥸
+- id: notes-translations
+  title: Notes & translations
+  nav:
+    ja: ノート
+    zh-Hans: 笔记
+    en: Notes & translations
+  tags:
+  - notes
+  - translations
+  description: These are my notes and slides for various talks and seminars. Most
+    have not been proof-read, and correctness is NOT guaranteed.
+  image:
+    file: "/assets/img/circles-of-apollonius-genus-4-curve.png"
+    alt: Spanning lines
+    caption: An illustration of the relationship between circles of apollonius and
+      a singular genus 4 curve.
+- id: blog-projects
+  title: Blog
+  nav:
+    ja: ブログ
+    zh-Hans: 博客
+    en: Blog & ongoing projects
+  tags:
+  - projects

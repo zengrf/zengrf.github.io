@@ -1,0 +1,54 @@
+contact:
+- key: hero.contact.email
+  label: Email
+  value: zengrf at uw dot edu
+- key: hero.contact.office
+  label: Office
+  value: Padelford C-20, UW Seattle
+- key: hero.contact.cv
+  label: CV
+  value: Download curriculum vitae (August 2026)
+  url: "/assets/pdf/Michael CV Aug 2026.pdf"
+photos:
+- file: "/assets/img/yu-gardens.jpg"
+  alt: Michael at the Yu Gardens 豫园, Shanghai
+  caption: Yu Gardens, Shanghai · photo by Alex Waugh
+  caption_key: hero.photo.caption
+- file: "/assets/img/seattle-kerry-park.jpg"
+  alt: Michael at Kerry Park, Seattle, with the skyline and Mount Rainier behind,
+    photo by Ting Gong
+  caption: Kerry Park, Seattle · photo by Ting Gong
+  caption_key: hero.photo.caption2
+- file: "/assets/img/mount-rainier.jpg"
+  alt: Michael below Mount Rainier
+  caption: Mount Rainier · May 2026
+  caption_key: hero.photo.caption3
+pronunciation_title: How to pronounce my name
+pronunciations:
+- key: hero.pronounce.mandarin
+  label: Mandarin
+  value: zēng (high tone) — ruò (falling tone) — fán (rising tone)
+- key: hero.pronounce.cantonese
+  label: Cantonese
+  value: zang1 — joek6 — faan4
+- key: hero.pronounce.japanese
+  label: Japanese On'yomi
+  value: sou — jyaku — han
+- key: hero.pronounce.korean
+  label: Korean
+  value: jeung — yak — beom
+pronunciation_note: You might know me as Michael, マイケル, or Миша.
+activity_title: Recent activity
+activity:
+- SLMath Summer School on Moduli of Varieties. Berkeley, July 2026.
+- ICARM Summer School on Formalization in Lean. Carnegie Mellon University, July 2026.
+- '3rd AI for Math Workshop: Toward Self-Evolving Scientific Agents, ICML 2026. Seoul,
+  July 2026.'
+- ICARM Workshop on Algebraic Geometry and Machine Learning. Carnegie Mellon University,
+  June 2026.
+- 'M0,ntréal ISM Discovery School: Combinatorics of Moduli of Curves. UQAM, May 2026.'
+- Graduate Student Topology and Geometry Conference. Rutgers University, April 2026.
+- Graduate Student Combinatorics Conference. University of Illinois Chicago, March
+  2026.
+- Western Algebraic Geometry Symposium. UCSD, March 2026.
+activity_updated: Last updated 2026‑08‑17.

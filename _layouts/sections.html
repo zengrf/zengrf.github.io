@@ -1,0 +1,10 @@
+---
+layout: default
+---
+{% comment %}Markdown horizontal rules separate the page's styled sections.{% endcomment %}
+{% assign sections = content | split: '<hr />' %}
+{% for section in sections %}
+<section class="section">
+  {{ section }}
+</section>
+{% endfor %}

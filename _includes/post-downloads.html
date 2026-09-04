@@ -1,0 +1,22 @@
+{% comment %}
+  Downloads are defined once in post YAML. PDFs and images preview automatically;
+  set preview: false for a download-only attachment. Descriptions support Markdown.
+{% endcomment %}
+{% for item in page.downloads %}
+  {% assign download_url = item.file | relative_url | uri_escape %}
+  {% assign extension = item.file | split: '.' | last | downcase %}
+  {% assign media_title = item.title | default: page.title %}
+  {{ item.description | markdownify }}
+  {% unless item.preview == false %}
+    {% if extension == 'pdf' %}
+    <div class="pdf-frame">
+      <iframe src="{{ download_url | escape }}" title="{{ media_title | escape }}" loading="lazy"></iframe>
+    </div>
+    {% elsif extension == 'gif' or extension == 'png' or extension == 'jpg' or extension == 'jpeg' or extension == 'webp' or extension == 'svg' %}
+    <div class="gif-frame">
+      <img src="{{ download_url | escape }}" alt="{{ media_title | escape }}" loading="lazy">
+    </div>
+    {% endif %}
+  {% endunless %}
+  <p class="pdf-download"><a href="{{ download_url | escape }}" target="_blank" rel="noopener">{{ item.label | default: 'Download' | escape }}</a></p>
+{% endfor %}

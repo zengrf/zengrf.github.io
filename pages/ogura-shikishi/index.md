@@ -1,21 +1,21 @@
 ---
-title: "小倉色紙 (Ogura Shikishi)"
-layout: default
-permalink: /ogura-shikishi/
+title: 小倉色紙 (Ogura Shikishi)
+layout: sections
+permalink: "/ogura-shikishi/"
+calligraphy_image:
+  file: "/assets/img/ogura-calligraphy.jpg"
+  alt: Calligraphy study of the Ogura Hyakunin Isshu
+  caption: 小倉色紙 NO.41「こひすてふ」
+notes_image:
+  file: "/assets/img/ogura-notes.jpg"
+  alt: Translation notes for Ogura Shikishi
+  caption: 藤原定家
 ---
 
-<section class="section">
-  <figure>
-    <img src="{{ '/assets/img/ogura-calligraphy.jpg' | relative_url }}" alt="Calligraphy study of the Ogura Hyakunin Isshu" />
-    <figcaption>小倉色紙 NO.41「こひすてふ」</figcaption>
-  </figure>
-  <p>I am a big fan of classical languages. I have done some work with <i>Prof.</i> <a href="https://asian.washington.edu/people/paul-s-atkins">Paul Atkins</a> on the classical Japanese poem collection 百人一首 <i>One Hundred Poets, One Poem Each</i>. More details to come!</p>
-</section>
+{% include figure.html image=page.calligraphy_image %}
 
-<section class="section">
-  <figure>
-    <img src="{{ '/assets/img/ogura-notes.jpg' | relative_url }}" alt="Translation notes for Ogura Shikishi" />
-    <figcaption>藤原定家</figcaption>
-  </figure>
-</section>
+I am a big fan of classical languages. I have done some work with *Prof.* [Paul Atkins](https://asian.washington.edu/people/paul-s-atkins) on the classical Japanese poem collection 百人一首 *One Hundred Poets, One Poem Each*. More details to come!
 
+---
+
+{% include figure.html image=page.notes_image %}

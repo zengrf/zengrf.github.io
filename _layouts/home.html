@@ -1,0 +1,55 @@
+---
+layout: default
+---
+
+<section class="hero">
+  <div class="hero__text">
+    {{ content }}
+    <dl class="definition-list">
+      {% for item in site.data.home.contact %}
+      <dt data-i18n="{{ item.key }}.label">{{ item.label | escape }}</dt>
+      <dd data-i18n="{{ item.key }}.value">{% if item.url %}<a href="{{ item.url | relative_url | uri_escape | escape }}">{{ item.value | escape }}</a>{% else %}{{ item.value | markdownify | remove: '<p>' | remove: '</p>' }}{% endif %}</dd>
+      {% endfor %}
+    </dl>
+  </div>
+  <figure class="hero__image">
+    <div class="hero__scroll">
+      <div class="hero__mount" aria-hidden="true"></div>
+      <div class="hero__reel" id="heroReel" tabindex="0" role="group" aria-label="Photographs">
+        {% for photo in site.data.home.photos %}
+        <div class="hero__frame">
+          <img src="{{ photo.file | relative_url | uri_escape | escape }}" alt="{{ photo.alt | escape }}"{% unless forloop.first %} loading="lazy"{% endunless %} />
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="hero__marks" id="heroMarks" role="tablist" aria-label="Choose a photograph"></div>
+    <figcaption id="heroCaption" aria-live="polite"></figcaption>
+    <div class="hero__captions" hidden>
+      {% for photo in site.data.home.photos %}
+      <span data-i18n="{{ photo.caption_key }}">{{ photo.caption | escape }}</span>
+      {% endfor %}
+    </div>
+  </figure>
+</section>
+
+<section class="section" data-collapsible="true">
+  <h2 data-i18n="hero.pronounce.title">{{ site.data.home.pronunciation_title | escape }}</h2>
+  <dl class="definition-list">
+    {% for item in site.data.home.pronunciations %}
+    <dt data-i18n="{{ item.key }}.label">{{ item.label | escape }}</dt>
+    <dd data-i18n="{{ item.key }}.value">{{ item.value | escape }}</dd>
+    {% endfor %}
+  </dl>
+  <p data-i18n="hero.pronounce.note">{{ site.data.home.pronunciation_note | escape }}</p>
+</section>
+
+<section class="list-card" data-collapsible="true">
+  <h2 data-i18n="hero.activity.title">{{ site.data.home.activity_title | escape }}</h2>
+  <ul>
+    {% for activity in site.data.home.activity %}
+    <li>{{ activity | markdownify | remove: '<p>' | remove: '</p>' }}</li>
+    {% endfor %}
+  </ul>
+  <p class="hero__note" data-i18n="hero.activity.note">{{ site.data.home.activity_updated | escape }}</p>
+</section>

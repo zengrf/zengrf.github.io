@@ -9,6 +9,3 @@ downloads:
 ---
 
 Slides for my lightning talk at the [Macaulay2 Workshop at Tulane, April 2025](https://sites.google.com/view/macaulay2tulane/).
-
-{% include pdf-embed.html %}
-

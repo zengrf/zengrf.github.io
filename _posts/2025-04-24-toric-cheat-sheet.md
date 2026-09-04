@@ -9,5 +9,3 @@ downloads:
 ---
 
 Notes for a reading group on Toric varieties.
-
-{% include pdf-embed.html %}

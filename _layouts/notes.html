@@ -1,0 +1,47 @@
+---
+layout: default
+---
+{{ content }}
+<nav class="toc">
+  <details class="toc__details">
+    <summary class="toc__summary"><span lang="ja">目次</span><span lang="zh-Hans">目录</span><span lang="en">Table of Contents</span></summary>
+    <ul class="toc__list">
+      {% for section in site.data.notes %}
+      <li><a href="#{{ section.id }}">{% for label in section.nav %}<span lang="{{ label[0] }}">{{ label[1] | escape }}</span>{% endfor %}</a></li>
+      {% endfor %}
+    </ul>
+  </details>
+</nav>
+
+{% for section in site.data.notes %}
+  {% assign section_posts = '' | split: '' %}
+  {% for tag in section.tags %}
+    {% assign tagged_posts = site.posts | where_exp: 'post', 'post.tags contains tag' %}
+    {% assign section_posts = section_posts | concat: tagged_posts %}
+  {% endfor %}
+  {% assign section_posts = section_posts | uniq | sort: 'date' | reverse %}
+<section class="section section--grid" id="{{ section.id }}">
+  <details class="section-toc">
+    <summary class="section-toc__summary">
+      <h2>{{ section.title | escape }}</h2>
+      {% if section.description %}<br>{{ section.description | markdownify | remove: '<p>' | remove: '</p>' }}{% endif %}
+    </summary>
+    {% if section_posts.size > 0 %}
+    <ul class="section-toc__list">
+      {% for post in section_posts %}
+      <li><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </details>
+  {% if section_posts.size > 0 %}
+  <ul class="note-list note-list--grid">
+    {% for post in section_posts %}
+      {% include note-card.html post=post %}
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if section.image %}{% include figure.html image=section.image %}{% endif %}
+</section>
+{% if forloop.first %}<hr />{% endif %}
+{% endfor %}

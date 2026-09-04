@@ -6,11 +6,7 @@ tags: [code, tutorials, macaulay2]
 embed_url: "https://zengrf.github.io/macaulay2-invariantring-tutorial/"
 ---
 
-<p>This PreTeXt-powered tutorial walks through the Macaulay2 language using examples from the <code>InvariantRing2</code> package. It grew out of a course project for <a href="https://sites.math.washington.edu//~jarod/math509-spring25.html" target="_blank" rel="noopener">MATH 509: Advanced commutative algebra and scheme theory</a> taught by <a href="https://sites.math.washington.edu//~jarod/" target="_blank" rel="noopener">Jarod Alper</a>. I learned about the <a href="https://pretextbook.org/" target="_blank" rel="noopener">PreTeXt</a> language from <a href="https://sites.google.com/a/umich.edu/gandini/about-me?authuser=0" target="_blank" rel="noopener">Francesca Gandini.</a></p>
+This PreTeXt-powered tutorial walks through the Macaulay2 language using examples from the `InvariantRing2` package. It grew out of a course project for [MATH 509: Advanced commutative algebra and scheme theory](https://sites.math.washington.edu//~jarod/math509-spring25.html) taught by [Jarod Alper](https://sites.math.washington.edu//~jarod/). I learned about the [PreTeXt](https://pretextbook.org/) language from [Francesca Gandini.](https://sites.google.com/a/umich.edu/gandini/about-me?authuser=0)
 
 
-<p>The full <a href="https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html" target="_blank" rel="noopener">tutorial</a> is hosted via Github Pages.</p>
-
-<div class="embed-frame">
-  <iframe src="https://zengrf.github.io/macaulay2-invariantring-tutorial/" title="InvariantRing2 tutorial" loading="lazy"></iframe>
-</div>
+The full [tutorial](https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html) is hosted via Github Pages.

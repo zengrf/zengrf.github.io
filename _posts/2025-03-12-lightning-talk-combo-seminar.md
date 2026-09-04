@@ -9,6 +9,3 @@ downloads:
 ---
 
 Slides for my lightning talk at the [UW Combinatorics and Geometry Seminar](https://sites.math.washington.edu/~combinat/#past-talks).
-
-{% include pdf-embed.html %}
-
