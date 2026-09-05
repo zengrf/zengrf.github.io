@@ -6,3 +6,4 @@ layout: post
 ---
 
 Counting the 27 lines on a smooth cubic surface using Atiyah-Bott localization. Includes a 3D model of the Clebsch cubic surface.
+{: data-i18n="posts.27-lines-bott-residue.intro"}

@@ -14,3 +14,4 @@ downloads:
 ---
 
 English translation of Egbert Brieskorn’s 1968 paper on rational surface singularities.
+{: data-i18n="posts.brieskorn-rational-singularities.intro"}

@@ -40,15 +40,26 @@ pronunciations:
 pronunciation_note: You might know me as Michael, マイケル, or Миша.
 activity_title: Recent activity
 activity:
-- SLMath Summer School on Moduli of Varieties. Berkeley, July 2026.
-- ICARM Summer School on Formalization in Lean. Carnegie Mellon University, July 2026.
-- '3rd AI for Math Workshop: Toward Self-Evolving Scientific Agents, ICML 2026. Seoul,
-  July 2026.'
-- ICARM Workshop on Algebraic Geometry and Machine Learning. Carnegie Mellon University,
-  June 2026.
-- 'M0,ntréal ISM Discovery School: Combinatorics of Moduli of Curves. UQAM, May 2026.'
-- Graduate Student Topology and Geometry Conference. Rutgers University, April 2026.
-- Graduate Student Combinatorics Conference. University of Illinois Chicago, March
-  2026.
-- Western Algebraic Geometry Symposium. UCSD, March 2026.
+- key: activity.slmath-2026
+  text: SLMath Summer School on Moduli of Varieties. Berkeley, July 2026.
+- key: activity.lean-2026
+  text: ICARM Summer School on Formalization in Lean. Carnegie Mellon University,
+    July 2026.
+- key: activity.icml-2026
+  text: '3rd AI for Math Workshop: Toward Self-Evolving Scientific Agents, ICML 2026.
+    Seoul, July 2026.'
+- key: activity.icarm-2026
+  text: ICARM Workshop on Algebraic Geometry and Machine Learning. Carnegie Mellon
+    University, June 2026.
+- key: activity.montreal-2026
+  text: 'M0,ntréal ISM Discovery School: Combinatorics of Moduli of Curves. UQAM,
+    May 2026.'
+- key: activity.topology-2026
+  text: Graduate Student Topology and Geometry Conference. Rutgers University, April
+    2026.
+- key: activity.combinatorics-2026
+  text: Graduate Student Combinatorics Conference. University of Illinois Chicago,
+    March 2026.
+- key: activity.wags-2026
+  text: Western Algebraic Geometry Symposium. UCSD, March 2026.
 activity_updated: Last updated 2026‑08‑17.

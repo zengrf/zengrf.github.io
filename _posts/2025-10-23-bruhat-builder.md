@@ -6,3 +6,4 @@ embed_html: "/assets/html/bruhat_graph.html"
 ---
 
 Builds Bruhat graphs for $\mathcal S_n$.
+{: data-i18n="posts.bruhat-builder.intro"}

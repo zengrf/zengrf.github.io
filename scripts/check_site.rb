@@ -104,7 +104,15 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
     translations.each do |language, table|
       assert(table.keys.sort == site.data['translations'][language].keys.sort, "Lost translation keys: #{language}")
       table.each do |key, value|
-        assert(!value.include?('<p>') && !value.include?('](http'), "Unrendered translation: #{language}/#{key}")
+        assert(!value.include?('](http'), "Unrendered translation: #{language}/#{key}")
+        # A translation must retain the destinations of the English links.
+        html.each_value do |doc|
+          doc.css('[data-i18n]').select { |n| n['data-i18n'] == key && !n.key?('data-i18n-summary') }.each do |node|
+            original_links = node.css('a[href]').map { |a| decode(a['href']) }.sort
+            translated_links = Nokogiri::HTML.fragment(value).css('a[href]').map { |a| decode(a['href']) }.sort
+            assert(original_links == translated_links, "Translation changed links: #{language}/#{key}")
+          end
+        end
       end
     end
     puts "PASS: #{documents.size} pages, #{site.posts.docs.size} posts, links, media, categories, and translations (baseurl: #{baseurl.inspect})"

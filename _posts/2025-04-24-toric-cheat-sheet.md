@@ -9,3 +9,4 @@ downloads:
 ---
 
 Notes for a reading group on Toric varieties.
+{: data-i18n="posts.toric-cheat-sheet.intro"}

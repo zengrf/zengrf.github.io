@@ -10,3 +10,4 @@ downloads:
 ---
 
 Class talk on the exceptional Lie algebras and Freudenthal’s magic square for MATH 507: Algebraic Structures taught by Julia Pevtsova. Delivered with Zachary Wallace-Wells, Zawad Chowdhury, and Bryan Lu.
+{: data-i18n="posts.freudenthal-magic-square.intro"}

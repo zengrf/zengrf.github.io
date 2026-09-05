@@ -12,3 +12,4 @@ downloads:
 ---
 
 Notes from the [eCHT Reading Seminar on Quadratic Curve Counting](https://tbrazel.github.io/teaching/24c_curves.html) led by [Thomas Brazelton](https://tbrazel.github.io/), where I gave an introduction to Gromov–Witten invariants and quantum cohomology.
+{: data-i18n="posts.gromov-witten-invariants.intro"}

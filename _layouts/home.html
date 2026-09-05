@@ -18,7 +18,7 @@ layout: default
       <div class="hero__reel" id="heroReel" tabindex="0" role="group" aria-label="Photographs">
         {% for photo in site.data.home.photos %}
         <div class="hero__frame">
-          <img src="{{ photo.file | relative_url | uri_escape | escape }}" alt="{{ photo.alt | escape }}"{% unless forloop.first %} loading="lazy"{% endunless %} />
+          <img src="{{ photo.file | relative_url | uri_escape | escape }}" alt="{{ photo.alt | escape }}" data-i18n-alt="{{ photo.caption_key }}.alt"{% unless forloop.first %} loading="lazy"{% endunless %} />
         </div>
         {% endfor %}
       </div>
@@ -48,7 +48,7 @@ layout: default
   <h2 data-i18n="hero.activity.title">{{ site.data.home.activity_title | escape }}</h2>
   <ul>
     {% for activity in site.data.home.activity %}
-    <li>{{ activity | markdownify | remove: '<p>' | remove: '</p>' }}</li>
+    <li data-i18n="{{ activity.key }}">{{ activity.text | markdownify | remove: '<p>' | remove: '</p>' }}</li>
     {% endfor %}
   </ul>
   <p class="hero__note" data-i18n="hero.activity.note">{{ site.data.home.activity_updated | escape }}</p>

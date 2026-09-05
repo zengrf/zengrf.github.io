@@ -9,3 +9,4 @@ downloads:
 ---
 
 Notes for a learning seminar on "Galois = Monodromy," based on [Galois Groups of Enumerative Problems](https://projecteuclid.org/journals/duke-mathematical-journal/volume-46/issue-4/Galois-groups-of-enumerative-problems/10.1215/S0012-7094-79-04635-0.full).
+{: data-i18n="posts.plucker-formula.intro"}

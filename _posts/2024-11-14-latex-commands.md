@@ -9,3 +9,4 @@ downloads:
 ---
 
 A summary of LaTEX math commands I found on the internet.
+{: data-i18n="posts.latex-commands.intro"}

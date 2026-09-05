@@ -10,3 +10,4 @@ downloads:
 ---
 
 MATH 583C lecture notes summarizing different ways of enumerating the 27 lines on a cubic surface.
+{: data-i18n="posts.intersection-theory-27-lines.intro"}

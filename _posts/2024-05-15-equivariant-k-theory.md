@@ -10,3 +10,4 @@ downloads:
 ---
 
 A shallow introduction to several perspectives on equivariant K-theory, with examples and computations. DubTop seminar.
+{: data-i18n="posts.equivariant-k-theory.intro"}

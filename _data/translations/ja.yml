@@ -1,0 +1,378 @@
+# Markdown translations. Keys match data-i18n attributes in pages and templates.
+brand.subtitle: |-
+  数学専攻の大学院生
+nav.home: |-
+  ホーム
+nav.research: |-
+  研究
+nav.teaching: |-
+  授業・学生指導
+nav.notes: |-
+  ノート・ツール
+hero.intro.1: |-
+  ワシントン大学シアトル校で数学の博士課程に在籍している曽若凡（Michael Zeng）です。現在4年目で、Jarod Alper 先生と Sara Billey 先生の指導のもと、シューベルト・カルキュラス、同変交叉理論、モジュライ理論を研究しています。数学の形式化や、機械学習を使った数学研究にも関心があります。
+hero.intro.2: |-
+  2023年にペンシルベニア大学を卒業しました。学部では数学と言語学を専攻し、応用数学・計算機科学の修士号も取得しました。研究の合間にはテニスやバスケットボールをしたり、外国語を勉強したりしています。
+hero.intro.news1: |-
+  2026年6月から[ワシントン大学数学AIラボ](https://ai.math.uw.edu)の所長代理を務めています。[UW 2026 Lean Hackathon](https://uw2026leanhackathon.github.io/)を開催しました。同年夏からは [Simons Dissertation Fellowship](https://www.simonsfoundation.org/grant/simons-dissertation-fellowship-in-mathematics/) の支援を受け、秋学期はカリフォルニア大学バークレー校に滞在する予定です。
+hero.photo.caption: |-
+  上海・豫園にて · 撮影：Alex Waugh
+hero.photo.caption2: |-
+  シアトル・ケリーパーク · 撮影：龚挺
+hero.photo.caption3: |-
+  レーニア山 · 2026年5月
+footer.copyright: |-
+  © 曽若凡 · 2026 · シアトル
+hero.contact.email.label: |-
+  メール
+hero.contact.email.value: |-
+  zengrf at uw dot edu
+hero.contact.office.label: |-
+  研究室
+hero.contact.office.value: |-
+  Padelford C-20（ワシントン大学シアトル校）
+hero.contact.cv.label: |-
+  履歴書
+hero.contact.cv.value: |-
+  [履歴書をダウンロード（2026年8月）](/assets/pdf/Michael%20CV%20Aug%202026.pdf)
+hero.pronounce.title: |-
+  名前の読み方
+hero.pronounce.mandarin.label: |-
+  中国語（北京語）
+hero.pronounce.mandarin.value: |-
+  zēng（一声）— ruò（四声）— fán（二声）
+hero.pronounce.cantonese.label: |-
+  中国語（広東語）
+hero.pronounce.cantonese.value: |-
+  zang1 — joek6 — faan4
+hero.pronounce.japanese.label: |-
+  日本語音読み
+hero.pronounce.japanese.value: |-
+  曽　そう — 若　じゃく — 凡　はん
+hero.pronounce.korean.label: |-
+  韓国語
+hero.pronounce.korean.value: |-
+  증 jeung — 약 yak — 범 beom
+hero.activity.title: |-
+  最近の活動
+hero.pronounce.note: |-
+  Michael、マイケル、Миша という名前でも呼ばれています。
+hero.activity.note: |-
+  最終更新：2026年8月17日。
+ui.menu: |-
+  メニュー
+ui.language: |-
+  言語を切り替える
+ui.navigation: |-
+  メインナビゲーション
+ui.fullscreen: |-
+  全画面で表示
+ui.comments: |-
+  コメント
+back.notes: |-
+  ノート一覧に戻る
+back.research: |-
+  研究ページに戻る
+back.teaching: |-
+  授業・学生指導に戻る
+back.home: |-
+  ホームに戻る
+notes.code-tools.title: |-
+  コード・対話型ツール
+notes.code-tools.description: |-
+  コードや、AIと試行錯誤しながら作ったツールを置いています。🥸
+notes.notes-translations.title: |-
+  ノート・翻訳
+notes.notes-translations.description: |-
+  研究会やセミナーで使ったノートとスライドです。十分に校正できていないものが多く、誤りが含まれている可能性があります。
+notes.blog-projects.title: |-
+  雑記・進行中のプロジェクト
+publications.pure-math: |-
+  純粋数学
+publications.ai-math: |-
+  AIと数学
+publications.ai-languages: |-
+  AIと言語研究
+research.title: |-
+  研究
+research.interests: |-
+  研究テーマ
+research.intro: |-
+  シューベルト・カルキュラス、モジュライスタック上の交叉理論、数え上げ幾何を研究しています。機械学習やAIを数学研究にどう役立てられるかにも関心があります。
+research.topics: |-
+  最近は、4次曲面上の直線、いくつかのモジュライスタックの $K_0$ 環、$\overline{\mathscr{M}}_{g,n}$ 上のネフ因子、トーリック多様体の直線束、安定写像のモジュライ空間などについて考えています。
+research.publications: |-
+  論文・プレプリント
+teaching.seminars: |-
+  自主セミナー
+teaching.milestone.title: |-
+  Writing Milestone セミナー
+teaching.curves.title: |-
+  代数曲線
+teaching.intersection.title: |-
+  MATH 583C — 交叉理論
+teaching.courses: |-
+  ワシントン大学での授業
+teaching.linear.title: |-
+  MATH 208 線形代数
+teaching.mentorship: |-
+  学生の研究指導
+teaching.ai.title: |-
+  [ワシントン大学数学AIラボ](https://sites.math.washington.edu/ai/)
+teaching.wxml.title: |-
+  [ワシントン実験数学ラボ（WXML）](https://wxml.math.washington.edu/)
+teaching.wdrp.title: |-
+  [ワシントン個別読書プログラム（WDRP）](https://sites.uw.edu/wdrp/)
+teaching.milestone.text: |-
+  2025年春、[Zawad Chowdhury](https://sites.math.washington.edu/~zawadx/) さんとともに [Writing Milestone セミナー](https://sites.math.washington.edu/~zawadx/milestone_sem.html) の運営に携わりました。[writing milestone](https://math.washington.edu/writing-milestone) という文章執筆課題に取り組む大学院生が、学んでいる数学について発表し、執筆の経験を共有する場です。
+teaching.curves.text: |-
+  2025年冬、[Giovanni Inchiostro](https://math.washington.edu/people/giovanni-inchiostro) 先生の指導のもと、大学院生向けの代数曲線の輪読を企画しました。詳しくは[セミナーのページ](https://sites.google.com/uw.edu/algebraic-curves-seminar/home)をご覧ください。
+teaching.intersection.text: |-
+  2024年春、[Arkamouli Debnath](https://sites.google.com/view/arkamouli/courses-and-research?authuser=0) さんと交叉理論の輪読を企画しました。[Sándor Kovács](https://math.washington.edu/people/sandor-kovacs) 先生に指導していただきました。ノートと日程は[授業のページ](https://sites.google.com/view/uwmath583cintersectiontheory)に掲載しています。
+teaching.linear.text: |-
+  2025年夏、[MATH 208 C：線形代数](https://sites.math.washington.edu/~m208/)を担当しました。対面とオンラインを併用し、Zoomの録画も提供しました。受講者は83名でした。
+teaching.duties.intro: |-
+  これまでにTAや採点を担当した授業は以下のとおりです。
+teaching.mentorship.intro: |-
+  ワシントン大学数学AIラボ、ワシントン実験数学ラボ（WXML）、ワシントン個別読書プログラム（WDRP）で学生の研究指導に携わっています。
+teaching.ai.circuits: |-
+  [多項式の強化学習](https://github.com/uw-math-ai/PolyArithmeticCircuitsRL/tree/rohan-new-branch)プロジェクトで学生を指導しています。[Jarod Alper](https://sites.math.washington.edu//~jarod/) 先生やメンバーと、少ない演算で多項式を計算する回路を見つけるため、AlphaZero型の強化学習に取り組んでいます。自動証明生成を大幅に単純化したモデルとも捉えられます。この研究から、ICLRワークショップ論文 [CircuitBuilder: From Polynomials to Circuits via Reinforcement Learning](https://arxiv.org/abs/2603.17075) が生まれました。
+teaching.ai.cayley: |-
+  [CayleyPy: Advancing Group Theory with AI](https://github.com/uw-math-ai/cayley-py) でも学生を指導し、AIを使って群論の問題に取り組んでいます。
+teaching.ai.networks: |-
+  数学AIラボの2024〜2025年度の活動では、「ニューラルネットワークはどのような数学的関数を学習できるか」というテーマで学生を指導しました。
+teaching.wxml.current: |-
+  2026年春は「微積分の可視化：Desmosや3Dプリントなどを使った対話型モデリング」で学生を指導しています。
+teaching.wxml.prints: |-
+  2025年春には「微積分の授業に役立つ3Dプリントとアニメーションの制作」で学生を指導しました。[Andy Loveless](https://sites.math.washington.edu/~aloveles/) 先生やメンバーと数学的な対象を3Dプリントし、微積分の教材や、幾何的な感覚を養うための模型を作りました。作品は随時更新している[模型ギャラリー](https://sites.math.washington.edu/~aloveles/CalcVisuals/)にまとめています。特に気に入っているのが次の模型です。
+teaching.wdrp.intro: |-
+  WDRPでは、次のテーマで学生と一緒に本を読みました。
+teaching.wdrp.talk: |-
+  2025年春のWDRPセミナーで発表しました。大学院生が自分の研究に関連する数学を初学者向けに紹介するセミナーです。[スライドはこちら](/notes/2025/04/23/WDRP-talk/)。
+teaching.duties.2025: |-
+  - 2025年秋：*TA*、MATH 208 線形代数
+teaching.duties.2024: |-
+  - 2025年春：*採点担当*、MATH 327 実解析入門
+  - 2025年冬：*TA*、MATH 111 代数とその応用
+  - 2024年秋：*TA*、MATH 126 CE / CF 微積分と解析幾何 III
+teaching.duties.2023: |-
+  - 2024年夏：*採点担当*、MATH 300 A 数学的推論入門
+  - 2024年春：*TA*、MATH 126 BA / BB 微積分と解析幾何 III
+  - 2024年冬：*TA*、MATH 125 CC / CD 微積分と解析幾何 II
+  - 2023年秋：*TA*、MATH 125 CE / CF 微積分と解析幾何 II
+teaching.wdrp.projects: |-
+  - 2025年春：表現論を巡る
+  - 2024年春：数え上げ幾何・接続幾何・射影幾何
+  - 2024年冬：リー群は「うそ（lie）」じゃない――身近にあるリー群
+ogura.intro: |-
+  古典語が好きで、[Paul Atkins](https://asian.washington.edu/people/paul-s-atkins) 先生と『百人一首』に関する研究をしてきました。詳しい内容は今後こちらで紹介する予定です。
+posts.algebraic-k-theory.title: |-
+  代数的K理論 — SAAG（2023年12月）
+posts.algebraic-k-theory.intro: |-
+  Student AAG セミナーで発表した、代数的K理論の基礎と計算についてのノートです。
+posts.27-lines-bott-residue.title: |-
+  Bottの留数公式で数える27本の直線 — 1-2-3セミナー（2024年2月）
+posts.27-lines-bott-residue.intro: |-
+  Atiyah–Bottの局所化公式を使って、非特異3次曲面上の27本の直線を数えます。Clebsch 3次曲面の3Dモデルも含めています。
+posts.brackets-for-macaulay2.title: |-
+  Macaulay2のBracketsパッケージ
+posts.brackets-for-macaulay2.intro: |-
+  2023年にミネソタ大学で開かれたMacaulay2ワークショップで、[Brackets](https://github.com/Macaulay2/M2/tree/master/M2/Macaulay2/packages/Brackets.m2) パッケージの開発に参加しました。ブラケット記号で表される古典的な $SL_n$ 不変量を簡約するためのパッケージです。
+posts.intersection-theory-27-lines.title: |-
+  交叉理論：27本の直線を巡って
+posts.intersection-theory-27-lines.intro: |-
+  MATH 583Cの講義ノートです。3次曲面上の27本の直線を数えるいくつかの方法をまとめました。
+posts.equivariant-k-theory.title: |-
+  同変K理論 — DubTop（2024年5月）
+posts.equivariant-k-theory.intro: |-
+  DubTopセミナーでの発表ノートです。同変K理論をいくつかの視点から紹介し、具体例と計算を扱いました。
+posts.intersection-theory-3264.title: |-
+  交叉理論：3264 and All That
+posts.intersection-theory-3264.intro: |-
+  MATH 583Cのノートです。射影平面 $\mathbb P^2$ 上の与えられた5本の2次曲線に接する2次曲線が3264本あることを、どのように数えるかをまとめました。
+posts.neural-networks-with-math.title: |-
+  Neural Networks with Math：ニューラルネットワークの数学
+posts.neural-networks-with-math.intro: |-
+  [Linhang Huang](https://linhang-h.github.io/) さんのブログ [Neural Networks with Math](https://linhang-h.github.io/Neural-Networks-with-Math/) に寄稿し、深層学習のモデルを支える数学を解説しました。G-CNNについては、[群同変ニューラルネットワークのノート](https://linhang-h.github.io/Neural-Networks-with-Math/posts/post4/)をご覧ください。
+posts.gromov-witten-invariants.title: |-
+  Gromov–Witten不変量
+posts.gromov-witten-invariants.intro: |-
+  [Thomas Brazelton](https://tbrazel.github.io/) さんが主催した [eCHT Reading Seminar on Quadratic Curve Counting](https://tbrazel.github.io/teaching/24c_curves.html) で、Gromov–Witten不変量と量子コホモロジーを紹介したときのノートです。
+posts.invariantring2-tutorial.title: |-
+  Macaulay2 InvariantRing2 チュートリアル
+posts.invariantring2-tutorial.intro: |-
+  `InvariantRing2` パッケージの例を使ってMacaulay2の言語を学ぶ、PreTeXtで書いたチュートリアルです。[Jarod Alper](https://sites.math.washington.edu//~jarod/) 先生の [MATH 509：高等可換代数とスキーム理論](https://sites.math.washington.edu//~jarod/math509-spring25.html)の授業プロジェクトから生まれました。[PreTeXt](https://pretextbook.org/) は [Francesca Gandini](https://sites.google.com/a/umich.edu/gandini/about-me?authuser=0) さんに教えていただきました。
+posts.brieskorn-rational-singularities.title: |-
+  Brieskorn（1968）：有理特異点
+posts.brieskorn-rational-singularities.intro: |-
+  Egbert Brieskornによる曲面の有理特異点に関する1968年の論文を英訳しました。
+posts.latex-commands.title: |-
+  よく使うTeXの数式記号
+posts.latex-commands.intro: |-
+  インターネットで見つけた、LaTeXの数式コマンドの早見表です。
+posts.intersection-homology.title: |-
+  交叉ホモロジー
+posts.intersection-homology.intro: |-
+  2024年11月の [eCHT Kan セミナー](https://s.wayne.edu/echt/echt-reading-seminars/kan-seminar-fall-2024/) で、交叉ホモロジーとperverse層について発表したときのノートです。
+posts.freudenthal-magic-square.title: |-
+  Freudenthalの魔方陣
+posts.freudenthal-magic-square.intro: |-
+  Julia Pevtsova先生のMATH 507（代数構造）で、例外型リー代数とFreudenthalの魔方陣について発表しました。Zachary Wallace-Wells、Zawad Chowdhury、Bryan Luの各氏との共同発表です。
+posts.degeneracy-loci-talk.title: |-
+  退化軌跡と二重シューベルト多項式
+posts.degeneracy-loci-talk.intro: |-
+  退化軌跡の公式と二重シューベルト多項式についての発表ノートです。Billey–Gao–Pawlowski（2025）の [*Introduction to the Cohomology of the Flag Variety*](https://arxiv.org/abs/2506.21064) 第5.4節に基づいています。
+posts.lightning-talk-combo-seminar.title: |-
+  UW組合せ論・幾何セミナーでのライトニングトーク
+posts.lightning-talk-combo-seminar.intro: |-
+  [UW組合せ論・幾何セミナー](https://sites.math.washington.edu/~combinat/#past-talks)でのライトニングトークのスライドです。
+posts.plucker-formula.title: |-
+  Plückerの公式と平面曲線の変曲点のモノドロミー
+posts.plucker-formula.intro: |-
+  「Galois = Monodromy」をテーマとする勉強会のノートです。[Galois Groups of Enumerative Problems](https://projecteuclid.org/journals/duke-mathematical-journal/volume-46/issue-4/Galois-groups-of-enumerative-problems/10.1215/S0012-7094-79-04635-0.full) を参考にしています。
+posts.commutative-algebra-notes.title: |-
+  可換代数のノート
+posts.commutative-algebra-notes.intro: |-
+  [MATH 509：高等可換代数とスキーム理論](https://sites.math.washington.edu/~jarod/math509-spring25.html)の最初の2週間に取ったノートです。
+posts.lightning-talk-M2-workshop.title: |-
+  テュレーン大学Macaulay2ワークショップでのライトニングトーク
+posts.lightning-talk-M2-workshop.intro: |-
+  [2025年4月のテュレーン大学Macaulay2ワークショップ](https://sites.google.com/view/macaulay2tulane/)でのライトニングトークのスライドです。
+posts.WDRP-talk.title: |-
+  WDRPセミナーでの大学院生による講演
+posts.WDRP-talk.intro: |-
+  2025年春のWDRPセミナーで使ったスライドです。
+posts.toric-cheat-sheet.title: |-
+  トーリック多様体の早見表
+posts.toric-cheat-sheet.intro: |-
+  トーリック多様体の勉強会用にまとめたノートです。
+posts.circles-of-apollonius.title: |-
+  アポロニウスの円のモノドロミー
+posts.circles-of-apollonius.intro: |-
+  8個のアポロニウスの円のモノドロミーについてのノートです。Harris（1982）の [*Theta Characteristics on Algebraic Curves*](https://www.ams.org/journals/tran/1982-271-02/S0002-9947-1982-0654853-6/) に基づいています。
+posts.clebsch-visualizer.title: |-
+  27本の直線の可視化
+posts.clebsch-visualizer.intro: |-
+  Clebsch 3次曲面上の27本の直線、36組のダブルシックス、45個の三重接平面を表示します。
+posts.apollonius-visualizer.title: |-
+  アポロニウスの円の可視化
+posts.apollonius-visualizer.intro: |-
+  自由に動かして試してみてください。
+posts.pencil-of-quartics.title: |-
+  実4次曲面の束に現れる実直線
+posts.pencil-of-quartics.intro: |-
+  実4次曲面の束に現れる20本の実直線を、MathematicaでGIFにしました。数値計算の安定性の問題により、一部の直線が同じ曲面上に描かれています。
+posts.bruhat-builder.title: |-
+  Bruhatグラフ作成ツール
+posts.bruhat-builder.intro: |-
+  対称群 $\mathcal S_n$ のBruhatグラフを作成します。
+posts.WAGS-lightning-talk.title: |-
+  WAGSのライトニングトークとポスター
+posts.WAGS-lightning-talk.intro: |-
+  [オレゴン大学で開催されたWAGS](https://sites.google.com/a/wagsymposium.org/current/oregon-fall-2025?authuser=0)でのライトニングトークのスライドです。
+posts.a-theorem-a-day.title: |-
+  一日一定理
+posts.a-theorem-a-day.intro: |-
+  論文を読みながら書き留めた定理と証明です。代数幾何におけるEuler類や実直線の数え上げを扱っています。
+posts.pipe-dreams.title: |-
+  パイプドリーム作成ツール
+posts.pipe-dreams.intro: |-
+  置換から通常のパイプドリームとバンプレス・パイプドリームを作成します。chute・ladder・droopの各操作、置換と重みの読み取り、全図形の列挙によるシューベルト多項式の表示、TikZへの書き出しに対応しています。
+posts.invariantring2-tutorial.more: |-
+  [チュートリアルの全文](https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html)はGitHub Pagesで公開しています。
+posts.brieskorn-rational-singularities.attachment2: |-
+  比較のため、ドイツ語の原文も掲載しています。
+posts.commutative-algebra-notes.attachment2: |-
+  インターネットで *Mathematische Annalen* の1890年の巻のPDFを見つけました。
+posts.commutative-algebra-notes.attachment3: |-
+  この巻には、Hilbertによる不変式論の原論文 *Ueber die Theorie der algebraischen Formen* が収録されています。
+posts.WAGS-lightning-talk.attachment2: |-
+  ポスターもあります。
+downloads.download-notes-pdf: |-
+  ノートをダウンロード（PDF）
+downloads.download-slides-pdf: |-
+  スライドをダウンロード（PDF）
+downloads.download-handout-pdf: |-
+  配布資料をダウンロード（PDF）
+downloads.download-pdf: |-
+  PDFをダウンロード
+downloads.download-gif: |-
+  GIFをダウンロード
+downloads.english-translation-pdf: |-
+  英訳をダウンロード（PDF）
+downloads.original-german-pdf: |-
+  ドイツ語原文をダウンロード（PDF）
+tags.notes: |-
+  ノート
+tags.talks: |-
+  発表
+tags.talk: |-
+  発表
+tags.k-theory: |-
+  K理論
+tags.enumerative-geometry: |-
+  数え上げ幾何
+tags.code: |-
+  コード
+tags.macaulay2: |-
+  Macaulay2
+tags.projects: |-
+  プロジェクト
+tags.collaboration: |-
+  共同研究
+tags.tutorials: |-
+  チュートリアル
+tags.translations: |-
+  翻訳
+tags.visualizers: |-
+  可視化
+research.figure.caption: |-
+  [vZome](https://www.vzome.com/) で作成した、空間を張る直線配置です。
+research.figure.alt: |-
+  空間を張る直線配置
+teaching.seminar.caption: |-
+  [MATH 583 交叉理論](https://sites.google.com/view/uwmath583cintersectiontheory)の表紙画像です。複数の素材画像を組み合わせて作りました。
+teaching.seminar.alt: |-
+  交叉理論のセミナー
+teaching.mentorship.caption: |-
+  WDRPでの発表スライドの一枚です。
+teaching.mentorship.alt: |-
+  アポロニウスの円についてのWDRP発表スライド
+teaching.lines.alt: |-
+  27本の直線の配置を3Dプリントした模型
+teaching.heart.alt: |-
+  ハート形の3Dプリント模型
+ogura.calligraphy.alt: |-
+  小倉色紙の書跡
+ogura.notes.alt: |-
+  小倉色紙の翻訳ノート
+ogura.calligraphy.caption: |-
+  小倉色紙 第41番「こひすてふ」
+ogura.notes.caption: |-
+  藤原定家
+notes.figure.caption: |-
+  アポロニウスの円と種数4の特異曲線の関係を示した図です。
+notes.figure.alt: |-
+  アポロニウスの円と特異曲線の関係
+hero.photo.caption.alt: |-
+  上海の豫園にて
+hero.photo.caption2.alt: |-
+  シアトルのケリーパークにて。背景は市街地とレーニア山。撮影：龚挺
+hero.photo.caption3.alt: |-
+  レーニア山の麓にて
+activity.slmath-2026: |-
+  SLMath「代数多様体のモジュライ」サマースクール。バークレー、2026年7月。
+activity.lean-2026: |-
+  ICARM「Leanによる数学の形式化」サマースクール。カーネギーメロン大学、2026年7月。
+activity.icml-2026: |-
+  第3回AI for Mathワークショップ「自己進化する科学エージェントに向けて」（ICML 2026）。ソウル、2026年7月。
+activity.icarm-2026: |-
+  ICARM「代数幾何と機械学習」ワークショップ。カーネギーメロン大学、2026年6月。
+activity.montreal-2026: |-
+  M0,ntréal ISM Discovery School「曲線のモジュライの組合せ論」。ケベック大学モントリオール校、2026年5月。
+activity.topology-2026: |-
+  大学院生トポロジー・幾何学会議。ラトガース大学、2026年4月。
+activity.combinatorics-2026: |-
+  大学院生組合せ論会議。イリノイ大学シカゴ校、2026年3月。
+activity.wags-2026: |-
+  Western Algebraic Geometry Symposium（WAGS）。カリフォルニア大学サンディエゴ校、2026年3月。

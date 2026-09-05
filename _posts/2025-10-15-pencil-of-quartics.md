@@ -9,3 +9,4 @@ downloads:
 ---
 
 A GIF displaying 20 real lines in a real pencil of quartic surfaces, generated using Mathematica. Some lines got plotted on the same surface due to numerical stability issues.
+{: data-i18n="posts.pencil-of-quartics.intro"}

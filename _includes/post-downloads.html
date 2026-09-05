@@ -6,7 +6,7 @@
   {% assign download_url = item.file | relative_url | uri_escape %}
   {% assign extension = item.file | split: '.' | last | downcase %}
   {% assign media_title = item.title | default: page.title %}
-  {{ item.description | markdownify }}
+  {% if item.description %}<div data-i18n="posts.{{ page.slug }}.attachment{{ forloop.index }}">{{ item.description | markdownify }}</div>{% endif %}
   {% unless item.preview == false %}
     {% if extension == 'pdf' %}
     <div class="pdf-frame">
@@ -18,5 +18,5 @@
     </div>
     {% endif %}
   {% endunless %}
-  <p class="pdf-download"><a href="{{ download_url | escape }}" target="_blank" rel="noopener">{{ item.label | default: 'Download' | escape }}</a></p>
+  <p class="pdf-download"><a href="{{ download_url | escape }}" target="_blank" rel="noopener" data-i18n="downloads.{{ item.label | slugify }}">{{ item.label | default: 'Download' | escape }}</a></p>
 {% endfor %}

@@ -18,3 +18,4 @@ downloads:
 ---
 
 Here are the notes I took for the first two weeks of [MATH 509: Advanced Commutative Algebra and Scheme Theory](https://sites.math.washington.edu/~jarod/math509-spring25.html)
+{: data-i18n="posts.commutative-algebra-notes.intro"}

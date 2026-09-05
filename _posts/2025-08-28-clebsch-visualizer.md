@@ -6,3 +6,4 @@ embed_html: "/assets/html/(fin) Clebsch surface visualizer.html"
 ---
 
 27 Lines, 36 double sixes, and 45 tritangent planes on the Clebsch cubic surface.
+{: data-i18n="posts.clebsch-visualizer.intro"}

@@ -9,3 +9,4 @@ downloads:
 ---
 
 Notes for a seminar talk on degeneracy loci formulas and double Schubert polynomials, based on Section 5.4 of [*Introduction to the Cohomology of the Flag Variety*](https://arxiv.org/abs/2506.21064) (Billey-Gao-Pawlowski 2025).
+{: data-i18n="posts.degeneracy-loci-talk.intro"}

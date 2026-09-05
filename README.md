@@ -16,14 +16,20 @@ custom Jekyll plugins are needed.
 | Teaching, seminars, mentorship | `pages/teaching/index.md` |
 | Ogura Shikishi | `pages/ogura-shikishi/index.md` |
 | Notes categories and descriptions | `_data/notes.yml` |
-| Chinese and Japanese translations | `_data/translations.yml` |
+| Chinese and Japanese translations | `_data/translations/zh-Hans.yml`, `_data/translations/ja.yml` |
 | Navigation | `_data/navigation.yml` |
 
-The active language switcher reads `_data/translations.yml` at build time.
+The active language switcher reads `_data/translations/` at build time.
 The older files in `assets/i18n/` are unused. English homepage paragraphs carry
 `{: data-i18n="..."}` attributes so translations can replace them; keep those
 attributes when editing. Update the corresponding translations when changing
-English content.
+English content. Keys such as `research.intro` or `posts.bruhat-builder.intro`
+connect a Markdown paragraph to its translations. Lists use the same attribute
+on the line after the list, and their translations are Markdown lists too.
+Captions use the image's `i18n` key; activity entries have stable `key` and
+`text` fields so they can be reordered safely. Missing translations fall back
+to English. Paper titles and bibliographic citations retain their original
+language, as do quoted theorem statements and the linked PDFs and demos.
 
 ## Add a post
 

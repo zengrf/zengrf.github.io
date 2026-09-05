@@ -7,3 +7,4 @@ embed_html: "/assets/html/pipe-dreams.html"
 ---
 
 Builds classical and bumpless pipe dreams for a permutation, offers the chute, ladder and droop moves, reads off the permutation and weight, enumerates every diagram to display the Schubert polynomial, and exports TikZ.
+{: data-i18n="posts.pipe-dreams.intro"}

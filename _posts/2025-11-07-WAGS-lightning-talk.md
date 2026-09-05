@@ -13,3 +13,4 @@ downloads:
 ---
 
 Slides for my lightning talk at [WAGS, University of Oregon](https://sites.google.com/a/wagsymposium.org/current/oregon-fall-2025?authuser=0).
+{: data-i18n="posts.WAGS-lightning-talk.intro"}

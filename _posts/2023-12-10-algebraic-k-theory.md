@@ -10,3 +10,4 @@ downloads:
 ---
 
 An overview of foundations and computations in algebraic K-theory for the Student AAG Seminar.
+{: data-i18n="posts.algebraic-k-theory.intro"}

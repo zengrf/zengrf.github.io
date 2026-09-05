@@ -10,3 +10,4 @@ downloads:
 ---
 
 Notes for the monodromy of the eight Circles of Apollonius, based on the paper [*Theta Characteristics on Algebraic Curves*](https://www.ams.org/journals/tran/1982-271-02/S0002-9947-1982-0654853-6/) (Harris 1982).
+{: data-i18n="posts.circles-of-apollonius.intro"}

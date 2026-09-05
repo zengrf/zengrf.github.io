@@ -41,8 +41,8 @@
           <span class="brand__title">{{ site.title }}</span>
           <span class="brand__subtitle" data-i18n="brand.subtitle">Graduate student in mathematics</span>
         </a>
-        <nav class="site-nav" aria-label="Primary navigation">
-          <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <nav class="site-nav" aria-label="Primary navigation" data-i18n-aria="ui.navigation">
+          <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" data-i18n="ui.menu">Menu</button>
           <ul id="nav-links">
             {% for item in site.data.navigation.main %}
             {% assign item_url_index = item.url | append: 'index.html' %}
@@ -68,7 +68,7 @@
           <span class="time-icon" aria-hidden="true"></span>
         </button>
         <div class="lang-overlay" id="lang-overlay" aria-hidden="true">
-          <button class="lang-toggle" aria-controls="lang-overlay" aria-expanded="false" aria-label="Change language">
+          <button class="lang-toggle" aria-controls="lang-overlay" aria-expanded="false" aria-label="Change language" data-i18n-aria="ui.language">
             <span class="lang-current">English</span>
           </button>
           <ul class="lang-list">

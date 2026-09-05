@@ -19,6 +19,7 @@
   description: These are my notes and slides for various talks and seminars. Most
     have not been proof-read, and correctness is NOT guaranteed.
   image:
+    i18n: notes.figure
     file: "/assets/img/circles-of-apollonius-genus-4-curve.png"
     alt: Spanning lines
     caption: An illustration of the relationship between circles of apollonius and

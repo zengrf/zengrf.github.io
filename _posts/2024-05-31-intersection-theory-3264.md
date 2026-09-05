@@ -10,3 +10,4 @@ downloads:
 ---
 
 MATH 583C notes summarizing the enumration of 3264 conics tangent to 5 given conics in $\mathbb P^2$.
+{: data-i18n="posts.intersection-theory-3264.intro"}

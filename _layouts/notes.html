@@ -23,13 +23,13 @@ layout: default
 <section class="section section--grid" id="{{ section.id }}">
   <details class="section-toc">
     <summary class="section-toc__summary">
-      <h2>{{ section.title | escape }}</h2>
-      {% if section.description %}<br>{{ section.description | markdownify | remove: '<p>' | remove: '</p>' }}{% endif %}
+      <h2 data-i18n="notes.{{ section.id }}.title">{{ section.title | escape }}</h2>
+      {% if section.description %}<br><span data-i18n="notes.{{ section.id }}.description">{{ section.description | markdownify | remove: '<p>' | remove: '</p>' }}</span>{% endif %}
     </summary>
     {% if section_posts.size > 0 %}
     <ul class="section-toc__list">
       {% for post in section_posts %}
-      <li><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></li>
+      <li><a href="{{ post.url | relative_url }}" data-i18n="posts.{{ post.slug }}.title">{{ post.title | escape }}</a></li>
       {% endfor %}
     </ul>
     {% endif %}

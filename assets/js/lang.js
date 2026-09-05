@@ -11,7 +11,8 @@
   var toggleText = toggle ? toggle.querySelector('.lang-current') : null;
   var buttons = overlay ? Array.prototype.slice.call(overlay.querySelectorAll('.lang-option')) : [];
 
-  var originalContent = {};
+  var originalContent = new WeakMap();
+  var originalLabels = new WeakMap();
 
   var langLabels = { 'en': 'English', 'zh-Hans': '简体中文', 'ja': '日本語' };
 
@@ -20,7 +21,7 @@
     {% for language in site.data.translations %}
     {{ language[0] | jsonify }}: {
       {% for entry in language[1] %}
-      {{ entry[0] | jsonify }}: {{ entry[1] | markdownify | remove: '<p>' | remove: '</p>' | replace: 'href="/', internal_link_prefix | strip | jsonify }}{% unless forloop.last %},{% endunless %}
+      {{ entry[0] | jsonify }}: {{ entry[1] | markdownify | replace: 'href="/', internal_link_prefix | strip | jsonify }}{% unless forloop.last %},{% endunless %}
       {% endfor %}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
@@ -29,6 +30,8 @@
   function applyTranslations(code) {
     var table = translations[code];
     var nodes = document.querySelectorAll('[data-i18n]');
+    var math = window.MathJax;
+    if (math && math.typesetClear) math.typesetClear(Array.from(nodes));
     Array.prototype.forEach.call(nodes, function (el) {
       var key = el.getAttribute('data-i18n');
       if (!key) return;
@@ -36,17 +39,52 @@
          the innerHTML swap — detach it, swap the text, put it back */
       var keep = el.querySelector('.collapse-indicator');
       if (keep) keep.remove();
-      if (!(key in originalContent)) originalContent[key] = el.innerHTML;
-      if (code === 'en' || !table) {
-        el.innerHTML = originalContent[key];
+      if (!originalContent.has(el)) originalContent.set(el, el.innerHTML);
+      if (code === 'en' || !table || table[key] === undefined) {
+        el.innerHTML = originalContent.get(el);
       } else {
+        var fragment = document.createElement('div');
+        fragment.innerHTML = table[key];
+        var first = fragment.firstElementChild;
         var value = table[key];
-        if (value !== undefined) {
-          if (/<[^>]+>/.test(value)) { el.innerHTML = value; } else { el.textContent = value; }
+        // A Markdown paragraph fits inside a heading or caption; a translated
+        // list supplies the items of the existing list, preserving its hooks.
+        if (fragment.childElementCount === 1 && first &&
+            ((first.tagName === 'P' && el.tagName !== 'DIV') || first.tagName === el.tagName)) {
+          value = first.innerHTML;
+        }
+        if (el.hasAttribute('data-i18n-summary')) {
+          var plain = fragment.textContent.trim();
+          el.textContent = plain.length > 200 ? plain.slice(0, 197) + '...' : plain;
+        } else {
+          el.innerHTML = value;
         }
       }
       if (keep) el.appendChild(keep);
     });
+    document.querySelectorAll('[data-i18n-aria], [data-i18n-alt]').forEach(function (el) {
+      var attr = el.hasAttribute('data-i18n-alt') ? 'alt' : 'aria-label';
+      var key = el.getAttribute(attr === 'alt' ? 'data-i18n-alt' : 'data-i18n-aria');
+      if (!originalLabels.has(el)) originalLabels.set(el, el.getAttribute(attr));
+      if (table && table[key] !== undefined) {
+        var fragment = document.createElement('div');
+        fragment.innerHTML = table[key];
+        el.setAttribute(attr, fragment.textContent.trim());
+      } else {
+        el.setAttribute(attr, originalLabels.get(el));
+      }
+    });
+    document.querySelectorAll('time[data-local-date]').forEach(function (el) {
+      if (!originalContent.has(el)) originalContent.set(el, el.innerHTML);
+      el.textContent = code === 'en' ? originalContent.get(el) :
+        new Intl.DateTimeFormat(code, { year: 'numeric', month: 'long', day: 'numeric',
+          timeZone: {{ site.timezone | jsonify }} }).format(new Date(el.dateTime));
+    });
+    if (math && math.typesetPromise) {
+      math.typesetPromise(Array.from(nodes)).catch(function (error) {
+        console.error('Could not typeset translated mathematics:', error);
+      });
+    }
   }
 
   function setActive(code) {

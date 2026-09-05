@@ -7,3 +7,4 @@ embed_html: "/assets/html/(fin) Apollonius visualizer.html"
 ---
 
 Feel free to mess around with it!
+{: data-i18n="posts.apollonius-visualizer.intro"}

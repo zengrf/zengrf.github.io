@@ -1,0 +1,378 @@
+# Markdown translations. Keys match data-i18n attributes in pages and templates.
+brand.subtitle: |-
+  数学专业博士生
+nav.home: |-
+  首页
+nav.research: |-
+  研究
+nav.teaching: |-
+  教学与指导
+nav.notes: |-
+  笔记与工具
+hero.intro.1: |-
+  你好，我是曾若凡，在西雅图华盛顿大学攻读数学博士，目前是四年级。我的导师是 Jarod Alper 和 Sara Billey。我主要研究舒伯特演算、等变相交理论和模空间，也对数学形式化，以及用机器学习辅助数学研究感兴趣。
+hero.intro.2: |-
+  我于 2023 年毕业于宾夕法尼亚大学，本科双修数学和语言学，同时获得了应用数学与计算机科学硕士学位。数学之外，我喜欢打网球、篮球，也喜欢学外语。
+hero.intro.news1: |-
+  2026 年 6 月起，我担任[华盛顿大学数学 AI 实验室](https://ai.math.uw.edu)代理主任。我们举办了 [UW 2026 Lean Hackathon](https://uw2026leanhackathon.github.io/)。2026 年夏季起，我获得了 [Simons Dissertation Fellowship](https://www.simonsfoundation.org/grant/simons-dissertation-fellowship-in-mathematics/)，并将在秋季学期访问加州大学伯克利分校。
+hero.photo.caption: |-
+  上海豫园 · Alex Waugh 拍摄
+hero.photo.caption2: |-
+  西雅图凯瑞公园 · 龚挺 拍摄
+hero.photo.caption3: |-
+  雷尼尔山 · 2026年5月
+footer.copyright: |-
+  © 曾若凡 · 2026 · 西雅图
+hero.contact.email.label: |-
+  邮箱
+hero.contact.email.value: |-
+  zengrf at uw dot edu
+hero.contact.office.label: |-
+  办公室
+hero.contact.office.value: |-
+  Padelford C-20，华盛顿大学西雅图校区
+hero.contact.cv.label: |-
+  简历
+hero.contact.cv.value: |-
+  [下载简历（2026年8月）](/assets/pdf/Michael%20CV%20Aug%202026.pdf)
+hero.pronounce.title: |-
+  “曾若凡”的各种读音
+hero.pronounce.mandarin.label: |-
+  普通话
+hero.pronounce.mandarin.value: |-
+  zēng（一声）— ruò（四声）— fán（二声）
+hero.pronounce.cantonese.label: |-
+  粤语
+hero.pronounce.cantonese.value: |-
+  zang1 — joek6 — faan4
+hero.pronounce.japanese.label: |-
+  日语音读
+hero.pronounce.japanese.value: |-
+  そう　sou — じゃく　jyaku — はん　han
+hero.pronounce.korean.label: |-
+  韩语
+hero.pronounce.korean.value: |-
+  증 jeung — 약 yak — 범 beom
+hero.pronounce.note: |-
+  你也许更熟悉我的英文名 Michael，或者日语的「マイケル」、俄语的「Миша」。
+hero.activity.title: |-
+  近期活动
+hero.activity.note: |-
+  更新于 2026 年 8 月 17 日。
+ui.menu: |-
+  菜单
+ui.language: |-
+  切换语言
+ui.navigation: |-
+  主导航
+ui.fullscreen: |-
+  全屏查看
+ui.comments: |-
+  评论
+back.notes: |-
+  返回笔记
+back.research: |-
+  返回研究页面
+back.teaching: |-
+  返回教学页面
+back.home: |-
+  返回首页
+notes.code-tools.title: |-
+  代码与交互工具
+notes.code-tools.description: |-
+  一些代码，还有我借助 AI 边试边做的小工具。🥸
+notes.notes-translations.title: |-
+  笔记与译文
+notes.notes-translations.description: |-
+  这里整理了我在各类报告和讨论班中使用的笔记与幻灯片。大多尚未仔细校对，可能有误，请自行核实。
+notes.blog-projects.title: |-
+  随笔与进行中的项目
+publications.pure-math: |-
+  纯数学
+publications.ai-math: |-
+  AI 与数学
+publications.ai-languages: |-
+  AI 与语言研究
+research.title: |-
+  研究
+research.interests: |-
+  研究兴趣
+research.intro: |-
+  我主要研究舒伯特演算、模叠上的相交理论和枚举几何，也对用机器学习和人工智能辅助数学研究感兴趣。
+research.topics: |-
+  最近常想的问题包括四次曲面上的直线、某些模叠的 $K_0$ 环、$\overline{\mathscr{M}}_{g,n}$ 上的 nef 除子、托里克簇上的线丛，以及稳定映射的模空间。
+research.publications: |-
+  论文与预印本
+teaching.seminars: |-
+  讨论班
+teaching.milestone.title: |-
+  Writing Milestone 讨论班
+teaching.curves.title: |-
+  代数曲线
+teaching.intersection.title: |-
+  MATH 583C — 相交理论
+teaching.courses: |-
+  在华盛顿大学的教学
+teaching.linear.title: |-
+  MATH 208 线性代数
+teaching.mentorship: |-
+  学生指导
+teaching.ai.title: |-
+  [华盛顿大学数学 AI 实验室](https://sites.math.washington.edu/ai/)
+teaching.wxml.title: |-
+  [华盛顿实验数学实验室（WXML）](https://wxml.math.washington.edu/)
+teaching.wdrp.title: |-
+  [华盛顿指导阅读计划（WDRP）](https://sites.uw.edu/wdrp/)
+teaching.milestone.text: |-
+  2025 年春季，我与 [Zawad Chowdhury](https://sites.math.washington.edu/~zawadx/) 一起协助组织了 [Writing Milestone 讨论班](https://sites.math.washington.edu/~zawadx/milestone_sem.html)。讨论班面向正在完成 [writing milestone](https://math.washington.edu/writing-milestone) 的低年级研究生，让大家有机会介绍自己近期深入学习的数学课题，也交流初次撰写数学文章的经历。
+teaching.curves.text: |-
+  2025 年冬季，我组织了一个代数曲线研究生阅读班，由 [Giovanni Inchiostro](https://math.washington.edu/people/giovanni-inchiostro) 指导。详情见[代数曲线讨论班网页](https://sites.google.com/uw.edu/algebraic-curves-seminar/home)。
+teaching.intersection.text: |-
+  2024 年春季，我与 [Arkamouli Debnath](https://sites.google.com/view/arkamouli/courses-and-research?authuser=0) 一起组织了相交理论研究生阅读班，由 [Sándor Kovács](https://math.washington.edu/people/sandor-kovacs) 指导。笔记和日程见[课程网页](https://sites.google.com/view/uwmath583cintersectiontheory)。
+teaching.linear.text: |-
+  2025 年夏季，我独立讲授了 [MATH 208 C：线性代数](https://sites.math.washington.edu/~m208/)。课程采用线上线下混合教学，并提供 Zoom 录像，共有 83 名学生。
+teaching.duties.intro: |-
+  以下是我担任助教和作业批改员的课程。
+teaching.mentorship.intro: |-
+  我在华盛顿大学数学 AI 实验室、华盛顿实验数学实验室（WXML）和华盛顿指导阅读计划（WDRP）中参与学生指导。
+teaching.ai.circuits: |-
+  我参与指导[多项式的强化学习](https://github.com/uw-math-ai/PolyArithmeticCircuitsRL/tree/rohan-new-branch)项目，与 [Jarod Alper](https://sites.math.washington.edu//~jarod/) 及团队成员一起，尝试训练类似 AlphaZero 的强化学习智能体，以更少的运算计算多项式。这可以看作自动生成证明的一个极简模型。项目成果已形成 ICLR 研讨会论文 [CircuitBuilder: From Polynomials to Circuits via Reinforcement Learning](https://arxiv.org/abs/2603.17075)。
+teaching.ai.cayley: |-
+  我也参与指导 [CayleyPy: Advancing Group Theory with AI](https://github.com/uw-math-ai/cayley-py) 项目，用 AI 探索群论问题。
+teaching.ai.networks: |-
+  在数学 AI 实验室 2024—2025 年度的项目中，我指导了“神经网络能够学会哪些数学函数？”这一课题。
+teaching.wxml.current: |-
+  2026 年春季，我参与指导“微积分可视化：利用 Desmos、3D 打印等工具进行交互式建模”项目。
+teaching.wxml.prints: |-
+  2025 年春季，我参与指导“用 3D 打印和动画辅助微积分教学”项目。我与 [Andy Loveless](https://sites.math.washington.edu/~aloveles/) 及团队成员一起制作数学对象的 3D 打印模型，用于微积分教学，也帮助学生培养几何直觉。已经完成的模型收录在这个不断更新的[几何模型图集](https://sites.math.washington.edu/~aloveles/CalcVisuals/)中。下面这几件是我特别喜欢的：
+teaching.wdrp.intro: |-
+  我指导过以下 WDRP 阅读项目。
+teaching.wdrp.talk: |-
+  我在 2025 年春季 WDRP 讨论班上作过一次报告。这个讨论班由研究生面向初学者介绍与自己研究相关的数学。[报告幻灯片见此处](/notes/2025/04/23/WDRP-talk/)。
+teaching.duties.2025: |-
+  - （2025 秋）*助教*，MATH 208：线性代数
+teaching.duties.2024: |-
+  - （2025 春）*作业批改*，MATH 327：实分析导论
+  - （2025 冬）*助教*，MATH 111：代数及其应用
+  - （2024 秋）*助教*，MATH 126 CE / CF：微积分与解析几何 III
+teaching.duties.2023: |-
+  - （2024 夏）*作业批改*，MATH 300 A：数学推理导论
+  - （2024 春）*助教*，MATH 126 BA / BB：微积分与解析几何 III
+  - （2024 冬）*助教*，MATH 125 CC / CD：微积分与解析几何 II
+  - （2023 秋）*助教*，MATH 125 CE / CF：微积分与解析几何 II
+teaching.wdrp.projects: |-
+  - （2025 春）表示论漫游
+  - （2024 春）枚举几何、关联几何、射影几何
+  - （2024 冬）李群不是“谎言”：它们无处不在
+ogura.intro: |-
+  我很喜欢古典语言，曾与 [Paul Atkins](https://asian.washington.edu/people/paul-s-atkins) 教授合作研究日本古典和歌集《百人一首》。后续会在这里介绍更多。
+posts.algebraic-k-theory.title: |-
+  代数 K 理论 — SAAG（2023 年 12 月）
+posts.algebraic-k-theory.intro: |-
+  为 Student AAG 讨论班整理的代数 K 理论基础与计算概览。
+posts.27-lines-bott-residue.title: |-
+  用 Bott 留数公式数出 27 条直线 — 1-2-3 讨论班（2024 年 2 月）
+posts.27-lines-bott-residue.intro: |-
+  用 Atiyah–Bott 局部化公式计算光滑三次曲面上的 27 条直线，附有 Clebsch 三次曲面的 3D 模型。
+posts.brackets-for-macaulay2.title: |-
+  Macaulay2 的 Brackets 包
+posts.brackets-for-macaulay2.intro: |-
+  在 2023 年明尼苏达大学的 Macaulay2 工作坊期间，我参与开发了 [Brackets](https://github.com/Macaulay2/M2/tree/master/M2/Macaulay2/packages/Brackets.m2) 包，用于约化称为 bracket symbols 的经典 $SL_n$ 不变量。
+posts.intersection-theory-27-lines.title: |-
+  相交理论：27 条直线的变奏
+posts.intersection-theory-27-lines.intro: |-
+  MATH 583C 课程笔记，整理了计算三次曲面上 27 条直线的几种方法。
+posts.equivariant-k-theory.title: |-
+  等变 K 理论 — DubTop（2024 年 5 月）
+posts.equivariant-k-theory.intro: |-
+  DubTop 讨论班报告，从几个角度简要介绍等变 K 理论，并给出例子和计算。
+posts.intersection-theory-3264.title: |-
+  相交理论：3264 and All That
+posts.intersection-theory-3264.intro: |-
+  MATH 583C 课程笔记，介绍如何计算射影平面 $\mathbb P^2$ 中与给定的 5 条二次曲线相切的 3264 条二次曲线。
+posts.neural-networks-with-math.title: |-
+  Neural Networks with Math：神经网络背后的数学
+posts.neural-networks-with-math.intro: |-
+  我为 [Linhang Huang](https://linhang-h.github.io/) 的博客 [Neural Networks with Math](https://linhang-h.github.io/Neural-Networks-with-Math/) 写过文章，介绍深度学习架构背后的数学。这篇是关于 G-CNN 的笔记：[群等变神经网络](https://linhang-h.github.io/Neural-Networks-with-Math/posts/post4/)。
+posts.gromov-witten-invariants.title: |-
+  Gromov–Witten 不变量
+posts.gromov-witten-invariants.intro: |-
+  这是我在 [Thomas Brazelton](https://tbrazel.github.io/) 组织的 [eCHT 二次型值曲线计数讨论班](https://tbrazel.github.io/teaching/24c_curves.html)上介绍 Gromov–Witten 不变量与量子上同调时使用的笔记。
+posts.invariantring2-tutorial.title: |-
+  Macaulay2 InvariantRing2 教程
+posts.invariantring2-tutorial.intro: |-
+  这份用 PreTeXt 编写的教程，通过 `InvariantRing2` 包中的例子介绍 Macaulay2 语言。它源于 [Jarod Alper](https://sites.math.washington.edu//~jarod/) 教授的 [MATH 509：高等交换代数与概形理论](https://sites.math.washington.edu//~jarod/math509-spring25.html)课程项目。我是从 [Francesca Gandini](https://sites.google.com/a/umich.edu/gandini/about-me?authuser=0) 那里了解到 [PreTeXt](https://pretextbook.org/) 的。
+posts.brieskorn-rational-singularities.title: |-
+  Brieskorn（1968）：有理奇点
+posts.brieskorn-rational-singularities.intro: |-
+  Egbert Brieskorn 1968 年关于曲面有理奇点的论文的英文译稿。
+posts.latex-commands.title: |-
+  常用 TeX 数学符号
+posts.latex-commands.intro: |-
+  一份在网上找到的 LaTeX 数学命令速查表。
+posts.intersection-homology.title: |-
+  交叉同调
+posts.intersection-homology.intro: |-
+  2024 年 11 月在 [eCHT Kan 讨论班](https://s.wayne.edu/echt/echt-reading-seminars/kan-seminar-fall-2024/)上介绍交叉同调和反常层时使用的笔记。
+posts.freudenthal-magic-square.title: |-
+  Freudenthal 魔方阵
+posts.freudenthal-magic-square.intro: |-
+  Julia Pevtsova 教授的 MATH 507：代数结构课上的报告，主题是例外李代数与 Freudenthal 魔方阵。我与 Zachary Wallace-Wells、Zawad Chowdhury 和 Bryan Lu 一起完成了这次报告。
+posts.degeneracy-loci-talk.title: |-
+  退化轨迹与双舒伯特多项式
+posts.degeneracy-loci-talk.intro: |-
+  关于退化轨迹公式和双舒伯特多项式的讨论班笔记，参考 Billey–Gao–Pawlowski（2025）的 [*Introduction to the Cohomology of the Flag Variety*](https://arxiv.org/abs/2506.21064) 第 5.4 节。
+posts.lightning-talk-combo-seminar.title: |-
+  UW 组合与几何讨论班短报告
+posts.lightning-talk-combo-seminar.intro: |-
+  我在 [UW 组合与几何讨论班](https://sites.math.washington.edu/~combinat/#past-talks)上作短报告时使用的幻灯片。
+posts.plucker-formula.title: |-
+  Plücker 公式与平面曲线拐点的单值群
+posts.plucker-formula.intro: |-
+  “Galois = Monodromy”学习讨论班的笔记，参考论文 [Galois Groups of Enumerative Problems](https://projecteuclid.org/journals/duke-mathematical-journal/volume-46/issue-4/Galois-groups-of-enumerative-problems/10.1215/S0012-7094-79-04635-0.full)。
+posts.commutative-algebra-notes.title: |-
+  交换代数笔记
+posts.commutative-algebra-notes.intro: |-
+  我在 [MATH 509：高等交换代数与概形理论](https://sites.math.washington.edu/~jarod/math509-spring25.html)课程前两周记的笔记。
+posts.lightning-talk-M2-workshop.title: |-
+  杜兰大学 Macaulay2 工作坊短报告
+posts.lightning-talk-M2-workshop.intro: |-
+  我在 [2025 年 4 月杜兰大学 Macaulay2 工作坊](https://sites.google.com/view/macaulay2tulane/)上作短报告时使用的幻灯片。
+posts.WDRP-talk.title: |-
+  WDRP 讨论班研究生报告
+posts.WDRP-talk.intro: |-
+  我在 2025 年春季 WDRP 讨论班上的报告幻灯片。
+posts.toric-cheat-sheet.title: |-
+  托里克簇速查表
+posts.toric-cheat-sheet.intro: |-
+  托里克簇读书小组的笔记。
+posts.circles-of-apollonius.title: |-
+  阿波罗尼斯圆的单值群
+posts.circles-of-apollonius.intro: |-
+  关于八个阿波罗尼斯圆的单值群的笔记，参考 Harris（1982）的 [*Theta Characteristics on Algebraic Curves*](https://www.ams.org/journals/tran/1982-271-02/S0002-9947-1982-0654853-6/)。
+posts.clebsch-visualizer.title: |-
+  27 条直线可视化
+posts.clebsch-visualizer.intro: |-
+  展示 Clebsch 三次曲面上的 27 条直线、36 组双六线和 45 个三切平面。
+posts.apollonius-visualizer.title: |-
+  阿波罗尼斯圆可视化
+posts.apollonius-visualizer.intro: |-
+  随便拖动、改改参数，看看会发生什么！
+posts.pencil-of-quartics.title: |-
+  实四次曲面束上的实直线
+posts.pencil-of-quartics.intro: |-
+  用 Mathematica 生成的 GIF，展示一个实四次曲面束中的 20 条实直线。受数值稳定性影响，部分直线被画到了同一张曲面上。
+posts.bruhat-builder.title: |-
+  Bruhat 图构造工具
+posts.bruhat-builder.intro: |-
+  为对称群 $\mathcal S_n$ 构造 Bruhat 图。
+posts.WAGS-lightning-talk.title: |-
+  WAGS 短报告与海报
+posts.WAGS-lightning-talk.intro: |-
+  我在[俄勒冈大学 WAGS 会议](https://sites.google.com/a/wagsymposium.org/current/oregon-fall-2025?authuser=0)上作短报告时使用的幻灯片。
+posts.a-theorem-a-day.title: |-
+  每天一个定理
+posts.a-theorem-a-day.intro: |-
+  读论文时摘录的定理与证明，涉及代数几何中的 Euler 类与实直线计数。
+posts.pipe-dreams.title: |-
+  Pipe dream 交互工具
+posts.pipe-dreams.intro: |-
+  为给定置换构造普通 pipe dream 和 bumpless pipe dream，支持 chute、ladder 和 droop 变换，可读出置换与权重，枚举所有图形来显示舒伯特多项式，并导出 TikZ。
+posts.invariantring2-tutorial.more: |-
+  完整[教程](https://zengrf.github.io/macaulay2-invariantring-tutorial/shorttitlelowercase-2.html)托管在 GitHub Pages 上。
+posts.brieskorn-rational-singularities.attachment2: |-
+  德文原文也放在这里，供对照参考：
+posts.commutative-algebra-notes.attachment2: |-
+  我在网上找到了 *Mathematische Annalen* 1890 年卷的 PDF，
+posts.commutative-algebra-notes.attachment3: |-
+  其中有 Hilbert 关于不变量理论的原始论文 *Ueber die Theorie der algebraischen Formen*。
+posts.WAGS-lightning-talk.attachment2: |-
+  还有一张海报。
+downloads.download-notes-pdf: |-
+  下载笔记（PDF）
+downloads.download-slides-pdf: |-
+  下载幻灯片（PDF）
+downloads.download-handout-pdf: |-
+  下载讲义（PDF）
+downloads.download-pdf: |-
+  下载 PDF
+downloads.download-gif: |-
+  下载 GIF
+downloads.english-translation-pdf: |-
+  下载英文译稿（PDF）
+downloads.original-german-pdf: |-
+  下载德文原文（PDF）
+tags.notes: |-
+  笔记
+tags.talks: |-
+  报告
+tags.talk: |-
+  报告
+tags.k-theory: |-
+  K 理论
+tags.enumerative-geometry: |-
+  枚举几何
+tags.code: |-
+  代码
+tags.macaulay2: |-
+  Macaulay2
+tags.projects: |-
+  项目
+tags.collaboration: |-
+  合作
+tags.tutorials: |-
+  教程
+tags.translations: |-
+  译文
+tags.visualizers: |-
+  可视化
+research.figure.caption: |-
+  用 [vZome](https://www.vzome.com/) 制作的张成直线配置。
+research.figure.alt: |-
+  张成直线配置
+teaching.seminar.caption: |-
+  [MATH 583 相交理论](https://sites.google.com/view/uwmath583cintersectiontheory)的封面图，由多张素材图片拼成。
+teaching.seminar.alt: |-
+  相交理论讨论班
+teaching.mentorship.caption: |-
+  我的 WDRP 报告中的一页幻灯片。
+teaching.mentorship.alt: |-
+  WDRP 报告中关于阿波罗尼斯圆的幻灯片
+teaching.lines.alt: |-
+  27 条直线结构的 3D 打印模型
+teaching.heart.alt: |-
+  心形的 3D 打印模型
+ogura.calligraphy.alt: |-
+  《百人一首》小仓色纸书迹
+ogura.notes.alt: |-
+  小仓色纸的翻译笔记
+ogura.calligraphy.caption: |-
+  小仓色纸第 41 首「こひすてふ」
+ogura.notes.caption: |-
+  藤原定家
+notes.figure.caption: |-
+  阿波罗尼斯圆与一条亏格为 4 的奇异曲线之间的关系示意图。
+notes.figure.alt: |-
+  阿波罗尼斯圆与奇异曲线的关系
+hero.photo.caption.alt: |-
+  我在上海豫园的照片
+hero.photo.caption2.alt: |-
+  我在西雅图凯瑞公园的照片，背景是城市天际线和雷尼尔山，龚挺摄
+hero.photo.caption3.alt: |-
+  我在雷尼尔山下的照片
+activity.slmath-2026: |-
+  SLMath 代数簇模空间暑期学校。伯克利，2026 年 7 月。
+activity.lean-2026: |-
+  ICARM Lean 数学形式化暑期学校。卡内基梅隆大学，2026 年 7 月。
+activity.icml-2026: |-
+  第三届 AI for Math 研讨会：迈向自我演进的科学智能体（ICML 2026）。首尔，2026 年 7 月。
+activity.icarm-2026: |-
+  ICARM 代数几何与机器学习研讨会。卡内基梅隆大学，2026 年 6 月。
+activity.montreal-2026: |-
+  M0,ntréal ISM Discovery School：曲线模空间的组合学。魁北克大学蒙特利尔分校，2026 年 5 月。
+activity.topology-2026: |-
+  研究生拓扑与几何会议。罗格斯大学，2026 年 4 月。
+activity.combinatorics-2026: |-
+  研究生组合数学会议。伊利诺伊大学芝加哥分校，2026 年 3 月。
+activity.wags-2026: |-
+  西部代数几何研讨会（WAGS）。加州大学圣迭戈分校，2026 年 3 月。

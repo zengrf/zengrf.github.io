@@ -1,5 +1,5 @@
 {% for group in site.data.publications %}
-<h4>{{ group.title | escape }}</h4>
+<h4 data-i18n="publications.{{ group.key }}">{{ group.title | escape }}</h4>
 <ol reversed class="publications">
   {% for entry in group.entries %}
   <li>{{ entry | markdownify | remove: '<p>' | remove: '</p>' }}</li>
