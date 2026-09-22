@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" data-time="day">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3264 conics · recorded Julia solutions</title><link rel="stylesheet" href="../lib/fonts.css"><link rel="stylesheet" href="../materials.css"><link rel="stylesheet" href="../slides.css"><link rel="stylesheet" href="demo.css"></head>
+<body>
+<header><div><span class="eyebrow">Steiner’s problem · a computational interlude</span><h1>3264 conics in a Second</h1></div><a href="https://arxiv.org/abs/1902.05518" target="_blank" rel="noopener">Breiding · Sturmfels · Timme ↗</a></header>
+<main>
+<section class="plot-panel" aria-label="Conic visualization">
+<canvas id="plot" aria-label="Five blue input conics and one vermilion solution, with five points of contact"></canvas>
+<div class="legend"><span class="given">━ Five input conics</span><span class="solution">━ A tangent conic</span><span>● Contact points</span></div>
+<div class="plot-tools"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit">Reset view</button></div>
+<div class="display-controls"><button id="show-all" aria-pressed="false">Show all 3,264 real solutions</button><output id="render-status" role="status" aria-live="polite"></output></div>
+<div class="browse"><button id="prev" aria-label="Previous real conic">←</button><button id="play">Play</button><input id="solution" type="range" min="0" max="3263" value="0" aria-label="Real solution"><button id="next" aria-label="Next real conic">→</button><output id="which"></output></div>
+<p id="plot-note">Drag to pan · scroll to zoom · select a contact point to inspect tangency</p>
+</section>
+<aside>
+<div class="stats"><div><strong id="count">3264</strong><span>real solutions</span></div><div><strong id="complex-count">3264</strong><span>complex solutions</span></div></div>
+<p id="mode" class="mode">Recorded Julia output · works offline</p>
+<p id="status" role="status" aria-live="polite">The authors’ instance has all 3,264 solutions real.</p>
+<label for="preset">Saved computation</label><select id="preset"><option value="all-real">Authors’ all-real instance</option><option value="generic">A generic real arrangement</option><option value="perturb">Perturbed all-real inputs</option></select>
+<div class="actions"><button id="download">Download results</button></div>
+<p class="numerical" id="numerical">Saved, rounded plotting data. Fresh runs report numerical solutions, not certified counts.</p>
+<a class="full-link" href="./" target="_blank" rel="noopener">Open demo in its own window ↗</a>
+</aside>
+</main>
+<footer>The three saved runs include their input coefficients, solutions, contact points, and computation metadata. <a href="https://www.juliahomotopycontinuation.org/3264/" target="_blank" rel="noopener">Original example & certification</a> · <a href="https://github.com/JuliaHomotopyContinuation/Steiner.jl" target="_blank" rel="noopener">Steiner.jl</a></footer>
+<script src="recordings.js"></script><script src="demo.js"></script>
+</body></html>

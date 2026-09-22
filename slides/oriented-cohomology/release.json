@@ -1,0 +1,22 @@
+{
+  "title": "3264 and Algebraic Cobordism",
+  "slides": 93,
+  "source_sha256": "5b1a23715bea416b2ef98425bfd01ed2dc1e05f64d5df86a58dc38b491f2a36d",
+  "recordings": {
+    "conics": {
+      "version": "1.17",
+      "recorded_at": "2026-09-22T05:39:06.891752+00:00",
+      "source_sha256": "d1cfcec847241a015a0f2b7f19f5482919a0bc26e86af747803f05dce0ff1362"
+    },
+    "twisted-cubic": {
+      "version": "1.17",
+      "recorded_at": "2026-09-22T05:39:06.891752+00:00",
+      "source_sha256": "0f2391d875a4e479fbc8c5c3608728d76c7bf870af1dd4f25780a8cb65af852c"
+    },
+    "chow-conics": {
+      "version": "1.17",
+      "recorded_at": "2026-09-22T05:39:06.891752+00:00",
+      "source_sha256": "a8bb2d3d3ad6d85ec9b6a2b95d81ac996689b04cf2ed1537132e9b2f8308c4df"
+    }
+  }
+}
