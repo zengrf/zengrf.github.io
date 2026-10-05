@@ -25,6 +25,7 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
     site.process
     pages = site.pages.select { |p| p.path == 'index.md' || p.path.start_with?('pages/') }
     documents = pages + site.posts.docs
+    audience_urls = documents.select { |doc| doc.data['layout'] == 'audience' }.map(&:url)
     html = documents.to_h do |doc|
       file = doc.destination(destination)
       assert(File.file?(file), "Missing page: #{doc.url}")
@@ -32,8 +33,9 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
     end
 
     html.each do |url, doc|
-      assert(doc.at_css('main'), "Missing page content: #{url}")
-      assert(!doc.at_css('main').to_html.match?(/\{%|\{\{|&lt;\/?(?:div|iframe|i)&gt;/), "Unrendered markup: #{url}")
+      content = doc.at_css(audience_urls.include?(url) ? 'body' : 'main')
+      assert(content, "Missing page content: #{url}")
+      assert(!content.to_html.match?(/\{%|\{\{|&lt;\/?(?:div|iframe|i)&gt;/), "Unrendered markup: #{url}")
       doc.css('a[href], img[src], iframe[src], script[src], link[href]').each do |node|
         target = node['href'] || node['src']
         next if target.match?(/\A(?:[a-z][a-z0-9+.-]*:|\/\/)/i)
@@ -59,6 +61,16 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
 
     site.posts.docs.each do |post|
       doc = html.fetch(post.url)
+      if post.data['layout'] == 'audience'
+        frame = doc.at_css('body > iframe')
+        expected = post.data['slides_url']
+        assert(expected && frame && frame['src'] == baseurl + expected, "Broken audience slides: #{post.url}")
+        assert(frame['title'] == post.data['title'] && frame.key?('allowfullscreen'), "Inaccessible audience slides: #{post.url}")
+        post.data.fetch('downloads', []).each do |item|
+          assert(File.file?(File.join(destination, decode(item['file']))), "Missing audience download: #{post.url}")
+        end
+        next
+      end
       assert(doc.at_css('h1').text == post.data['title'], "Changed title: #{post.url}")
       downloads = post.data.fetch('downloads', [])
       links = doc.css('.post__content .pdf-download a')

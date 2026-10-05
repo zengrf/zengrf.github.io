@@ -13,8 +13,17 @@ layout: default
     </dl>
   </div>
   <figure class="hero__image">
+    <div class="hero__surround" aria-hidden="true">
+      <span class="hero__surround-top"></span><span class="hero__surround-right"></span>
+      <span class="hero__surround-bottom"></span><span class="hero__surround-left"></span>
+    </div>
     <div class="hero__scroll">
+      <span class="hero__cord-loop" aria-hidden="true"></span>
       <div class="hero__mount" aria-hidden="true"></div>
+      <span class="hero__futai hero__futai--left" aria-hidden="true"></span>
+      <span class="hero__futai hero__futai--right" aria-hidden="true"></span>
+      <span class="hero__roller-knob hero__roller-knob--left" aria-hidden="true"></span>
+      <span class="hero__roller-knob hero__roller-knob--right" aria-hidden="true"></span>
       <div class="hero__reel" id="heroReel" tabindex="0" role="group" aria-label="Photographs">
         {% for photo in site.data.home.photos %}
         <div class="hero__frame">

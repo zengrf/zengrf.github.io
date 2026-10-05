@@ -1,0 +1,804 @@
+/* KIWARI photographic materials.
+   Ceramic relief, kumiko joinery, silk weave, leaf joins, and engraved metal are raster assets
+   derived from the approved material concepts. Their small-scale reflections
+   stay intact; CSS supplies room light, exposure, and contact/cast shadows.
+   Screen-only rules preserve print. URLs are relative to assets/css/main.css. */
+@media screen {
+  :root, html[data-time] {
+    --material-paper: #{'url("../img/materials/washi-fiber.webp")'};
+    --material-cedar-h: #{'url("../img/materials/cedar-h.webp")'};
+    --material-cedar-v: #{'url("../img/materials/cedar-v.webp")'};
+    --material-kumiko: #{'url("../img/materials/asanoha-kumiko.webp")'};
+    --material-silk: #{'url("../img/materials/silk-shippou.webp")'};
+    --material-gold: #{'url("../img/materials/gold-leaf.webp")'};
+    --material-lacquer: #{'url("../img/materials/urushi-black.webp")'};
+    --material-lacquer-v: #{'url("../img/materials/urushi-black-v.webp")'};
+    --material-lacquer-column: #{'url("../img/materials/urushi-black-column.webp")'};
+    --material-vermilion: #{'url("../img/materials/urushi-vermilion.webp")'};
+    --material-vermilion-v: #{'url("../img/materials/urushi-vermilion-v.webp")'};
+    --material-roof: #{'url("../img/materials/ceramic-roof.webp")'};
+    --material-roof-lotus: #{'url("../img/materials/ceramic-roof-lotus.webp")'};
+    --material-dougong: #{'url("../img/materials/dougong-vermilion-repeat.webp")'};
+    --tx-eave-day: var(--material-roof);
+    --tx-eave-dusk: var(--material-roof);
+    --tx-eave-night: var(--material-roof);
+    --tx-eave-zh-day: var(--material-roof-lotus);
+    --tx-eave-zh-dusk: var(--material-roof-lotus);
+    --tx-eave-zh-night: var(--material-roof-lotus);
+    --tx-washi: var(--material-paper);
+    --tx-grain-h: var(--material-cedar-h);
+    --tx-grain-v: var(--material-cedar-v);
+    --tx-lacquer-v: var(--material-lacquer-v);
+    --tx-kinpaku: var(--material-gold);
+    --tx-kugikakushi: #{'url("../img/materials/gilt-flower-repeat.webp")'};
+    --roof-height: 60px;
+    --roof-light: brightness(0.96) saturate(0.8);
+    --metal-light: brightness(1.02);
+    --roof-cast: rgba(16, 17, 13, 0.34);
+    --gilt-highlight: #f6e4b8;
+    --gilt-mid: #c29c52;
+    --gilt-low: #624520;
+    --gilt-shadow: #35240f;
+    --gilt-collar: linear-gradient(180deg, var(--gilt-shadow), var(--gilt-highlight) 20%,
+      var(--gilt-mid) 42%, var(--gilt-low) 72%, var(--gilt-shadow));
+
+    --timber-h: var(--material-cedar-h);
+    --timber-v: var(--material-cedar-v);
+    --timber-scale-h: 1080px 360px;
+    --timber-scale-v: 360px 1080px;
+    --timber-exposure: rgba(38, 24, 12, 0.05);
+    --timber-key: rgba(255, 239, 207, 0.25);
+    --timber-reflection: rgba(255, 249, 227, 0);
+    --timber-shade: rgba(20, 12, 7, 0.48);
+    --timber-edge: rgba(245, 223, 182, 0.29);
+    /* Match the fiber scale after cropping the balanced photographic repeat. */
+    --paper-size: 349px 349px;
+    --paper-veil: rgba(250, 247, 235, 0.18);
+    --ink-composite: multiply;
+    --paper-key: rgba(255, 255, 251, 0.34);
+    --paper-shadow: rgba(64, 58, 47, 0.09);
+    --paper-top: rgba(47, 33, 19, 0.12);
+    --room-fill: rgba(69, 66, 52, 0.055);
+    --contact: rgba(33, 23, 13, 0.36);
+    --cast: rgba(44, 32, 19, 0.19);
+    --cast-soft: rgba(55, 38, 21, 0.12);
+    --wood-contact: rgba(30, 21, 12, 0.53);
+    --wood-near: rgba(43, 32, 20, 0.27);
+    --wood-far: rgba(53, 45, 32, 0.13);
+    --wood-ambient: rgba(39, 29, 18, 0.19);
+    --post-shadow: inset 0 4px 5px -3px var(--wood-contact),
+      inset 0 -3px 4px -3px var(--wood-contact),
+      -0.6px 0 0.7px var(--wood-ambient),
+      0.8px 0.5px 0.8px var(--wood-contact),
+      2.4px 1.4px 2.8px -0.5px var(--wood-near),
+      6px 3px 8px -2px var(--wood-far);
+    --post-shadow-right: inset 0 4px 5px -3px var(--wood-contact),
+      inset 0 -3px 4px -3px var(--wood-contact),
+      -0.8px 0 0.8px var(--wood-contact),
+      -2.5px 0 3px -1px var(--wood-ambient),
+      1px 0.5px 0.8px var(--wood-contact),
+      2.4px 1.4px 2.8px -0.5px var(--wood-near),
+      6px 3px 8px -2px var(--wood-far);
+    --rail-shadow: 0 -0.5px 0.5px var(--wood-ambient),
+      0.5px 0.9px 0.7px var(--wood-contact),
+      1.5px 3px 2.6px -0.6px var(--wood-near),
+      4px 7px 9px -3px var(--wood-far);
+    --sill-shadow: 0 0.7px 0.6px var(--wood-contact),
+      1px 2.5px 2px -0.5px var(--wood-near),
+      3px 5px 6px -2px var(--wood-far);
+    --joint-ends: linear-gradient(90deg,
+      var(--wood-contact), rgba(237, 212, 171, 0.12) 0.7px,
+      transparent 2px, transparent calc(100% - 2px),
+      var(--wood-ambient) calc(100% - 0.8px), var(--wood-contact));
+    --roller-shading: linear-gradient(180deg,
+      rgba(18, 12, 7, 0.76), rgba(255, 229, 181, 0.28) 17%,
+      rgba(247, 219, 172, 0.10) 32%, transparent 45%,
+      rgba(25, 16, 8, 0.35) 72%, rgba(16, 10, 5, 0.85));
+    --mount: #eae4d4;
+    --mount-veil: rgba(234, 228, 212, 0.08);
+    --gold-key: rgba(255, 244, 195, 0.18);
+    --gold-shade: rgba(46, 34, 18, 0.39);
+    --gold-exposure: rgba(60, 44, 17, 0.08);
+    --gold-bounce: rgba(255, 232, 175, 0.18);
+    --lattice-face: #c1ae8c;
+    --lattice-back: #cec6af;
+    --lattice-depth: #a2977e;
+    --lattice-height: 36px;
+    --lattice-light: brightness(0.78) saturate(0.72);
+    --transom-mask: var(--tx-asanoha);
+    --transom-size: 34px 58.89px;
+    --transom-position: 50% -44px;
+    --room-key: rgba(255, 253, 239, 0.24);
+    --room-shade: rgba(54, 47, 33, 0.08);
+
+    /* Narrow arrises leave a broad, materially textured face. */
+    --bevel-v: linear-gradient(90deg,
+      rgba(23, 14, 8, 0.7), var(--timber-edge) 0.8px,
+      rgba(250, 231, 190, 0.06) 2.4px, transparent 4px,
+      transparent calc(100% - 4px), var(--timber-shade) calc(100% - 1px),
+      rgba(19, 11, 6, 0.72));
+    --bevel-v-r: var(--bevel-v);
+    --bevel-h: linear-gradient(180deg,
+      var(--timber-edge), rgba(244, 224, 191, 0.09) 1.1px,
+      transparent 3px, transparent calc(100% - 3.5px),
+      var(--timber-shade) calc(100% - 0.8px), rgba(19, 11, 6, 0.72));
+  }
+
+  html[data-time="day"], html[lang][data-time="day"] {
+    --ground: #e8e4d8;
+    --bay: #fbf9f1;
+    --panel: #f4f0e4;
+    --ink: rgba(30, 28, 24, 0.94);
+    --ink-strong: rgba(23, 21, 18, 0.97);
+    --muted: rgba(58, 50, 39, 0.86);
+    --line: rgba(68, 56, 39, 0.17);
+    --line-strong: rgba(62, 49, 31, 0.34);
+  }
+  html[data-time="dusk"], html[lang][data-time="dusk"] {
+    --roof-light: sepia(0.18) saturate(0.84) brightness(0.82);
+    --metal-light: sepia(0.12) saturate(1.05) brightness(0.93);
+    --eave: var(--tx-eave-dusk);
+    --gilt-highlight: #fbe0a6;
+    --gilt-mid: #bc8840;
+    --gilt-low: #64401e;
+    --roof-cast: rgba(25, 18, 15, 0.42);
+    --room-fill: rgba(57, 54, 69, 0.085);
+    --ground: #d5c9b5;
+    --bay: #f2e7cf;
+    --panel: #eaddc0;
+    --ink: rgba(33, 27, 23, 0.94);
+    --ink-strong: rgba(25, 21, 17, 0.97);
+    --muted: rgba(61, 47, 32, 0.87);
+    --line: rgba(65, 48, 30, 0.20);
+    --line-strong: rgba(65, 48, 30, 0.36);
+    --paper-key: rgba(255, 234, 185, 0.47);
+    --paper-shadow: rgba(66, 61, 66, 0.19);
+    --paper-top: rgba(54, 32, 17, 0.18);
+    --paper-veil: rgba(240, 225, 197, 0.14);
+    --timber-key: rgba(255, 204, 123, 0.31);
+    --timber-edge: rgba(255, 215, 147, 0.37);
+    --timber-exposure: rgba(66, 34, 10, 0.17);
+    --wood-contact: rgba(30, 21, 19, 0.56);
+    --wood-near: rgba(42, 34, 36, 0.29);
+    --wood-far: rgba(50, 44, 51, 0.15);
+    --wood-ambient: rgba(33, 26, 24, 0.21);
+    --lattice-light: sepia(0.12) brightness(0.68) saturate(0.86);
+    --lattice-back: #b7a583;
+    --lattice-depth: #8c795b;
+    --mount: #e5d7b9;
+    --mount-veil: rgba(229, 215, 185, 0.16);
+    --gold-key: rgba(255, 218, 138, 0.23);
+    --gold-shade: rgba(51, 35, 24, 0.43);
+    --gold-exposure: rgba(74, 39, 10, 0.19);
+    --gold-bounce: rgba(255, 207, 122, 0.22);
+    --room-key: rgba(234, 214, 180, 0.26);
+    --room-shade: rgba(66, 53, 47, 0.16);
+  }
+  html[data-time="night"], html[lang][data-time="night"] {
+    --roof-light: brightness(0.47) saturate(0.48) sepia(0.08) hue-rotate(145deg);
+    --metal-light: brightness(0.72) saturate(0.9);
+    --gilt-highlight: #ebca89;
+    --gilt-mid: #956b2b;
+    --gilt-low: #493017;
+    --roof-cast: rgba(9, 10, 12, 0.62);
+    --room-fill: rgba(37, 39, 49, 0.15);
+    --ground: #181615;
+    --bay: #dfcdaa;
+    --panel: #d7c4a0;
+    --ink: rgba(35, 25, 18, 0.95);
+    --ink-strong: rgba(25, 18, 12, 0.97);
+    --muted: rgba(54, 38, 23, 0.89);
+    --link: #783114;
+    --link-hover: #4f210f;
+    --mon: #87401b;
+    --line: rgba(58, 41, 23, 0.21);
+    --line-strong: rgba(53, 35, 19, 0.38);
+    --lattice: rgba(72, 45, 17, 0.55);
+    --gold-quiet: rgba(137, 93, 27, 0.30);
+    --paper-key: rgba(255, 232, 174, 0.56);
+    --paper-shadow: rgba(46, 46, 51, 0.25);
+    --paper-top: rgba(24, 16, 9, 0.26);
+    --paper-veil: rgba(221, 202, 166, 0.12);
+    --timber-key: rgba(255, 215, 150, 0.24);
+    --timber-edge: rgba(255, 221, 156, 0.34);
+    --timber-exposure: rgba(13, 11, 10, 0.48);
+    --timber-shade: rgba(9, 7, 6, 0.64);
+    --contact: rgba(22, 14, 8, 0.53);
+    --cast: rgba(26, 20, 13, 0.26);
+    --cast-soft: rgba(30, 22, 14, 0.17);
+    --wood-contact: rgba(16, 12, 9, 0.64);
+    --wood-near: rgba(27, 22, 17, 0.34);
+    --wood-far: rgba(25, 23, 24, 0.18);
+    --wood-ambient: rgba(19, 15, 11, 0.27);
+    --mount: #d6c19a;
+    --mount-veil: rgba(149, 111, 57, 0.27);
+    --gold-key: rgba(255, 214, 125, 0.22);
+    --gold-shade: rgba(25, 24, 27, 0.56);
+    --gold-exposure: rgba(38, 27, 14, 0.31);
+    --gold-bounce: rgba(242, 185, 90, 0.11);
+    --lattice-face: #9e8357;
+    --lattice-back: #423628;
+    --lattice-depth: #211d18;
+    --lattice-light: sepia(0.16) brightness(0.49) saturate(0.78);
+    --room-key: rgba(67, 56, 41, 0.24);
+    --room-shade: rgba(6, 9, 14, 0.26);
+    --img-filter: brightness(0.93) saturate(0.97);
+    --portrait-filter: brightness(0.91) saturate(0.94);
+    --paper-glow: none;
+    color-scheme: light;
+  }
+
+  /* Continuous paper wall: fine density variation, quiet under the type. */
+  body, .site-body {
+    background-color: var(--ground);
+    background-image: radial-gradient(ellipse 1100px 1000px at 12% 180px, var(--room-key), transparent 95%),
+      linear-gradient(90deg, transparent 30%, var(--room-shade)), var(--material-paper);
+    background-size: auto, auto, var(--paper-size);
+    background-blend-mode: normal, normal, multiply;
+  }
+  .frame {
+    background-image:
+      radial-gradient(ellipse 140% 95% at 20% 12%, transparent 42%, var(--room-fill)),
+      linear-gradient(180deg, var(--paper-top), transparent 76px),
+      radial-gradient(ellipse 1000px 1100px at 10% 180px, var(--paper-key), transparent 85%),
+      linear-gradient(106deg, transparent 30%, var(--paper-shadow)),
+      linear-gradient(var(--paper-veil), var(--paper-veil)), var(--material-paper);
+    background-size: auto, auto, auto, auto, auto, var(--paper-size);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    background-blend-mode: normal, normal, normal, normal, normal, multiply;
+    box-shadow: none;
+  }
+  html[data-time="night"] .frame {
+    background-image:
+      radial-gradient(ellipse 120% 90% at 24% 390px, transparent 28%, var(--room-fill)),
+      linear-gradient(180deg, var(--paper-top), transparent 84px),
+      radial-gradient(ellipse 820px 760px at 24% 390px, var(--paper-key), transparent 90%),
+      linear-gradient(103deg, transparent 20%, var(--paper-shadow)),
+      linear-gradient(var(--paper-veil), var(--paper-veil)), var(--material-paper);
+  }
+
+  /* Ink belongs to the paper plane. A little translucency lets the local
+     fibers show through; multiply is limited to text, never photographs or
+     interactive figures. No blur, emboss, displacement or rasterized type. */
+  .hero__text, .section > h2, .section > h3, .list-card > h2,
+  .post__header, .post__content > h2, .post__content > h3,
+  .toc summary, .section-toc summary {
+    mix-blend-mode: var(--ink-composite);
+    text-shadow: none;
+  }
+  .frame h1, .frame h2 { letter-spacing: 0.025em; font-kerning: normal; }
+  .frame h3 { letter-spacing: 0.012em; }
+  .hero__text a, .section a, .post__content a {
+    text-decoration-thickness: 0.055em;
+    text-underline-offset: 0.18em;
+    text-decoration-skip-ink: auto;
+  }
+
+  /* Timber. Grain phase differs between members; highlights never mirror. */
+  .frame::before, .frame::after {
+    background-image: var(--bevel-v),
+      linear-gradient(180deg, var(--timber-exposure), var(--timber-exposure)),
+      linear-gradient(90deg, var(--timber-key), transparent 40%, rgba(11, 8, 5, 0.12)), var(--timber-v);
+    background-size: auto, auto, auto, var(--timber-scale-v);
+    background-position: 0 0, 0 0, 0 0, -31px -57px;
+    box-shadow: var(--post-shadow);
+  }
+  .frame::after {
+    background-position: 0 0, 0 0, 0 0, -169px -293px;
+    /* A narrow occlusion on the inner edge; the key still casts to the right. */
+    box-shadow: var(--post-shadow-right);
+  }
+  .site-header {
+    padding-top: calc(var(--roof-height) - 2px);
+    background-image:
+      linear-gradient(180deg, rgba(17, 12, 7, 0.63) calc(var(--roof-height) - 12px), rgba(24, 16, 8, 0.07) calc(var(--roof-height) + 27px), transparent calc(var(--roof-height) + 48px)),
+      var(--bevel-under),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)),
+      linear-gradient(105deg, rgba(245, 219, 175, 0.055), transparent 52%, rgba(19, 13, 8, 0.14)), var(--timber-h);
+    background-size: auto, auto, auto, auto, var(--timber-scale-h);
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 -87px;
+    box-shadow: inset 0 -1px 1px rgba(16, 11, 6, 0.55),
+      0.5px 1px 0.8px var(--wood-contact),
+      1.5px 3.5px 3px -0.5px var(--wood-near),
+      4px 8px 10px -3px var(--wood-far);
+    z-index: 5;
+  }
+  .brand__title, .brand__subtitle, .site-nav a, .site-footer p {
+    text-shadow: 0 -0.5px 0.6px rgba(0, 0, 0, 0.75), 0 0.6px 0 rgba(255, 237, 192, 0.13);
+  }
+  .frame > * + .section::before,
+  .frame > * + .list-card::before,
+  .frame > * + .hero::before {
+    /* Rails seat between the posts. The grain stops at a narrow shoulder;
+       a half-pixel overlap closes antialiasing gaps at either breakpoint. */
+    left: calc(-1 * var(--bay-pad-x) - 0.5px);
+    right: calc(-1 * var(--bay-pad-x) - 0.5px);
+    background-image: var(--joint-ends), var(--bevel-h),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, auto, var(--timber-scale-h);
+    background-position: 0 0, 0 0, 0 0, -137px -171px;
+    box-shadow: var(--rail-shadow);
+  }
+  .frame > :nth-child(odd)::before { background-position: 0 0, 0 0, 0 0, -321px -234px; }
+
+  /* Photographic joinery floats just ahead of a recessed paper backing.
+     A single orthographic cell repeats at its natural aspect ratio. The alpha
+     holes admit light; the face, chamfer and side grain are in the photograph. */
+  .ranma-wrap {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--lattice-back);
+    background-image: linear-gradient(180deg, var(--lattice-depth), transparent 70%), var(--material-paper);
+    background-size: auto, var(--paper-size);
+    background-blend-mode: normal, multiply;
+    padding-bottom: var(--rail-minor);
+    border-bottom: 0;
+    box-shadow: var(--sill-shadow);
+  }
+  .ranma-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 var(--rail-minor);
+    box-shadow: inset 0 1px 1px var(--wood-contact),
+      inset 1px 4px 4px -2px var(--wood-near),
+      inset 3px 0 3px -2px var(--wood-contact),
+      inset -2px 0 2px -1px var(--wood-contact),
+      inset 0 -1px 1px var(--wood-ambient);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ranma-wrap::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: var(--rail-minor);
+    background-image: var(--bevel-h),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, var(--timber-scale-h);
+    background-position: 0 0, 0 0, -71px -218px;
+    box-shadow: 0 -0.5px 0.6px var(--wood-contact);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ranma {
+    position: relative;
+    height: var(--lattice-height);
+    opacity: 1;
+    background: var(--material-kumiko) center / auto var(--lattice-height) repeat-x;
+    -webkit-mask: none;
+    mask: none;
+    filter: var(--lattice-light)
+      drop-shadow(0.45px 0.6px 0.3px var(--wood-contact))
+      drop-shadow(1px 1.8px 1.1px var(--wood-near));
+  }
+
+  /* Gold is an uneven reflecting surface deep inside the timber surround. */
+  .hero__image {
+    background-color: #bc9b54;
+    background-image:
+      linear-gradient(180deg, rgba(34, 24, 11, 0.40), transparent 37px),
+      linear-gradient(270deg, var(--gold-shade), transparent 29px),
+      radial-gradient(ellipse 110% 53% at 2% 32%, var(--gold-key), transparent 84%),
+      radial-gradient(ellipse 75% 90% at 96% 83%, var(--gold-bounce), transparent 75%),
+      linear-gradient(var(--gold-exposure), var(--gold-exposure)), var(--material-gold);
+    background-size: auto, auto, auto, auto, auto, 600px 600px;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, -17px -33px;
+    border-color: var(--rail-lo);
+    box-shadow: inset 0.8px 1px 0.9px var(--wood-contact),
+      inset 2px 3px 3px -0.7px var(--wood-near),
+      inset 5px 8px 11px -3px var(--wood-far),
+      inset -0.7px -0.6px 0.7px var(--wood-ambient);
+  }
+  .hero__surround {
+    position: absolute;
+    inset: -14px -11px -16px -5px;
+    z-index: 2;
+    pointer-events: none;
+    filter: drop-shadow(0.6px 0.8px 0.45px var(--wood-contact))
+      drop-shadow(1.5px 2.8px 2.1px var(--wood-near));
+  }
+  .hero__surround span { position: absolute; display: block; }
+  .hero__surround-top, .hero__surround-bottom {
+    left: 0; right: 0;
+    background-image: var(--bevel-h), linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, 740px 247px;
+  }
+  .hero__surround-top {
+    top: 0; height: 14px;
+    background-position: 0 0, 0 0, -172px -36px;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 11px) 100%, 5px 100%);
+  }
+  .hero__surround-bottom {
+    bottom: 0; height: 16px;
+    background-position: 0 0, 0 0, -397px -189px;
+    clip-path: polygon(5px 0, calc(100% - 11px) 0, 100% 100%, 0 100%);
+  }
+  .hero__surround-left, .hero__surround-right {
+    top: 0; bottom: 0;
+    background-image: var(--bevel-v), linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-v);
+    background-size: auto, auto, 247px 740px;
+  }
+  .hero__surround-left {
+    left: 0; width: 5px;
+    background-position: 0 0, 0 0, -49px -53px;
+    clip-path: polygon(0 0, 100% 14px, 100% calc(100% - 16px), 0 100%);
+  }
+  .hero__surround-right {
+    right: 0; width: 11px;
+    background-position: 0 0, 0 0, -164px -194px;
+    clip-path: polygon(0 14px, 100% 0, 100% 100%, 0 calc(100% - 16px));
+  }
+
+  /* Thin seams follow the actual four miters, including the unequal jambs.
+     They stay below one CSS pixel instead of turning into dark corner cuts. */
+  .hero__surround-top::before, .hero__surround-top::after,
+  .hero__surround-bottom::before, .hero__surround-bottom::after {
+    content: "";
+    position: absolute; inset: 0 auto 0 0;
+    width: 6px;
+    background: var(--wood-contact);
+    clip-path: polygon(0 0, 0.65px 0, 5.65px 100%, 5px 100%);
+  }
+  .hero__surround-top::after {
+    left: auto; right: 0; width: 12px;
+    clip-path: polygon(100% 0, calc(100% - 0.65px) 0, 0.35px 100%, 1px 100%);
+  }
+  .hero__surround-bottom::before {
+    clip-path: polygon(5px 0, 5.65px 0, 0.65px 100%, 0 100%);
+  }
+  .hero__surround-bottom::after {
+    left: auto; right: 0; width: 12px;
+    clip-path: polygon(1px 0, 0.35px 0, calc(100% - 0.65px) 100%, 100% 100%);
+  }
+
+  /* Silk, mounted print, and title slip are separate thin objects. */
+  .hero__scroll {
+    background-color: var(--mount);
+    background-image:
+      linear-gradient(180deg, rgba(38, 29, 16, 0.20), rgba(255, 252, 228, 0.17) 10px,
+        transparent 26px, transparent calc(100% - 10px), rgba(57, 42, 23, 0.12) calc(100% - 4px), rgba(255, 239, 199, 0.16)),
+      linear-gradient(var(--mount-veil), var(--mount-veil)), var(--material-silk);
+    background-repeat: no-repeat, no-repeat, repeat;
+    background-size: auto, auto, 256px 256px;
+    background-position: 0 0, 0 0, 0 0;
+    background-blend-mode: normal;
+    box-shadow: 0.6px 1px 1px var(--contact), 3px 5px 5px var(--cast), 9px 14px 16px var(--cast);
+  }
+  /* The pattern is woven into the photograph, not a second printed overlay. */
+  .hero__scroll .hero__mount { display: none; }
+  .hero__futai {
+    position: absolute;
+    top: 0;
+    width: 7px;
+    height: 39px;
+    background-image: linear-gradient(90deg, rgba(73, 57, 35, 0.19), rgba(255, 250, 229, 0.16) 23%, transparent 51%, rgba(54, 40, 22, 0.24)),
+      linear-gradient(var(--mount-veil), var(--mount-veil)), var(--material-silk);
+    background-size: auto, auto, 256px 256px;
+    background-position: 0 0, 0 0, -42px -11px;
+    border-bottom: 0.5px solid rgba(77, 61, 38, 0.23);
+    box-shadow: 1px 1.5px 1.2px rgba(41, 30, 16, 0.22);
+    transform-origin: top center;
+    pointer-events: none;
+  }
+  .hero__futai--left { left: calc(26% - 2px); transform: rotate(-0.8deg); }
+  .hero__futai--right { right: calc(26% - 2px); transform: rotate(1.1deg); }
+  .hero__frame {
+    background-image: linear-gradient(90deg, rgba(56, 42, 20, 0.065), transparent 8px, transparent calc(100% - 8px), rgba(56, 42, 20, 0.085)), var(--material-paper);
+    background-size: auto, var(--paper-size);
+    background-blend-mode: normal, multiply;
+  }
+  .hero__image img {
+    filter: saturate(0.96) contrast(0.99);
+    border-color: rgba(71, 56, 33, 0.25);
+    box-shadow: 0 -7px 0 rgba(167, 132, 57, 0.29), 0 7px 0 rgba(167, 132, 57, 0.29),
+      0.6px 0.9px 1px rgba(47, 34, 18, 0.31);
+  }
+  html[data-time="night"] .hero__image img { filter: var(--portrait-filter); }
+  .hero__scroll::before {
+    background-image: var(--roller-shading),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, 540px 180px;
+    background-position: 0 0, 0 0, -94px -49px;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    box-shadow: 0.6px 1px 1px var(--contact), 2px 4px 4px var(--cast);
+  }
+  .hero__scroll::after {
+    left: -9px; right: -9px; bottom: -7px;
+    background-image: var(--roller-shading),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, 540px 180px;
+    background-position: 0 0, 0 0, -247px -112px;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px var(--contact), 3px 5px 6px var(--cast);
+  }
+  .hero__roller-knob {
+    position: absolute;
+    bottom: -8px;
+    width: 9px; height: 13px;
+    z-index: 3;
+    border: 0.6px solid rgba(26, 17, 8, 0.73);
+    border-radius: 42%;
+    background-color: var(--post-mid);
+    background-image: radial-gradient(ellipse at 26% 24%, rgba(247, 223, 177, 0.36), transparent 28%, rgba(21, 13, 7, 0.69) 86%),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, 340px 114px;
+    background-position: 0 0, 0 0, -31px -24px;
+    box-shadow: inset 0.6px 0.6px 0 rgba(244, 216, 163, 0.25), 2px 3px 3px var(--cast);
+    pointer-events: none;
+  }
+  .hero__roller-knob--left { left: -14px; }
+  .hero__roller-knob--right { right: -14px; }
+  .hero__cord-loop {
+    position: absolute;
+    top: -6px; left: calc(50% - 1.4px);
+    width: 2.8px; height: 8px;
+    border-radius: 40%;
+    background: repeating-linear-gradient(155deg, #bba176 0 0.6px, #735b39 0.6px 1.3px, #483723 1.3px 1.8px);
+    box-shadow: inset 0.5px 0 0 rgba(239, 220, 179, 0.26), 0.8px 0.6px 0.6px var(--contact);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .hero__image::after {
+    width: 1px;
+    background: repeating-linear-gradient(160deg, #b79d6d 0 0.7px, #6f5734 0.7px 1.7px, #4d3b23 1.7px 2.1px);
+    box-shadow: 1.6px 1px 1px rgba(28, 19, 9, 0.22);
+  }
+  .hero__image::before {
+    /* The cord starts at a small fixed pin, also visible on the unframed scroll. */
+    content: "";
+    position: absolute;
+    top: -2px; left: calc(50% - 1.8px);
+    width: 3.6px; height: 3.6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, var(--gilt-highlight), var(--gilt-mid) 24%, var(--gilt-low) 67%, var(--gilt-shadow));
+    box-shadow: 0.4px 0.7px 0.5px var(--contact), 0.8px 1.3px 1px var(--cast);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hero__image figcaption {
+    background-color: var(--bay);
+    background-image: linear-gradient(var(--paper-veil), var(--paper-veil)), var(--material-paper);
+    background-size: auto, 258px 258px;
+    background-position: 0 0, -170px -291px;
+    background-blend-mode: normal, multiply;
+    border-color: rgba(94, 72, 38, 0.16);
+    box-shadow: 0.5px 0.8px 0.8px var(--contact), 2px 3px 3px var(--cast-soft);
+  }
+  .hero__image figcaption::after {
+    mix-blend-mode: var(--ink-composite);
+    opacity: 0.88;
+    transform: rotate(-1.3deg);
+  }
+
+  /* Quiet paper surfaces elsewhere, with thickness kept in the frames. */
+  .section figure, .post__content figure, .toc, .section-toc {
+    background-size: var(--paper-size);
+    background-blend-mode: multiply;
+    box-shadow: inset 0.5px 0.7px 0 rgba(255, 250, 230, 0.42),
+      0.7px 1px 1px rgba(41, 27, 12, 0.20), 2px 4px 7px rgba(44, 32, 18, 0.08);
+  }
+  .section figure, .post__content figure {
+    border-color: var(--rail-mid);
+    border-style: solid;
+    border-width: 3px;
+  }
+  .lang-toggle, .time-toggle, .nav-toggle, .embed-fullscreen, .lang-list {
+    background-image: var(--bevel-h), linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, 720px 240px;
+    background-position: 0 0, 0 0, -235px -145px;
+  }
+  .site-footer {
+    background-image: linear-gradient(var(--timber-exposure), var(--timber-exposure)),
+      repeating-linear-gradient(180deg, rgba(12, 8, 4, 0.42) 0 1px, rgba(232, 208, 165, 0.12) 1px 2px, transparent 2px 43px), var(--timber-h);
+    background-size: auto, auto, var(--timber-scale-h);
+    background-position: 0 0, 0 0, -430px -192px;
+  }
+  .site-footer::before {
+    background: var(--bevel-h), var(--timber-h);
+    background-size: auto, 1080px 360px;
+    box-shadow: var(--sill-shadow);
+  }
+  .kdoor__paper { background-size: auto, auto, auto, var(--paper-size); background-blend-mode: normal, normal, normal, multiply; }
+  .kdoor__paper::before { background-size: 1080px 360px; opacity: 0.45; }
+
+  /* Ebony urushi: low surface relief, a broad soft window reflection. */
+  html[lang="ja"] {
+    --timber-h: var(--material-lacquer);
+    --timber-v: var(--material-lacquer-v);
+    --timber-scale-h: 1200px 450px;
+    --timber-scale-v: 450px 1200px;
+    --timber-reflection: rgba(226, 229, 219, 0.12);
+    --timber-edge: rgba(245, 224, 176, 0.32);
+    --lattice-face: #ad9156;
+    --lattice-back: #b7aa8a;
+    --lattice-depth: #7f7054;
+  }
+  html[lang="ja"] .frame::before, html[lang="ja"] .frame::after {
+    background-image: var(--bevel-v),
+      var(--gilt-collar), var(--gilt-collar),
+      linear-gradient(90deg, transparent 6%, var(--timber-reflection) 19%, rgba(249, 240, 216, 0.04) 33%, transparent 46%),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--material-lacquer-column);
+    /* Matched repeat bounds exclude the baked window reflection; the layer
+       above supplies its continuous highlight. Natural grain scale on any page. */
+    background-size: auto, 100% 4.5px, 100% 4.5px, auto, auto, 450px auto;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+    background-position: 0 0, top, bottom, 0 0, 0 0, 48% 0;
+  }
+  html[lang="ja"] .frame::after { background-position: 0 0, top, bottom, 0 0, 0 0, 65% 0; }
+  html[lang="ja"] .site-header {
+    background-image:
+      linear-gradient(180deg, rgba(4, 3, 2, 0.65) calc(var(--roof-height) - 12px), transparent calc(var(--roof-height) + 42px)),
+      linear-gradient(176deg, transparent 31%, rgba(203, 210, 206, 0.04) 48%, rgba(245, 240, 219, 0.02) 51%, transparent 70%),
+      linear-gradient(180deg, transparent calc(100% - 4px), var(--gilt-highlight) calc(100% - 3px), var(--gilt-low) calc(100% - 2px), #17100a),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--material-lacquer);
+    background-size: auto, auto, auto, auto, cover;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 30%;
+    background-repeat: no-repeat;
+  }
+  html[lang="ja"] .frame > * + .section::before,
+  html[lang="ja"] .frame > * + .list-card::before,
+  html[lang="ja"] .frame > * + .hero::before {
+    background-image: var(--joint-ends), var(--bevel-h),
+      linear-gradient(180deg, rgba(220, 226, 216, 0.08), transparent 42%, transparent calc(100% - 3px),
+        var(--gilt-mid) calc(100% - 2.3px), var(--gilt-low) calc(100% - 1.4px), rgba(15, 10, 6, 0.65)),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--material-lacquer);
+    background-size: auto, auto, auto, auto, cover;
+    background-repeat: no-repeat;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 38%;
+    box-shadow: var(--rail-shadow);
+  }
+  /* Separate metal from its timber support so exposure never flattens the
+     engraved highlights or the small shadow beneath each nail cover. */
+  html[lang="ja"] .frame > * + .section::after,
+  html[lang="ja"] .frame > * + .list-card::after,
+  html[lang="ja"] .frame > * + .hero::after {
+    content: "";
+    position: absolute;
+    top: calc(-0.5 * var(--nageshi));
+    left: calc(-1 * (var(--hashira) + var(--bay-pad-x)));
+    right: calc(-1 * (var(--hashira) + var(--bay-pad-x)));
+    height: var(--nageshi);
+    background: var(--tx-kugikakushi) center / 190px 18px repeat-x;
+    filter: var(--metal-light) drop-shadow(0.5px 0.8px 0.5px rgba(0, 0, 0, 0.8));
+    z-index: 5;
+    pointer-events: none;
+  }
+  html[lang="ja"] .frame > .ranma-wrap + .hero::after,
+  html[lang="ja"] .frame > .ranma-wrap + .section::after,
+  html[lang="ja"] .frame > .ranma-wrap + .list-card::after { display: none; }
+  html[lang="ja"] .site-footer {
+    background-image: linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--material-lacquer);
+    background-size: auto, cover;
+    background-position: 0 0, 0 38%;
+    background-repeat: no-repeat;
+  }
+  html[lang="ja"] .site-footer::before {
+    background: linear-gradient(180deg, var(--gilt-highlight), var(--gilt-mid) 1px, var(--gilt-low) 2.2px, var(--rail-lo) 3px);
+  }
+
+  /* Vermilion lacquer: the window reflects on the same side of both columns. */
+  html[lang="zh-Hans"] {
+    --timber-h: var(--material-vermilion);
+    --timber-v: var(--material-vermilion-v);
+    --material-silk: #{'url("../img/materials/silk-meander.webp")'};
+    --timber-reflection: rgba(255, 237, 211, 0.23);
+    --timber-scale-h: 580px 580px;
+    --timber-scale-v: 580px 580px;
+    --lattice-face: #bf8060;
+    --lattice-back: #602d28;
+    --lattice-depth: #301519;
+    --transom-mask: var(--tx-kusa);
+    --transom-size: 36px 22px;
+    --transom-position: 50% 50%;
+    --lacquer-tint: rgba(176, 45, 37, 0.08);
+    --beam-tint: rgba(67, 16, 21, 0.28);
+    --bracket-light: brightness(0.74) saturate(0.86);
+  }
+  html[lang="zh-Hans"][data-time="dusk"] { --eave: var(--tx-eave-zh-dusk); --lacquer-tint: rgba(158, 40, 29, 0.12); --beam-tint: rgba(61, 16, 19, 0.31); }
+  html[lang="zh-Hans"][data-time="night"] { --lacquer-tint: rgba(100, 27, 20, 0.19); --beam-tint: rgba(48, 16, 18, 0.37); --link: #7c2930; --link-hover: #52151d; --mon: #81342c; }
+  html[lang="zh-Hans"][data-time="dusk"] { --bracket-light: brightness(0.63) saturate(0.80); }
+  html[lang="zh-Hans"][data-time="night"] { --bracket-light: brightness(0.41) saturate(0.62); }
+  html[lang="zh-Hans"] .frame::before, html[lang="zh-Hans"] .frame::after {
+    background-image:
+      linear-gradient(90deg, rgba(48, 11, 13, 0.68), transparent 20%, rgba(255, 127, 89, 0.13) 37%, transparent 57%, rgba(48, 11, 13, 0.63)),
+      linear-gradient(90deg, transparent 17%, var(--timber-reflection) 29%, rgba(255, 225, 190, 0.10) 39%, transparent 50%),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)),
+      linear-gradient(var(--lacquer-tint), var(--lacquer-tint)), var(--timber-v);
+    background-size: auto, auto, auto, auto, 480px 480px;
+    background-position: 0 0, 0 0, 0 0, 0 0, -63px -120px;
+  }
+  html[lang="zh-Hans"] .frame::after { background-position: 0 0, 0 0, 0 0, 0 0, -221px -351px; }
+  html[lang="zh-Hans"] .site-header {
+    padding-top: calc(var(--roof-height) + 14px);
+    background-image:
+      linear-gradient(180deg, rgba(26, 8, 7, 0.42) calc(var(--roof-height) - 3px), rgba(26, 8, 7, 0.16) calc(var(--roof-height) + 15px), transparent calc(var(--roof-height) + 35px)),
+      linear-gradient(174deg, transparent 38%, rgba(239, 210, 189, 0.10) 59%, transparent 76%),
+      var(--bevel-under), linear-gradient(var(--timber-exposure), var(--timber-exposure)),
+      linear-gradient(var(--beam-tint), var(--beam-tint)), var(--material-vermilion);
+    background-size: auto, auto, auto, auto, auto, cover;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 30%;
+    background-repeat: no-repeat;
+  }
+  /* The old solid-black mask looked like a pixelated cast shadow. These are
+     actual lacquered brackets tucked under the ceramic edge, with their own
+     small contact shadow. One support spans every three straight tile bays. */
+  html[lang="zh-Hans"] .site-header::before {
+    top: calc(var(--roof-height) - 2px);
+    height: 20px;
+    background-color: transparent;
+    background-image: var(--material-dougong);
+    background-size: calc(var(--roof-height) * 2.434232) 20px;
+    background-position: 0 0;
+    background-repeat: repeat-x;
+    -webkit-mask: none;
+    mask: none;
+    filter: var(--bracket-light) drop-shadow(0.7px 1.3px 0.8px var(--wood-near));
+    z-index: 1;
+  }
+  html[lang="zh-Hans"] .frame > * + .section::before,
+  html[lang="zh-Hans"] .frame > * + .list-card::before,
+  html[lang="zh-Hans"] .frame > * + .hero::before {
+    background-image: var(--joint-ends), var(--bevel-h),
+      linear-gradient(180deg, var(--gilt-mid), transparent 1.2px, transparent calc(100% - 2px), var(--gilt-low)),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)),
+      linear-gradient(var(--beam-tint), var(--beam-tint)), var(--material-vermilion);
+    background-size: auto, auto, auto, auto, auto, cover;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 38%;
+    background-repeat: no-repeat;
+    box-shadow: var(--rail-shadow);
+  }
+  /* The Chinese transom keeps its scrolling-vine identity and red finish. */
+  html[lang="zh-Hans"] .ranma {
+    height: 28px;
+    background-color: var(--lattice-face);
+    background-image: linear-gradient(115deg, rgba(255, 247, 219, 0.24), transparent 37%, rgba(30, 20, 10, 0.18)), var(--material-cedar-h);
+    background-size: auto, 1080px 360px;
+    background-blend-mode: normal, soft-light;
+    -webkit-mask: var(--transom-mask) var(--transom-position) / var(--transom-size);
+    mask: var(--transom-mask) var(--transom-position) / var(--transom-size);
+    filter: drop-shadow(0.5px 0.7px 0.3px var(--wood-contact));
+  }
+  html[lang="zh-Hans"] .hero__image { background: none; border: 0; box-shadow: none; }
+  html[lang="zh-Hans"] .hero__surround { display: none; }
+  html[lang="zh-Hans"] .site-footer {
+    background-image: linear-gradient(var(--timber-exposure), var(--timber-exposure)), linear-gradient(var(--beam-tint), var(--beam-tint)), var(--material-vermilion);
+    background-size: auto, auto, 640px 640px;
+  }
+  html[lang="zh-Hans"] .lang-toggle, html[lang="zh-Hans"] .time-toggle,
+  html[lang="zh-Hans"] .nav-toggle, html[lang="zh-Hans"] .embed-fullscreen,
+  html[lang="zh-Hans"] .lang-list {
+    background-image: var(--bevel-h), linear-gradient(var(--beam-tint), var(--beam-tint)), var(--material-vermilion);
+  }
+
+  /* One straight photographic bay repeats at a constant pitch: no perspective
+     fan or mismatched joints between strips. Its generated alpha retains the
+     scalloped ceramic edge. Keep the natural aspect ratio and round tile ends. */
+  .eave {
+    height: var(--roof-height);
+    background-size: auto var(--roof-height);
+    filter: var(--roof-light) drop-shadow(1px 2.4px 1.6px var(--roof-cast));
+  }
+  html[data-time="dusk"] .eave::after { content: none; }
+  html[lang="ja"] .section figure, html[lang="ja"] .post__content figure {
+    box-shadow: inset 0 0 0 0.6px rgba(172, 139, 68, 0.24), 0.7px 1px 1px var(--cast), 2px 4px 7px var(--cast-soft);
+  }
+
+  @media (max-width: 720px) {
+    :root, html[data-time] {
+      --rail-shadow: 0 -0.5px 0.5px var(--wood-ambient),
+        0.5px 0.8px 0.7px var(--wood-contact),
+        1px 2.3px 2.2px -0.6px var(--wood-near),
+        3px 5px 7px -2.5px var(--wood-far);
+    }
+    .site-header .container { row-gap: 0.75rem; }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    :root, html[data-time] { --ink-composite: normal; }
+    .frame, .note-card, .featured-card, .toc, .section-toc { background-image: none; }
+  }
+  @media (forced-colors: active), (prefers-contrast: more) {
+    :root, html[data-time] { --ink-composite: normal; }
+  }
+}

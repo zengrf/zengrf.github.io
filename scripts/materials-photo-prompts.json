@@ -1,0 +1,194 @@
+{
+  "generator": "Built-in image_gen",
+  "date": "2026-10-04",
+  "purpose": "Photographic replacements derived from the original concepts: straight repeatable ceramic bays, asanoha wood joinery, engraved gilt fittings, woven silk, gold leaf, washi, and lacquer.",
+  "processing": "scripts/prepare_materials.py crops the repeat bounds of single straight ceramic and kumiko cells and exposure-balanced paper (no perspective warping), retains alpha, rotates lacquer grain, packs the flower repeat and encodes WebP at quality 93. Roof: 512px wide; kumiko: 600px wide; silk: 768px wide; paper: 1012px crop; other surfaces: original resolution. No vector or procedural substitutes.",
+  "textures": [
+    {
+      "id": "asanoha-kumiko",
+      "prompt": "Use case: precise-object-edit.\nAsset type: photographic wooden lattice material for the narrow transom at the top of the live website.\nInput image 1 is the edit source. Extract ONLY the Japanese asanoha wooden lattice in its upper-left quadrant, removing the thick outside posts, outer framing, paper wall and all other quadrants. The real fine wood grain and neatly fitted joinery in that concept are the quality benchmark. Image 2 shows the whole website and is only a guide to the slender decorative band and its existing sixfold hexagonal pattern.\nProduce a wide landscape 3:1 photograph of the lattice alone, filling the whole image edge to edge. TRUE ORTHOGRAPHIC FRONT VIEW: every matching member is parallel, equal pitch, no vanishing point or fanning. A precise repeating asanoha hemp-leaf pattern: regular hexagonal sixfold star cells subdivided into slim triangular leaves by straight, neatly jointed wooden strips. Exactly three complete sixfold cells across the width, with matching partial cells at the top and bottom where the repeating field continues. Opposite left/right edges match exactly in pattern phase, pitch, height and illumination so this is a horizontal repeat material. No external border or vertical divider between cells.\nNatural softly aged hinoki/cedar wood, warm restrained honey-brown rather than bright gold, 2–3 mm wide front faces, tiny chamfered arrises, visible darker side faces giving each wooden strip actual thickness, very fine grain ALIGNED WITH EACH INDIVIDUAL STRUT. Sharp hand-cut half-lap/miter joints with tiny dark seams and wood end grain at the intersections; well maintained precise craftsmanship, no gaps or warping, no extra sticks. Real upper-left daylight glints gently on the wood's top-left edges; lower-right side faces are darker. Real focus-stacked macro architectural photography.\nEvery triangular opening is FULLY TRANSPARENT alpha, so the website can place softly lit paper behind the lattice. No opaque black, white or gray in the holes; no glass, cloth or paper. Preserve the material's tiny self-shadows on wooden side faces, but no cast shadows baked into a background. No solid backing, no checkerboard, no external shadow or margins.\nAvoid vector linework, wires, metallic/golden rods, extruded plastic, smooth CGI gradients, fake noise, ornamental flowers, random triangles or fivefold stars, bent members, perspective drift, mismatched repetition, typography and watermark. This must read as miniature actual wooden joinery, not an illustration.",
+      "references": [
+        "/Users/zengrf/website-realism-study/material-studies.png",
+        "/Users/zengrf/website-realism-study/daylight-concept.png"
+      ],
+      "transparent_background": true,
+      "generated_file": "exec-83e24cb0-7d86-4ace-a95f-69c19d58a663.png",
+      "source_pixels": [
+        2172,
+        724
+      ],
+      "repeat_crop": [
+        386,
+        14,
+        1125,
+        470
+      ],
+      "webp_pixels": [
+        600,
+        370
+      ],
+      "integration": "One orthographic cell repeats horizontally at its natural aspect ratio, 36 CSS pixels high; a separate recessed washi backing and CSS cast shadows remain visible through the alpha openings."
+    },
+    {
+      "id": "ceramic-roof",
+      "prompt": "Use case: precise-object-edit.\nProduction asset extraction. From the reference photograph, extract ONLY ONE central Japanese ceramic roof-tile bay and enlarge it as a perfectly straight, seamless horizontal repeat module. Output a square RGBA macro image containing exactly ONE central half-round barrel tile and ONE circular three-comma mitsudomoe end medallion, with a half pan trough on each side. No other barrel tiles and no other medallions.\nThe central barrel's centerline MUST BE EXACTLY VERTICAL at 50% canvas width from the top edge through the center of the circular medallion. Its left and right outlines run parallel without converging, slanting, tapering or fanning. True orthographic long-lens elevation: no perspective vanishing point, no lens distortion. Keep the top and bottom of the circular medallion aligned with the exact central x-axis. The disc is round, its face parallel to the image plane.\nThe side pan tiles extend all the way to both canvas edges, cut at matching MIDPOINTS of identical troughs. Left and right edges must match exactly in profile, height, material color, surface light and lap-joint y-coordinate for seamless horizontal repetition. The top ceramic lap joint is completely horizontal. All geometry has equal scale and is centered symmetrically. A gently scalloped bottom edge with the disc projecting lower than the pan lips. Roof starts at the top canvas edge and fills the upper 90% of the image; only the bottom 10% and the area beneath the scallop are transparent.\nPreserve the reference's real photographic ceramic: silver charcoal gray fired clay, fine pitting, carbon sheen, subtle mineral grain, softly worn lips, thick hand-molded tile edges, scrollwork incised into the pan lips, the molded three-comma crest, convincing dark overlap gaps. Maintained craftsmanship, clean regular silhouette, no broken/chipped edges. Soft directional daylight from upper left. Focus-stacked architectural macro photograph, not a rendering or drawing.\nMost important: ONE TILE BAY, perfectly vertical central ridge, horizontally seamless, TRUE ALPHA under the roof. No diagonal long axes. No fan shape. No multiple bays. No wood, text, background, checkerboard, white margin, border or watermark.",
+      "references": [
+        "ceramic-roof.png"
+      ],
+      "transparent_background": true,
+      "generated_file": "exec-9b817525-07ac-45ea-9d4c-8c3d9931d347.png",
+      "crop": [
+        250,
+        200,
+        1000,
+        1124
+      ],
+      "export_width": 512
+    },
+    {
+      "id": "gilt-flower",
+      "prompt": "Use case: precise-object-edit.\nAsset type: isolated photographic architectural fitting with transparent background.\nInput: supplied material-study image is the edit source. Isolate the antique gilded six-petal flower nail cover from the LOWER LEFT panel. Remove the wood and everything else. Reconstruct as a straight-on, focus-stacked macro photograph, keeping its elegant flat six-lobed silhouette, engraved petal details and small central domed rivet.\nOne fitting only, centered, fills about 84 percent of a square image. True alpha all around, no ground, no text, no added cast shadow outside the metal. The actual object is a thin antique Japanese gilt bronze kugikakushi, not a jewelry flower. Six shallow flat lobed petals, delicate raised outer border, six small punched dots, intricate fine incised radial linework and tiny stippling, round central nail head. Metal has natural warm gold with dark bronze recesses, fine tool marks, micro scratches and subtly worn highlights. Directional window light from upper left reflects sharply on the rim and dome, lower right edges dark. Match the real hammered/engraved metal in the source. Avoid smooth inflated petals, toy-like plastic, broad vector gradients, extra leaves, gemstones, CGI gloss, symmetry errors, background color or checkerboard.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": true,
+      "generated_file": "exec-ac466fa9-f942-4de2-84bd-26dccc51881e.png"
+    },
+    {
+      "id": "silk-shippou",
+      "prompt": "Use case: precise-object-edit.\nAsset type: seamless photographic silk texture for the mounting of a Japanese hanging scroll.\nInput image is an edit source. Extract and enlarge ONLY the pale silk brocade from the upper-right panel, removing the gold backing, roller and picture. Fill a square image edge-to-edge with this real textile, viewed straight on and perfectly flat, seamless on all four edges.\nWarm pale ivory, restrained pearl and pale flax. The motif is precise overlapping shippou circles woven in subtly different satin directions, NOT printed line art. About eight full circles across the image. Fine lustrous silk warp and weft, minute thread irregularity, raised jacquard strands, softly broken highlights on the pattern, extremely fine weave like museum-quality scroll mounting. Soft natural light upper left, flat even exposure with delicate local directional sheen. No large folds or draping, no seams, no coarse linen/burlap crosshatch, no stain, no vignette, no borders, no text, no wooden elements. It must be visibly photographic and tactile at close range while quiet enough to frame a portrait. Match the supplied concept's silk, with a much higher level of real thread detail.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-27317318-6ee8-44b8-aa29-a512b8e63ce4.png"
+    },
+    {
+      "id": "gold-leaf",
+      "prompt": "Use case: precise-object-edit.\nAsset type: photoreal gold-leaf wall material for the recessed alcove of a website.\nInput is an edit source. Extract and expand ONLY the gold-leaf backing from the upper-right panel into a square, edge-to-edge seamless material image. Remove the scroll and all other objects.\nA real Japanese kinpaku surface, four squares of thin gold leaf across and four vertically. Very subtle slightly misaligned sheet overlaps, hairline joins and an occasional nearly invisible short tear. Match the source's natural restrained pale rich gold, luminous gold highlights and warm ochre-brown mottling. Microscopic creases, tiny pinholes, brushed size visible under wafer-thin leaf. Fine roughness variation so the metal reflects softly with small scattered glints, never glitter. Photographed straight on with a large diffuse daylight source upper left, consistent exposure across the patch so it can repeat. No dramatic vignette or global light gradient. Not yellow painted plaster, not crumpled foil, not polished brass, not heavy rust. No borders or objects, no text, no artificial stamped grid. The irregular sheet joins should be physically part of the real gold surface. Must match the tactile photography of the material-study concept.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-265883b3-3c82-464c-9800-6bacccb9d675.png"
+    },
+    {
+      "id": "washi-fiber",
+      "prompt": "Use case: precise-object-edit.\nAsset type: real washi paper photographic material for a readable website background.\nInput is an edit source. Extract and enlarge ONLY the ivory handmade paper from the lower part of the upper-left panel, with all timber removed. Deliver an edge-to-edge square seamless texture of a broad 50 cm swatch, camera parallel to the surface.\nWarm ivory/off-white Japanese kozo washi, dense and refined, with gently interlaced long plant fibers beneath the surface and irregular fine short fibers in relief. Tiny variations in paper translucency, delicate soft diffuse micro shadows from upper left. Match the concept's real paper, without exaggerated grunge or crumpling. Fiber sizes natural and varied, visible on close inspection, pale enough for body text. No folds, no stains, no parchment browning, no noisy marbling, no linen weave, no prominent strands, no global lighting gradient, no borders, objects, text or watermark. Photographic macro texture spanning a broad area, perfectly sharp, natural paper tactility, seamless tile edges.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-9381d52c-20dd-4ed1-b65b-875d2ac64e55.png",
+      "revision": {
+        "prompt": "Use case: precise-object-edit.\nRefine this exact real ivory washi paper texture for the page background of the website. Remove ALL of the long, loose, hairlike plant strands that cross the surface diagonally and the big conspicuous knots/intersections. Preserve the photographic fine dense paper structure underneath, irregular short kozo fibers beneath the surface, the slight natural translucency, quiet tooth and soft upper-left micro illumination. The finished sheet should be refined fine-grained handmade paper: individual visible fibers are mostly 1–5 mm long in a swatch showing about 50 cm of paper, not the coarse loose netting seen in the current image. Reduce medium-scale contrast approximately 35 percent, while retaining sharp natural microscopic fiber detail. Color is warm pale ivory, not bright white, not tan. Seamless square all four edges with consistent exposure and fiber density. No visible joins, seams, creases, strong diagonal strands, stains, large marbled swirls, linen weave, blur, vignette, text or objects. It must remain a real photographed material, calm behind reading text.",
+        "generated_file": "exec-667cc1a8-6700-4a00-b151-78f19c382e34.png"
+      },
+      "seam_repair": {
+        "prompt": "Use case: precise-object-edit.\nAsset type: an existing photographic kozo washi texture used as a repeating website background.\nInput image 1 is the exact edit target. Repair only its uneven exposure and its tile boundaries. Preserve this exact fine, dense, ivory paper character, crisp microscopic short fibers, fiber scale, softness and natural translucency. Do not redesign the paper.\nThe current right edge is about 5 RGB levels darker than the left edge and the lower edge is slightly darker than the top. These cause obvious straight seams when the image repeats. Remove all low-frequency left-to-right and top-to-bottom exposure/color drift. A neutral, spatially uniform ivory base near RGB (233,226,217), with natural fine-scale variations only. No baked-in broad lighting, vignetting, warm/cool edge cast or cloud-shaped patches. Lighting for the final page is provided separately.\nMake this a genuinely seamless periodic square texture in BOTH axes: left and right edge exposure, color, grain density and fibers must continue exactly into each other; the same is true of the top and bottom edges, including all four corners. Imagine a 3-by-3 tiled grid; no line or color step should reveal any tile boundary. Balanced identical average exposure at all four edges and through the center. Do not put a rim, fade-to-white band, blurred edge or blank margin around the image.\nFull-bleed square orthographic macro photograph of refined handmade ivory washi. Sharp fine fibers, restrained natural micro relief. Preserve the grain and color character of the supplied photograph. No folds, stains, large strands, large knots, linen weave, diagonal lighting, global gradients, borders, grid, text or objects. Output only one seamless texture tile.",
+        "generated_file": "exec-9976d579-c850-4af7-a6ac-71d96f5e3a29.png",
+        "generator": "Built-in image_gen",
+        "source_pixels": [
+          1254,
+          1254
+        ],
+        "repeat_crop": [
+          224,
+          233,
+          1236,
+          1245
+        ],
+        "webp_pixels": [
+          1012,
+          1012
+        ],
+        "reading_repeat_css_px": 349,
+        "caption_repeat_css_px": 258,
+        "integration": "Exposure-balanced photograph cropped at measured matching edge tones on both axes. CSS repeats rescaled in proportion to the crop to retain the fine grain size; room illumination and paper veil unchanged. No blur, mirroring, or procedural texture."
+      }
+    },
+    {
+      "id": "ceramic-roof-lotus",
+      "prompt": "Use case: precise-object-edit.\nMake ONE very small change to this exact photographed ceramic roof module: replace ONLY the three-comma crest INSIDE the central circular medallion with an eight-petal LOTUS rosette (eight slender petals radiating around a small circular center), sculpted in the same gray clay.\nAll other pixels, layout and geometry are invariant. Preserve the SINGLE central perfectly vertical barrel, the complete circular medallion rim and its diameter, both side pan tiles, side edge profiles, scrollwork, all joints and shadows, rough fired silver-gray clay microtexture and existing upper-left light. Keep the same square canvas dimensions and exactly the same transparent alpha outside the object. No zoom, crop, change in angle, new perspective, stretching, shifting or extra tiles. This image will be cropped to the two trough midpoints for horizontal repetition, so moving ANY geometry or edges would break it. No text or objects or opaque background. Remain photographic.",
+      "references": [
+        "exec-9b817525-07ac-45ea-9d4c-8c3d9931d347.png"
+      ],
+      "transparent_background": true,
+      "generated_file": "exec-ae3482bd-a034-4ab2-ae4f-2f49081aff94.png",
+      "crop": [
+        250,
+        200,
+        1000,
+        1124
+      ],
+      "export_width": 512
+    },
+    {
+      "id": "silk-meander",
+      "prompt": "Use case: precise-object-edit.\nChange only the woven geometric motif in this ivory silk brocade. Replace the overlapping circles with a subtle small continuous Chinese square meander / leiwen key pattern, about twelve repeats across the square. The pattern is woven into real silk with lustrous direction-changing threads, not ink or graphic linework. Make the weave a little finer and smoother, like fine antique scroll mounting silk. Keep the warm pale ivory silk color, even soft upper-left daylight, photographic thread detail, perfectly flat square surface, edge-to-edge coverage, and seamlessly tileable edges. No folds, paper, coarse burlap, text, symbols, borders, stains, watermark or other objects.",
+      "references": [
+        "exec-27317318-6ee8-44b8-aa29-a512b8e63ce4.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-0e263aca-dcfe-4d96-afc9-cab4ee19bb25.png"
+    },
+    {
+      "id": "urushi-black",
+      "prompt": "Use case: precise-object-edit.\nInput is the material study source. Extract and enlarge ONLY the smooth black lacquered timber surface of the lower-left panel, remove the gold flower and joinery and all other objects. Output a wide landscape, seamless edge-to-edge photographic surface texture, grain running horizontally.\nReal hand-rubbed black Japanese urushi over fine hardwood. Deep near-black brown body, very subtle underlying grain, minute coating irregularity, extremely fine horizontal polishing marks. Low, softly broken silvery reflections in the upper third from a large daylight window off-frame; reflection should fade gently without any literal white window outline. Dark and sophisticated semi-gloss lacquer, photo from a real room, not a matte charcoal surface or generic rough wood. Even overall exposure so the wide material can repeat, no big white highlight or obvious light hotspot. Tactile micro roughness and faint directional grain preserved. No gold fitting, no wood edges, no text, no borders. Must match the living reflected quality of the reference lacquer.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-07b7f213-2012-4a49-ae13-54a1374180cc.png",
+      "column_derivative": {
+        "file": "urushi-black-column.webp",
+        "processing": "Rotate the same source 90 degrees, then crop only; no synthesis or retouching. Use a quiet section with matched exposure at the repeat ends; CSS supplies the continuous column reflection.",
+        "crop_after_rotation": [
+          0,
+          16,
+          768,
+          972
+        ],
+        "pixels": [
+          768,
+          956
+        ]
+      }
+    },
+    {
+      "id": "urushi-vermilion",
+      "prompt": "Use case: precise-object-edit.\nExtract the authentic vermilion lacquer material of the column in the lower-right panel of the reference. Convert it to a flat, square, edge-to-edge seamlessly repeating photographic material swatch, without the curvature, other objects, or beam.\nDeep warm cinnabar / vermilion lacquer over timber. Subtle horizontal brush flow and minute substrate grain visible through many polished coats. Restrained red-brown color variation, tiny lacquer surface ripples, scattered faint fine scratches, authentic hand-worked coating, refined and well maintained. Real semi-gloss reflections with very delicate broken upper-left highlights, not plastic gloss and not matte red painted plaster. No broad gradient, harsh white stripe, cartoon sheen, weathering, cracks, peeling, orange saturated color, text, borders, fittings, shadows of other objects, or watermark. Match the photographic lacquer quality of the reference; even global illumination for tiling.",
+      "references": [
+        "material-studies.png"
+      ],
+      "transparent_background": false,
+      "generated_file": "exec-ba992bb3-91b6-4564-9cac-050069fd49ae.png",
+      "revision": {
+        "prompt": "Use case: precise-object-edit.\nRefine this exact photographed vermilion lacquer surface for use on architectural beams and columns. Remove the large bright white reflected patch along the LEFT EDGE; replace it with the same deep cinnabar material as the center. Preserve natural small-scale broken highlights on the lacquer's micro ripples, fine horizontal grain, authentic slightly uneven hand-applied glossy coating, color and photographic detail. The swatch should have consistent overall exposure across the entire square, suitable for seamless tiling on all four edges. No broad light hotspot, no visible white window reflection, no global gradient. Small fine specular glints are essential and should remain: not flat matte red paint and not a synthetic smooth gradient. Make the red a little more restrained and deeper, like the polished lacquer of a historic temple maintained in good condition. No extra scratches, big cracks, dark stains, text, borders or objects. Keep the natural material microstructure sharply resolved.",
+        "generated_file": "exec-11703a70-3a81-4dae-aca8-7dc2a33bb950.png"
+      }
+    },
+    {
+      "id": "dougong-vermilion",
+      "prompt": "Use case: photorealistic-natural.\nAsset type: a small isolated architectural material for a photoreal website's Chinese roof support band.\nA single real traditional Chinese wooden dougong bracket, straight-on true orthographic frontal elevation, symmetric, no perspective convergence. Simple early/Tang-style three-tier interlocking bracket assembly: a broad shallow top bearing timber, two shorter stepped arms below, and a compact rectangular bearing block at bottom center. Real wood members with restrained rounded/chamfered ends and tight joinery. Low wide silhouette, approximately 3.2 times as wide as tall. The whole bracket supports an unseen roof above; no roof, wall, column, pedestal or surrounding scene is included.\nMaterial: deep warm vermilion red lacquer over fine wooden grain, beautifully maintained, tiny natural pores and brush traces, soft worn arrises, narrow realistic joints, no gold paint, no ornamental carvings. It must look like an actual small timber bracket photographed with a macro architectural lens, not a flat icon or CG plastic. Soft daylight from upper left: small natural highlights on the top-left arrises, darker underside and inner joints, subtle red reflected light. Even focus across the piece. No broad black shadow baked around the silhouette.\nComposition: one complete bracket alone, horizontal top edge, centered on a wide transparent canvas with a little transparent padding. Every exterior gap is fully transparent, true RGBA. No checkerboard, no white background, no text, no watermark, no multiple separate brackets or repeated strip. Fine enough photographic detail to remain convincing when this asset is reduced to a 20px-high website detail.",
+      "transparent_background": true,
+      "generated_file": "exec-da2ca93b-979a-472e-900c-4804bac97d80.png",
+      "source_pixels": [
+        2172,
+        724
+      ],
+      "alpha_crop": [
+        73,
+        116,
+        2099,
+        610
+      ],
+      "repeat_pixels": [
+        584,
+        80
+      ],
+      "height_css_px": 20,
+      "integration": "Photographic vermilion timber supports replace the old flat black dougong mask. One alpha-preserving support per three ceramic tile bays; light grading and a small cast shadow are separate CSS effects. Cropping, resizing and repeat-strip packing only."
+    }
+  ]
+}

@@ -290,7 +290,7 @@
       b.setAttribute('aria-selected', 'false');
       b.setAttribute('aria-label', 'Photograph ' + (i + 1) + ' of ' + frames.length);
       b.addEventListener('click', function () {
-        reel.scrollTo({ left: f.offsetLeft - reel.offsetLeft, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        reel.scrollTo({ left: f.offsetLeft, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
       });
       marks.appendChild(b);
     });
@@ -309,7 +309,7 @@
       var mid = reel.scrollLeft + reel.clientWidth / 2;
       var best = 0, bestD = Infinity;
       frames.forEach(function (f, i) {
-        var c = f.offsetLeft - reel.offsetLeft + f.clientWidth / 2;
+        var c = f.offsetLeft + f.clientWidth / 2;
         var d = Math.abs(c - mid);
         if (d < bestD) { bestD = d; best = i; }
       });
@@ -334,7 +334,13 @@
     // keep the slip in step when the language changes under it
     window.addEventListener('site:langchange', function () {
       var i = current; current = -1; show(i < 0 ? 0 : i);
+      requestAnimationFrame(sync);
     });
+
+    // Each frame's offset is relative to the positioned reel. Re-measure
+    // after responsive layout or translated text changes its opening.
+    if (window.ResizeObserver) new ResizeObserver(sync).observe(reel);
+    else window.addEventListener('resize', sync);
 
     show(0);
     sync();
@@ -376,7 +382,10 @@
         var card = li.firstElementChild;
         if (!card) return;
         li.style.gridColumn = card.classList.contains('note-card--featured') ? 'span 2' : '';
-        var h = card.getBoundingClientRect().height;
+        // The frame's breathing room belongs in its masonry span too.
+        // Otherwise the following frame starts at the previous card's edge.
+        // offsetHeight is stable while the card is lifted on hover.
+        var h = card.offsetHeight + (parseFloat(window.getComputedStyle(card).marginBottom) || 0);
         li.style.gridRowEnd = 'span ' + Math.ceil(h / row);
       });
     }

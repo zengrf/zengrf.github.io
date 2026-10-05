@@ -1,0 +1,207 @@
+/* Small physical frames and their interaction with the same upper-left light
+   as the room. Photographic grain follows each member; text stays on paper. */
+@media screen {
+  :root, html[data-time] {
+    --panel-edge: rgba(255, 241, 209, 0.38);
+    --panel-joint: rgba(26, 17, 9, 0.56);
+    --panel-fillet: rgba(103, 72, 34, 0.34);
+    --panel-glint: rgba(255, 237, 193, 0.62);
+    --panel-seat: inset 0.8px 1.3px 1.6px rgba(42, 30, 17, 0.20),
+      inset -0.6px -0.5px 0.6px rgba(255, 249, 230, 0.42);
+    --panel-rest: 0.5px 0.8px 0.7px var(--wood-contact),
+      1.5px 3px 2.5px -1px var(--wood-near),
+      3px 5px 8px -3px var(--wood-far);
+    --panel-raised: 0.7px 1.5px 0.8px var(--wood-contact),
+      3px 6px 5px -1.5px var(--wood-near),
+      6px 10px 13px -4px var(--wood-far);
+  }
+  html[lang="ja"] { --panel-fillet: rgba(185, 147, 73, 0.62); }
+  html[lang="zh-Hans"] { --panel-fillet: rgba(174, 123, 58, 0.48); }
+  html[data-time="night"] {
+    --panel-edge: rgba(235, 209, 157, 0.26);
+    --panel-glint: rgba(249, 220, 161, 0.48);
+  }
+
+  .note-card, .featured-card, .featured-card__preview, .post__embed,
+  .pdf-frame, .gif-frame, html[lang] figure.material-figure {
+    --panel-frame-width: 6px;
+    --panel-grain-h: -155px -92px;
+    --panel-grain-v: -89px -147px;
+    position: relative;
+    isolation: isolate;
+    border: var(--panel-frame-width) solid var(--panel-joint);
+    border-radius: 0;
+    box-shadow: var(--panel-seat), var(--panel-rest);
+  }
+  .note-card, .featured-card {
+    background-color: var(--bay);
+    background-image: linear-gradient(var(--paper-veil), var(--paper-veil)), var(--material-paper);
+    background-size: auto, var(--paper-size);
+    background-position: 0 0, -42px -75px;
+    background-blend-mode: normal, multiply;
+    transition: transform 180ms var(--ease), box-shadow 200ms var(--ease);
+  }
+  /* Override the original color-swap hover even on touchscreens. Paper and
+     printing retain their material color when the frame catches the light. */
+  .note-card:hover, .featured-card:hover {
+    background-color: var(--bay);
+    border-color: var(--panel-joint);
+  }
+  .note-list > li:nth-child(3n + 2) > .note-card {
+    --panel-grain-h: -318px -179px;
+    --panel-grain-v: -173px -297px;
+    background-position: 0 0, -191px -137px;
+  }
+  .note-list > li:nth-child(3n) > .note-card {
+    --panel-grain-h: -487px -238px;
+    --panel-grain-v: -238px -463px;
+    background-position: 0 0, -287px -224px;
+  }
+  .featured-card__preview {
+    --panel-frame-width: 4px;
+    --panel-grain-h: -263px -148px;
+    --panel-grain-v: -132px -318px;
+  }
+  /* The media itself already clips to its viewport. Keep the surrounding
+     border visible; the decorative frame never intercepts its controls. */
+  .featured-card__preview, .post__embed, .pdf-frame, .gif-frame { overflow: visible; }
+  html[lang] figure.material-figure { --panel-frame-width: 5px; }
+
+  .panel-frame {
+    position: absolute;
+    inset: calc(-1 * var(--panel-frame-width));
+    z-index: 1;
+    pointer-events: none;
+  }
+  .panel-frame > span { position: absolute; display: block; }
+  .panel-frame__top, .panel-frame__bottom {
+    left: 0; right: 0;
+    height: var(--panel-frame-width);
+    background-image:
+      linear-gradient(180deg, var(--panel-edge), rgba(255, 239, 203, 0.08) 0.8px,
+        transparent 1.6px, transparent calc(100% - 1.5px),
+        rgba(31, 20, 11, 0.25) calc(100% - 0.8px), var(--panel-joint)),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-h);
+    background-size: auto, auto, var(--timber-scale-h);
+    background-position: 0 0, 0 0, var(--panel-grain-h);
+  }
+  .panel-frame__top {
+    top: 0;
+    clip-path: polygon(0 0, 100% 0, calc(100% - var(--panel-frame-width)) 100%, var(--panel-frame-width) 100%);
+  }
+  .panel-frame__bottom {
+    bottom: 0;
+    background-position: 0 0, 0 0, -349px -217px;
+    clip-path: polygon(var(--panel-frame-width) 0, calc(100% - var(--panel-frame-width)) 0, 100% 100%, 0 100%);
+  }
+  .panel-frame__left, .panel-frame__right {
+    top: 0; bottom: 0;
+    width: var(--panel-frame-width);
+    background-image:
+      linear-gradient(90deg, var(--panel-edge), rgba(255, 239, 203, 0.08) 0.8px,
+        transparent 1.6px, transparent calc(100% - 1.5px),
+        rgba(31, 20, 11, 0.25) calc(100% - 0.8px), var(--panel-joint)),
+      linear-gradient(var(--timber-exposure), var(--timber-exposure)), var(--timber-v);
+    background-size: auto, auto, var(--timber-scale-v);
+    background-position: 0 0, 0 0, var(--panel-grain-v);
+  }
+  .panel-frame__left {
+    left: 0;
+    clip-path: polygon(0 0, 100% var(--panel-frame-width), 100% calc(100% - var(--panel-frame-width)), 0 100%);
+  }
+  .panel-frame__right {
+    right: 0;
+    background-position: 0 0, 0 0, -213px -384px;
+    clip-path: polygon(0 var(--panel-frame-width), 100% 0, 100% 100%, 0 calc(100% - var(--panel-frame-width)));
+  }
+  .panel-frame__top::after, .panel-frame__bottom::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, transparent 44%, var(--panel-joint) 48% 53%, transparent 57%),
+      linear-gradient(-45deg, transparent 44%, var(--panel-joint) 48% 53%, transparent 57%);
+    background-position: left top, right top;
+    background-size: var(--panel-frame-width) var(--panel-frame-width);
+    background-repeat: no-repeat;
+  }
+  .panel-frame__bottom::after { transform: scaleY(-1); }
+  .panel-frame::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--panel-frame-width) - 0.6px);
+    border: 0.6px solid var(--panel-fillet);
+    box-shadow: inset 0.6px 1px 0.8px rgba(32, 22, 12, 0.16),
+      0 -0.5px 0 rgba(255, 239, 203, 0.14);
+    transition: box-shadow 200ms var(--ease);
+  }
+
+  .note-card:focus-within, .featured-card:focus-within {
+    box-shadow: var(--panel-seat), var(--panel-raised);
+  }
+  .note-card:focus-within > .panel-frame::after,
+  .featured-card:focus-within > .panel-frame::after {
+    box-shadow: inset 0.6px 1px 0.8px rgba(32, 22, 12, 0.16),
+      -0.5px -0.7px 0.6px var(--panel-glint);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .note-card:hover, .featured-card:hover { box-shadow: var(--panel-seat), var(--panel-raised); }
+    .note-card:hover > .panel-frame::after, .featured-card:hover > .panel-frame::after {
+      box-shadow: inset 0.6px 1px 0.8px rgba(32, 22, 12, 0.16),
+        -0.5px -0.7px 0.6px var(--panel-glint);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .note-card:hover, .featured-card:hover,
+      .note-card:focus-within, .featured-card:focus-within { transform: translateY(-2px); }
+    }
+  }
+
+  /* Wooden controls respond through their bevel and contact with the surface. */
+  .lang-toggle, .time-toggle, .nav-toggle, .embed-fullscreen {
+    transition: box-shadow 160ms var(--ease), transform 160ms var(--ease);
+  }
+  .lang-toggle:hover, .time-toggle:hover, .nav-toggle:hover, .embed-fullscreen:hover {
+    background-color: var(--beam-mid);
+    border-color: var(--beam-lo);
+  }
+  .lang-toggle:focus-visible, .time-toggle:focus-visible,
+  .nav-toggle:focus-visible, .embed-fullscreen:focus-visible {
+    box-shadow: inset 0 0.7px 0.5px var(--panel-glint),
+      inset 0 -0.7px 0.6px var(--wood-contact), 1px 2px 2px var(--wood-near), 2px 4px 5px var(--wood-far);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lang-toggle:hover, .time-toggle:hover, .nav-toggle:hover, .embed-fullscreen:hover {
+      box-shadow: inset 0 0.7px 0.5px var(--panel-glint),
+        inset 0 -0.7px 0.6px var(--wood-contact), 1px 2px 2px var(--wood-near), 2px 4px 5px var(--wood-far);
+    }
+  }
+  .lang-toggle:active, .time-toggle:active, .nav-toggle:active, .embed-fullscreen:active {
+    box-shadow: inset 0.5px 1px 1.4px var(--wood-contact), 0.5px 0.7px 0.7px var(--wood-near);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .lang-toggle:active, .time-toggle:active, .nav-toggle:active, .embed-fullscreen:active { transform: translateY(1px); }
+  }
+
+  .post__embed:fullscreen, .featured-card__preview:fullscreen {
+    border: 0;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  .post__embed:fullscreen > .panel-frame, .featured-card__preview:fullscreen > .panel-frame { display: none; }
+  .post__embed:fullscreen > iframe, .featured-card__preview:fullscreen > iframe {
+    width: 100%; height: 100%; aspect-ratio: auto;
+  }
+  .post__embed:-webkit-full-screen, .featured-card__preview:-webkit-full-screen { border: 0; box-shadow: none; }
+  .post__embed:-webkit-full-screen > .panel-frame, .featured-card__preview:-webkit-full-screen > .panel-frame { display: none; }
+  .post__embed:-webkit-full-screen > iframe, .featured-card__preview:-webkit-full-screen > iframe { width: 100%; height: 100%; aspect-ratio: auto; }
+  @media (forced-colors: active) {
+    .panel-frame { display: none; }
+    html[lang] .note-card, html[lang] .featured-card, .featured-card__preview, .post__embed,
+    .pdf-frame, .gif-frame, html[lang] figure.material-figure {
+      border: 1px solid CanvasText;
+      background-image: none;
+      box-shadow: none;
+      transform: none;
+    }
+  }
+}
+@media print { .panel-frame { display: none; } }

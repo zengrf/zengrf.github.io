@@ -10,10 +10,12 @@
   {% unless item.preview == false %}
     {% if extension == 'pdf' %}
     <div class="pdf-frame">
+      {% include panel-frame.html %}
       <iframe src="{{ download_url | escape }}" title="{{ media_title | escape }}" loading="lazy"></iframe>
     </div>
     {% elsif extension == 'gif' or extension == 'png' or extension == 'jpg' or extension == 'jpeg' or extension == 'webp' or extension == 'svg' %}
     <div class="gif-frame">
+      {% include panel-frame.html %}
       <img src="{{ download_url | escape }}" alt="{{ media_title | escape }}" loading="lazy">
     </div>
     {% endif %}

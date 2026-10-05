@@ -126,6 +126,57 @@ works in publication entries, captions, contact values, activity entries,
 attachment descriptions, and translations. HTML styling belongs in
 `_layouts/`, `_includes/`, and `assets/css/main.scss`.
 
+## Materials and lighting
+
+`_sass/kiwari-realism.scss` and `_sass/kiwari-panels.scss`, imported by
+`assets/css/main.scss`, control the photographic material layer. WebP textures in `assets/img/materials/` provide
+cedar, asanoha joinery, fibrous washi, overlapping gold leaf, woven silk, ceramic eaves, engraved
+gilt nail covers, and black/vermilion lacquer. The English, Japanese, and
+Chinese structures retain their distinct materials and ornament. CSS supplies
+shared directional light, contact shadows, and day/dusk/night exposure; the
+paper remains warm and legible at night. These overrides apply only on screen.
+
+Keep timber grain aligned with each member and give neighboring members different
+texture positions. Adjust lighting with the `--paper-*`, `--timber-*`, `--gold-*`,
+and shadow tokens. Keep the photographic relief and small reflections in the
+ceramic, metal, and lacquer: flat albedo alone loses their physical character.
+One straight ceramic bay repeats at a fixed pitch, avoiding the fanned angles
+of a perspective roof photograph. It is gently graded for day, dusk, and night; Japanese
+tomoe and Chinese lotus roof crests remain distinct. Gold fittings occupy a
+separate decorative layer so their highlights and shadows survive grading.
+The asanoha lattice repeats one photographic cell over a recessed paper backing;
+its transparent openings, beveled struts, and small cast shadows remain separate.
+The Chinese eave uses photographic vermilion dougong supports, spaced at three
+tile bays. Their material and small cast shadow replace the old flat black mask;
+the ceramic edge casts one soft shadow onto the beam.
+Wood uses a narrow contact shadow plus a softer cast shadow, with light from the
+upper left. Both posts touch the paper without mirroring the direction of light.
+Rails seat between the continuous posts, with their shoulder seams tied to the
+actual post width. The portrait surround has thin miter seams; scroll rods use
+the same photographic wood or lacquer, with a small cord loop over the top rod.
+Reading paper uses a fine 349px repeat and a light veil. Its exposure-balanced
+photograph is cropped at measured matching edge tones on both axes, with its
+original fiber scale preserved; room lighting stays in the separate CSS layers.
+Ink is slightly
+translucent; selected text blocks and the caption seal multiply into their paper
+without blurring or rasterizing the text. High contrast modes disable that blend.
+Lacquer column texture repeats at a fixed scale instead of stretching with page height.
+Post cards and media have slim mitered frames, photographic grain along all four
+members, a narrow inner fillet, and recessed paper. The shared `panel-frame.html`
+include is decorative and never blocks links or embedded controls. Hover lifts a
+card by 2px, opens its cast shadow, and catches light at the inner edge without
+changing the paper color. Keyboard focus receives the same light and shadow;
+touch and reduced-motion modes skip the lift. The masonry spans include the
+card's bottom margin so adjacent frames keep their breathing room.
+
+The original cedar prompts are in `scripts/materials-prompts.json`; the new
+concept-derived asset prompts are in `scripts/materials-photo-prompts.json`.
+To package approved PNGs named by those asset IDs, run
+`python3 scripts/prepare_materials.py /path/to/approved-pngs` (requires Pillow).
+This crops the approved tile, lattice, and paper repeat bounds, aligns vertical grain, packs a flower repeat,
+and encodes WebP without retouching or procedurally replacing the photographs.
+The roof keeps its natural aspect ratio and generated transparency.
+
 ## Preview and check
 
 ```bash

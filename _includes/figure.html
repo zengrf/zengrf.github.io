@@ -1,4 +1,5 @@
-<figure>
+<figure class="material-figure">
+  {% include panel-frame.html %}
   <img src="{{ include.image.file | relative_url | uri_escape | escape }}" alt="{{ include.image.alt | escape }}"{% if include.image.i18n %} data-i18n-alt="{{ include.image.i18n }}.alt"{% endif %} />
   {% if include.image.caption %}
   <figcaption{% if include.image.i18n %} data-i18n="{{ include.image.i18n }}.caption"{% endif %}>{{ include.image.caption | markdownify | remove: '<p>' | remove: '</p>' }}</figcaption>
