@@ -2,7 +2,7 @@
 layout: audience
 title: "UW Math AI Lab · Fall 2026"
 date: 2026-10-04
-featured: true
+featured: false
 tags: [notes, slides]
 downloads:
   - label: Slides PDF
