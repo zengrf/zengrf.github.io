@@ -192,3 +192,9 @@
 [data-time=night] .lab-slide img[src*='/qr/'] {filter:none;}
 @media (max-width:600px) {.lab-demo-header{gap:8px;padding:10px}.lab-demo-header h2{flex-basis:70%;font-size:21px}.lab-demo-header button,.lab-demo-header a{font-size:14px;padding:9px}.lab-demo-status{font-size:12px}.lab-demo{width:98vw;height:96dvh}}
 @media print {.lab-demo{display:none!important}.lab-slide a{text-decoration:none}.lab-slide img{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Access details are shared directly with lab members. */
+.lab-access .property-grid {margin-top:85px;}
+.lab-access .property-card {min-height:240px;justify-content:center;}
+.lab-access .property-card h3 {font-size:42px;}
+.lab-access .property-card p:last-child {font:34px/1.3 var(--font-body, Georgia, serif);max-width:425px;margin:24px 0 0;}

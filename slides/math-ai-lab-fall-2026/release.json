@@ -7,8 +7,10 @@
   "pdf": {
     "file": "talk.pdf",
     "pages": 24,
-    "sha256": "0fcec833d01c93d04b27e4a77962586925a9546b170d364727b99ff15cb9ef63"
+    "sha256": "de4fbc500b63b32ec7242718bb8eb0f42eb00551f200e220e8e46c258283ddcb"
   },
   "updated_at": "2026-10-05",
-  "cover_photo": "Spring 2026 Demo Day \u00b7 June 8, 2026"
+  "cover_photo": "Spring 2026 Demo Day \u00b7 June 8, 2026",
+  "public_access_links": false,
+  "qr_codes": false
 }
