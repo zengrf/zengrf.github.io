@@ -1,0 +1,353 @@
+/* Axiom visit: the Math AI Lab theme, with spacious research-talk layouts. */
+.slide.axiom-slide.ax-source-screenshot {padding:20px 40px;background:#fff;}
+.axiom-slide.ax-source-screenshot>.eyebrow,.axiom-slide.ax-source-screenshot>h1,.axiom-slide.ax-source-screenshot>.slide-footer {display:none;}
+.axiom-slide.ax-source-screenshot .slide-grid {height:680px;display:flex;align-items:center;justify-content:center;}
+.ax-source-screenshot .slide-body {width:100%;}
+.ax-source-screenshot .slide-content p {margin:0;}
+.ax-source-screenshot .slide-content a {display:block;}
+.axiom-slide.ax-source-screenshot .slide-content img {width:auto;height:680px;max-width:100%;object-fit:contain;margin:0 auto;}
+.axiom-slide.ax-pm .slide-content {font-size:30px;line-height:1.28;}
+.ax-pm .slide-content .katex-display {font-size:30px;margin:.5em 0;}
+.axiom-slide.ax-pm .paper-statement {padding:21px 25px;margin:20px 0;}
+.ax-pm .statement-label {font-size:22px;margin-bottom:14px;}
+.ax-pm .statement-text,.ax-pm .statement-text p {font-size:30px;line-height:1.3;}
+.ax-pm .slide-content p:has(>.fmt-small) {margin-top:12px;}
+.axiom-slide.ax-pm.ax-pm-visual .slide-grid {display:flex;flex-direction:column;gap:6px;}
+.ax-pm-visual .visual {width:100%;margin:0;}
+.ax-pm-visual .visual svg {display:block;width:100%;height:180px;}
+.ax-pm-first-row .visual svg {height:174px;}
+.ax-pm-counterexample .visual svg {height:226px;}
+.ax-pm-intro .slide-content .katex-display {font-size:35px;}
+.ax-pm-intro .visual {margin-top:25px;}
+.ax-pm-training .property-grid {grid-template-columns:1.03fr 1fr;gap:45px;}
+.ax-pm-training .property-card h3 {font-size:35px;}
+.ax-pm-training .property-card p {font-size:30px;}
+.ax-pm-training .property-card table {font-size:29px;margin:12px 0 0;}
+.ax-pm-training .property-card td,.ax-pm-training .property-card th {padding:12px 16px 12px 0;}
+.ax-pm-training .property-card th {font:19px var(--font-sans);}
+.ax-pm-geometry .slide-content img {width:100%;height:280px;object-fit:contain;margin:22px 0 0;}
+.ax-pm-descent .slide-content table {font-size:27px;margin:18px 0;}
+.ax-pm-descent .slide-content td,.ax-pm-descent .slide-content th {padding:8px 27px 8px 0;}
+.ax-pm-descent .slide-content th {font:19px var(--font-sans);}
+.ax-pm-ranks .statement-text,.ax-pm-ranks .statement-text p {font-size:29px;}
+.ax-pm-projection .slide-content .katex-display {font-size:34px;}
+.pm-projection-panels {display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:22px;margin-top:15px;}
+.pm-projection-panels section {border:1px solid var(--line);padding:20px 16px;text-align:center;}
+.pm-projection-panels section:last-child {border-color:var(--accent);background:var(--panel);}
+.pm-projection-panels p {font:25px var(--font-sans);margin:0 0 25px;}
+.pm-projection-panels .pm-flag {font-size:28px;min-height:68px;}
+.pm-projection-panels h3 {font-size:37px;margin:0;color:var(--accent);}
+.ax-pm-theorem .statement-text {font-size:32px;}
+.ax-pm-theorem .statement-text p {font-size:32px;}
+.ax-pm-theorem .statement-text .katex-display {font-size:31px;}
+.ax-pm-outcomes .property-card h3 {font-size:34px;}
+.ax-pm-outcomes .property-card p {font-size:29px;}
+.axiom-slide.ax-cover h1 {text-wrap:balance;}
+.slide.axiom-slide {padding:48px 64px 50px;}
+.axiom-slide .eyebrow {font:500 15px/1.3 var(--font-sans);letter-spacing:.08em;margin:0 0 10px;color:var(--accent);}
+.axiom-slide h1 {font-size:52px;line-height:1.08;margin:0 0 23px;}
+.axiom-slide h1::after {margin-top:18px;}
+.axiom-slide .slide-grid {display:block;height:auto;}
+.axiom-slide .slide-body {max-width:none;width:100%;}
+.axiom-slide .slide-content {font-size:30px;line-height:1.3;}
+.axiom-slide .slide-content p {margin:0 0 18px;}
+.axiom-slide .slide-content h2,.axiom-slide .slide-content h3 {font-size:37px;line-height:1.15;margin:0 0 16px;}
+.axiom-slide .slide-content h4 {font:500 19px/1.3 var(--font-sans);color:var(--accent);margin:0 0 13px;}
+.axiom-slide .slide-content li {margin-bottom:16px;}
+.axiom-slide .slide-content .katex-display {font-size:30px;margin:.6em 0;}
+.axiom-slide .fmt-small {font:20px/1.4 var(--font-sans);color:var(--muted);}
+.axiom-slide p:has(>.fmt-small) {margin-top:16px;}
+.axiom-slide .slide-footer {left:64px;right:64px;bottom:18px;font-size:13px;}
+.axiom-slide .slide-content a {text-underline-offset:.17em;text-decoration-thickness:1px;}
+.axiom-slide .slide-content img {max-width:100%;display:block;object-fit:contain;}
+.axiom-slide .property-grid {display:grid;grid-template-rows:none;gap:32px 42px;height:auto;}
+.axiom-slide .property-card {border:0;padding:0;min-width:0;display:flex;flex-direction:column;justify-content:flex-start;}
+.axiom-slide.property-highlights > .eyebrow,.axiom-slide.property-highlights > h1,.axiom-slide.property-highlights > .slide-footer {display:block;}
+.axiom-slide.property-highlights .slide-grid,.axiom-slide.property-highlights .slide-body,.axiom-slide.property-highlights .slide-content {height:auto;}
+.ax-two .property-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+.ax-three .property-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+.ax-two .property-card+.property-card,.ax-three .property-card+.property-card {border-left:1px solid var(--line);padding-left:36px;}
+.ax-two .property-card h3 {font-size:37px;}
+.ax-three .property-card h3 {font-size:34px;}
+.ax-three .property-card p {font-size:27px;}
+.ax-two .property-card p:has(>.fmt-small),.ax-three .property-card p:has(>.fmt-small) {margin-top:auto;padding-top:18px;}
+.ax-two .property-card .katex-display {font-size:27px;}
+.ax-wide-left .property-grid {grid-template-columns:1.5fr 1fr;}
+.ax-wide-right .property-grid {grid-template-columns:1fr 1.45fr;}
+.ax-no-rules .property-card+.property-card {border:0;padding-left:0;}
+.axiom-slide.layout-section {padding-top:102px;}
+.axiom-slide.layout-section h1 {font-size:84px;max-width:1100px;margin:0 0 32px;}
+.axiom-slide.layout-section h1::after {width:100%;}
+.axiom-slide.layout-section .slide-content {font-size:36px;max-width:1060px;}
+.axiom-slide.layout-section .slide-content p {margin-bottom:25px;}
+.axiom-slide.layout-section .fmt-small {font-size:23px;}
+.axiom-slide.ax-cover {padding-top:90px;}
+.axiom-slide.ax-cover h1 {font-size:82px;line-height:1.03;max-width:885px;margin-bottom:42px;}
+.axiom-slide.ax-cover h1::after {display:none;}
+.ax-cover .slide-content {max-width:915px;font-size:32px;}
+.ax-cover .slide-content p:nth-child(2) {font-size:32px;margin-top:65px;margin-bottom:10px;}
+.ax-cover .slide-content p:nth-child(3) {font-size:25px;color:var(--muted);}
+.ax-cover .slide-content p:has(img[src*='math-ai-mark']) {position:absolute;right:68px;top:64px;width:156px;height:133px;margin:0;}
+.ax-cover img[src*='math-ai-mark'] {width:156px;height:133px;}
+.ax-cover .slide-content p:has(img[src*='/qr/']) {position:absolute;right:64px;bottom:75px;width:202px;height:202px;}
+.ax-cover img[src*='/qr/'] {width:202px;height:202px;background:white;padding:6px;}
+.axiom-slide .paper-statement {font-size:30px;margin:22px 0 0;padding:26px 30px;border:1px solid var(--line);border-left:3px solid var(--accent);}
+.axiom-slide .statement-label {font:500 22px/1.3 var(--font-sans);margin-bottom:20px;}
+.axiom-slide .statement-text {font-size:31px;line-height:1.32;}
+.axiom-slide .statement-text p:last-child {margin:0;}
+.axiom-slide .statement-text .katex-display {font-size:30px;}
+.axiom-slide.layout-theorem .slide-content {border:0;padding:0;}
+.ax-statement-compact .statement-text {font-size:28px;line-height:1.29;}
+.ax-statement-compact .statement-text li {margin-bottom:13px;}
+.ax-flow .property-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:38px;align-items:stretch;margin-top:40px;}
+.ax-flow .property-card {position:relative;border-top:3px solid var(--accent);padding:25px 0 0;}
+.ax-flow .property-card:not(:last-child)::after {content:'→';position:absolute;right:-29px;top:54px;font:29px var(--font-sans);color:var(--muted);}
+.ax-flow .property-card h3 {font-size:39px;}
+.ax-flow .property-card p {font-size:29px;line-height:1.3;}
+.ax-flow .property-card p:has(>.fmt-small) {margin-top:auto;padding-top:18px;}
+.ax-loop .property-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:45px 35px;margin-top:18px;}
+.ax-loop .property-card {border-top:2px solid var(--line);padding-top:20px;}
+.ax-loop .property-card h3 {font-size:34px;}
+.ax-loop .property-card p {font-size:27px;line-height:1.3;}
+.ax-loop .property-card:nth-child(n+4) {border-color:var(--accent);}
+.ax-loop .property-card:last-child {background:var(--panel);padding:20px 24px 12px;margin-top:0;}
+.ax-conjecture-loop .property-card:last-child {background:none;padding:20px 0 0;}
+.ax-conjecture-loop .property-card:nth-child(4) {background:var(--panel);padding:20px 24px 12px;}
+.ax-metaharness .property-card:last-child p {font-size:36px;line-height:1.3;margin-bottom:22px;}
+.ax-literature .property-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 50px;}
+.ax-literature .property-card {border-top:1px solid var(--line);padding-top:18px;}
+.ax-literature .property-card h3 {font-size:33px;margin:0 0 10px;}
+.ax-literature .property-card p {font-size:27px;margin-bottom:9px;}
+.ax-literature .property-card .fmt-small {font-size:19px;}
+.ax-literature .property-card p:has(>.fmt-small) {margin-top:auto;padding-top:4px;}
+.ax-table .slide-content table {font-size:28px;line-height:1.3;margin:22px 0 27px;}
+.ax-table .slide-content th {font-size:18px;line-height:1.3;}
+.ax-table .slide-content th,.ax-table .slide-content td {padding:10px 26px 10px 0;}
+.ax-table .slide-content td strong {color:var(--accent);}
+.ax-numbers .property-card h3 {font-size:90px;color:var(--accent);font-variant-numeric:tabular-nums;}
+.ax-numbers .property-card p {font-size:30px;}
+.ax-center .slide-content {text-align:center;padding-top:65px;font-size:40px;}
+.ax-center .slide-content .katex-display {font-size:38px;}
+.ax-center .slide-content p {margin-bottom:32px;}
+.ax-center .fmt-small {font-size:22px;}
+.ax-equation .slide-content .katex-display {font-size:36px;margin:1em 0;}
+.ax-equation .slide-content p {font-size:32px;}
+.ax-long-title h1 {font-size:45px;}
+.ax-photo .property-grid {grid-template-columns:1.65fr 1fr;align-items:center;gap:44px;}
+.ax-photo img {width:100%;height:420px;object-fit:cover!important;}
+.ax-photo .property-card h3 {font-size:62px;color:var(--accent);margin:0 0 8px;}
+.ax-photo .property-card p {font-size:28px;margin-bottom:26px;}
+.ax-photo .property-card p:has(>.fmt-small) {margin:10px 0 0;padding:0;}
+.ax-photo .property-card:first-child .fmt-small {font-size:17px;}
+.ax-photo-duo .property-card img {width:100%;height:267px;object-fit:cover;}
+.ax-photo-duo .property-card h3 {margin-top:20px;}
+.ax-qr .property-grid {grid-template-columns:1.75fr 1fr;gap:75px;align-items:center;}
+.ax-qr .property-card:first-child p {font-size:32px;}
+.ax-qr .property-card img {width:306px;height:306px;max-width:none;background:white;padding:6px;}
+.ax-qr .property-card .fmt-small {font-size:20px;}
+.ax-qr .property-card p:last-child {margin-top:20px;}
+.ax-bibliography .slide-content {font-size:23px;line-height:1.3;}
+.ax-bibliography .slide-content p {margin-bottom:24px;}
+.ax-bibliography .slide-content a {text-decoration:none;}
+.ax-bibliography .slide-content a:hover {text-decoration:underline;}
+.ax-demo .slide-content>p>a {display:inline-block;padding:16px 25px;background:var(--accent);color:var(--bay);text-decoration:none;font:25px var(--font-sans);border-radius:3px;}
+.ax-demo .slide-content blockquote {padding:22px 28px;font-size:34px;}
+.axiom-slide.ax-figure-bottom .slide-grid {display:flex;flex-direction:column;gap:4px;}
+.ax-figure-bottom .visual {width:100%;}
+.ax-figure-bottom .visual svg {display:block;width:100%;height:335px;}
+.ax-figure-bottom .slide-content p {margin-bottom:14px;}
+.ax-figure-bottom .slide-content .katex-display {margin:.3em 0;}
+.axiom-dialog {width:min(1450px,96vw);height:92dvh;max-width:none;max-height:none;padding:0;background:var(--bay);color:var(--ink);border:1px solid var(--line);border-radius:4px;}
+.axiom-dialog::backdrop {background:#111c;}
+.axiom-dialog[open] {display:flex;flex-direction:column;}
+.axiom-dialog header {display:flex;align-items:center;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line);font-family:var(--font-sans);}
+.axiom-dialog h2 {font:500 27px var(--display-font);margin:0;flex:1;}
+.axiom-dialog iframe {border:0;flex:1;width:100%;background:white;}
+.axiom-dialog .demo-empty {margin:auto;max-width:750px;padding:40px;font-size:32px;line-height:1.4;}
+.axiom-dialog .demo-empty p {font:20px/1.5 var(--font-sans);color:var(--muted);}
+[data-time=night] .axiom-slide img[src*='math-ai-mark'] {filter:brightness(0) invert(1);opacity:.85;}
+@media print {.axiom-dialog{display:none!important}.axiom-slide img{print-color-adjust:exact;-webkit-print-color-adjust:exact}.axiom-slide a{text-decoration:none}}
+
+/* Full-slide architecture figures; their labels use the ordinary figure editor. */
+.slide.axiom-slide.ax-architecture {padding:32px 48px 36px;}
+.axiom-slide.ax-architecture h1 {font-size:48px;margin-bottom:10px;}
+.axiom-slide.ax-architecture h1::after {margin-top:12px;}
+.axiom-slide.ax-architecture .slide-grid {display:flex;flex-direction:column;gap:5px;}
+.ax-architecture .visual {order:0;width:100%;}
+.ax-architecture .slide-body {order:1;}
+.ax-architecture .architecture-svg {display:block;width:100%;height:492px;overflow:visible;font-family:var(--font-sans);}
+.architecture-svg text {fill:var(--ink);}
+.ax-architecture .slide-content p {margin:0;}
+.ax-architecture .slide-content .fmt-small {font-size:18px;}
+[data-time=night] .architecture-node rect {fill:var(--panel);stroke:#9d8cad;}
+[data-time=night] .architecture-svg text {fill:var(--ink)!important;}
+[data-time=night] .architecture-svg .architecture-edge {stroke:#bdb3ca;}
+[data-time=night] .architecture-svg marker path {fill:#bdb3ca;}
+[data-time=night] .architecture-node[data-node=interpretation] path {stroke:#b9a7d2;}
+
+/* PatternMiner literature review. */
+.ax-lit-knot .property-card p {font-size:28px;line-height:1.3;}
+.ax-lit-knot .property-card .katex-display {font-size:25px;}
+.ax-lit-cards .property-grid {gap:34px;}
+.ax-lit-cards .property-card+.property-card {padding-left:28px;}
+.ax-lit-cards .property-card h3 {font-size:33px;}
+.ax-lit-cards .property-card p {font-size:28px;line-height:1.3;}
+.ax-lit-cards .property-card .fmt-small {font-size:20px;}
+.ax-lit-cards .property-card p:has(>.fmt-small),.ax-lit-flow .property-card p:has(>.fmt-small) {font-size:20px;line-height:1.4;}
+.ax-lit-formal .property-card p strong {font-weight:500;color:var(--accent);}
+.ax-lit-flow .property-grid {margin-top:18px;}
+.ax-lit-flow .property-card h3 {font-size:35px;}
+.ax-lit-flow .property-card p {font-size:28px;line-height:1.3;}
+.ax-lit-comparison .slide-content table {font-size:25px;line-height:1.22;table-layout:fixed;margin:8px 0 24px;width:100%;}
+.ax-lit-comparison .slide-content th {font-size:21px;line-height:1.25;}
+.ax-lit-comparison .slide-content td,.ax-lit-comparison .slide-content th {padding:12px 22px 12px 0;vertical-align:top;}
+.ax-lit-comparison .slide-content th:first-child {width:25%;}
+.ax-lit-comparison .slide-content th:nth-child(2) {width:43%;}
+.ax-lit-comparison .slide-content p {font-size:28px;line-height:1.3;margin-bottom:16px;}
+.ax-lit-comparison .slide-content .fmt-small {font-size:20px;}
+.ax-lit-comparison .slide-content p:has(>.fmt-small) {font-size:20px;line-height:1.4;}
+.ax-lit-comparison .slide-content td+td,.ax-lit-comparison .slide-content th+th {padding-left:18px;}
+
+/* Published figures in the literature review: citation titles, original art. */
+.axiom-slide.ax-paper h1 {font-size:52px;margin-bottom:20px;}
+.ax-paper h1 a {color:inherit;text-decoration:none;}
+.ax-paper h1 a:hover {color:var(--accent);}
+.ax-paper .eyebrow {font-size:17px;letter-spacing:.025em;}
+.ax-paper .slide-content>p:has(img) {display:flex;align-items:center;justify-content:center;gap:24px;height:400px;margin:0 0 20px;background:#fff;}
+.ax-paper .slide-content>p:has(img) img {display:block;flex:1 1 0;width:0;min-width:0;height:100%;object-fit:contain;background:#fff;}
+.ax-paper .slide-content>p:not(:has(img)) {font-size:28px;line-height:1.25;margin:0;}
+.ax-paper.ax-paper-tall .slide-content>p:has(img) {height:430px;}
+.ax-paper.ax-paper-table .slide-content>p:has(img) {height:310px;margin-top:30px;margin-bottom:38px;}
+.ax-paper.ax-paper-side .slide-content {display:grid;grid-template-columns:minmax(0,2.7fr) minmax(0,1fr);gap:30px;align-items:center;}
+.ax-paper.ax-paper-side .slide-content>p:has(img) {height:468px;margin:0;}
+.ax-paper.ax-paper-side .slide-content>p:not(:has(img)) {font-size:29px;line-height:1.32;}
+
+/* Compact literature review: citations head each paper, source figures stay large. */
+.ax-paper.ax-kl-saliency .slide-content>p:has(img) {height:320px;margin:18px 0;}
+.ax-paper.ax-kl-saliency .slide-content>p:not(:has(img)) {font-size:28px;line-height:1.27;}
+.ax-kl-outcome .slide-content {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;}
+.ax-paper.ax-kl-outcome .slide-content>p {grid-column:1/-1;}
+.ax-paper.ax-kl-outcome .slide-content>p:has(img) {height:250px;margin:0;}
+.ax-paper.ax-kl-outcome .slide-content>p:not(:has(img)) {font-size:26px;}
+.axiom-slide.ax-kl-outcome .paper-statement {margin:0;padding:14px 18px;}
+.ax-kl-outcome .statement-label {font-size:23px;margin-bottom:9px;}
+.ax-kl-outcome .statement-text {font-size:26px;line-height:1.24;}
+.ax-kl-outcome .statement-text p {font-size:26px;margin:0;line-height:1.24;}
+.ax-grouped .property-grid {gap:28px;}
+.ax-grouped-two .property-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+.ax-grouped-three .property-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+.ax-grouped .property-card+.property-card {border-left:1px solid var(--line);padding-left:26px;}
+.axiom-slide.ax-grouped .property-card h3 {font-size:33px;line-height:1.13;margin:0 0 15px;}
+.ax-grouped .property-card h3 a {color:inherit;text-decoration:none;}
+.ax-grouped .property-card h3 a:hover {color:var(--accent);}
+.ax-grouped .property-card p:has(img) {height:280px;display:flex;align-items:center;justify-content:center;background:#fff;margin:0 0 19px;}
+.ax-grouped .property-card img {width:100%;height:100%;object-fit:contain;background:#fff;}
+.ax-grouped .property-card p:not(:has(img)) {font-size:27px;line-height:1.26;margin:0;}
+.ax-grouped-three .property-card h3 {min-height:75px;}
+.ax-grouped-three .property-card p:has(img) {height:235px;}
+.ax-grouped-three .property-card p:not(:has(img)) {font-size:25px;}
+.axiom-slide.ax-grouped-models .property-card h3 {font-size:29px;min-height:0;}
+.ax-grouped-models .property-card:nth-child(-n+2) h3 {min-height:80px;}
+.ax-grouped-models .property-card h3+h3 {margin-top:-8px;}
+.ax-grouped-models .property-card p:has(img) {margin-bottom:10px;}
+.axiom-slide.ax-grouped > .slide-footer {display:flex;justify-content:flex-end;}
+
+/* Related papers and their venues on the CircuitPilot section opener. */
+.axiom-slide.ax-section-works .slide-content>p:nth-child(n+3) {font-size:26px;line-height:1.25;margin-bottom:12px;}
+
+/* CircuitPilot: source diagrams and the research story. */
+.ax-paper.ax-circuit-wide .slide-content>p:has(img) {height:350px;margin:20px 0 28px;}
+.ax-paper.ax-circuit-results .slide-content>p:has(img) {height:325px;margin:20px 0;}
+.ax-circuit-history .property-card h3 {font-size:35px;}
+.ax-circuit-history .property-card p {font-size:29px;line-height:1.3;}
+.ax-circuit-history .property-card p:last-child {font:24px/1.3 var(--font-sans);margin-top:26px;}
+.ax-circuit-rules .slide-content table {font-size:32px;margin:18px 0 30px;}
+
+/* Original paper titles and short AI-use declarations, with editable commentary. */
+.ax-paper-disclosure h1 a {color:inherit;text-decoration:none;}
+.ax-paper-disclosure .slide-content {padding:28px 34px;background:white;color:#202126;}
+.ax-paper-disclosure .slide-content>p:has(img) {display:flex;align-items:center;justify-content:flex-start;gap:10px;margin:0;background:white;}
+.ax-paper-disclosure .slide-content>p:first-child {height:120px;margin-bottom:34px;justify-content:center;}
+.ax-paper-disclosure .slide-content>p:first-child img {width:100%;height:100%;object-fit:contain;}
+.ax-paper-disclosure .slide-content>p:nth-child(2) {height:27px;margin-bottom:21px;}
+.ax-paper-disclosure .slide-content>p:nth-child(2) img {height:27px;width:auto;}
+.ax-paper-disclosure .slide-content>p:nth-child(3) {height:53px;margin-bottom:26px;font-size:32px;}
+.ax-paper-disclosure .slide-content>p:nth-child(3) img {height:auto;width:calc(100% - 35px);max-height:53px;object-fit:contain;}
+.ax-paper-disclosure.ax-disclosure-short .slide-content>p:nth-child(3) img {width:640px;max-width:100%;}
+.ax-paper-disclosure .slide-content>p:not(:has(img)) {font-size:29px;line-height:1.32;margin:0 0 24px;}
+.ax-paper-disclosure .slide-content>p:last-child {font:22px/1.3 var(--font-sans);margin:0;}
+.ax-paper-disclosure .slide-content a {color:#4b2e83;}
+
+/* Two papers on one slide: only the original title and disclosure screenshots. */
+.slide.axiom-slide.ax-paper-collage {padding:42px 64px;}
+.axiom-slide.ax-paper-collage>.eyebrow,.axiom-slide.ax-paper-collage>h1,.axiom-slide.ax-paper-collage>.slide-footer {display:none;}
+.ax-paper-collage .property-grid {grid-template-columns:1fr;gap:28px;}
+.ax-paper-collage .property-card {padding:22px 32px;background:#fff;border:1px solid var(--line);}
+.ax-paper-collage .property-card p {margin:0;display:flex;align-items:center;}
+.ax-paper-collage .property-card p a {display:block;min-width:0;max-width:100%;}
+.ax-paper-collage .property-card p:first-child {height:98px;margin-bottom:20px;justify-content:center;}
+.ax-paper-collage .property-card p:first-child a {width:100%;height:100%;}
+.ax-paper-collage .property-card p:first-child img {width:100%;height:100%;object-fit:contain;}
+.ax-paper-collage .property-card p:nth-child(2) {height:25px;margin-bottom:18px;}
+.ax-paper-collage .property-card p:nth-child(2) img {height:25px;width:auto;}
+.ax-paper-collage .property-card p:nth-child(3) {height:44px;}
+.ax-paper-collage .property-card p:nth-child(3) img {width:100%;height:auto;max-height:44px;object-fit:contain;}
+.ax-paper-collage .property-card:nth-child(2) p:nth-child(3) img {width:615px;max-width:100%;}
+
+/* Unmodified source charts; dates, count definitions, and citations stay visible. */
+.ax-paper.ax-growth .slide-content>p:has(img) {height:406px;margin:0 0 17px;}
+.ax-paper.ax-growth .slide-content>p:not(:has(img)) {font-size:29px;margin:0 0 14px;}
+.ax-paper.ax-growth .slide-content>p:last-child {font:22px/1.3 var(--font-sans);margin:0;}
+.slide.axiom-slide.ax-iclr-latest {padding:32px 48px 36px;}
+.axiom-slide.ax-iclr-latest h1 {font-size:48px;margin-bottom:12px;}
+.axiom-slide.ax-iclr-latest h1::after {margin-top:12px;}
+.ax-paper.ax-iclr-latest .slide-content>p:has(img) {height:425px;margin:0 0 18px;}
+.ax-paper.ax-iclr-latest .slide-content>p:nth-child(2) {font-size:29px;line-height:1.3;margin:0 0 14px;}
+.ax-paper.ax-iclr-latest .slide-content>p:nth-child(2) strong {font-size:37px;color:var(--accent);}
+.ax-paper.ax-iclr-latest .slide-content>p:last-child {font:21px/1.35 var(--font-sans);margin:0;}
+.ax-conference-growth .property-grid {grid-template-columns:1.65fr 1fr;gap:42px;align-items:start;}
+.ax-conference-growth .property-card:first-child p:has(img) {height:440px;background:white;margin:0 0 18px;}
+.ax-conference-growth .property-card:first-child img {width:100%;height:100%;object-fit:contain;}
+.ax-conference-growth .property-card:first-child p:last-child {font:22px/1.35 var(--font-sans);}
+.ax-conference-growth .property-card:last-child {border-left:1px solid var(--line);padding-left:36px;}
+.ax-conference-growth .property-card h3 {font-size:34px;margin:0 0 12px;}
+.ax-conference-growth .property-card h3:not(:first-child) {margin-top:34px;}
+.ax-conference-growth .property-card p {font-size:29px;line-height:1.25;margin:0 0 11px;}
+.ax-conference-growth .property-card strong {font-size:48px;color:var(--accent);font-weight:500;}
+.ax-conference-growth .property-card p:has(a) {font:22px/1.35 var(--font-sans);}
+
+/* The real service page is previewed here and opened in a live modal. */
+.ax-cas-demo .slide-content {display:grid;grid-template-columns:1.45fr 1fr;gap:22px 38px;align-content:center;}
+.ax-cas-demo .slide-content>p:first-child {grid-column:1;grid-row:1/4;margin:0;}
+.ax-cas-demo .slide-content>p:first-child img {width:100%;height:455px;object-fit:contain;background:white;border:1px solid var(--line);}
+.ax-cas-demo .slide-content>p:not(:first-child) {grid-column:2;font-size:31px;line-height:1.35;margin:0;}
+.ax-cas-demo .slide-content>p:nth-child(2) {align-self:end;}
+.ax-cas-demo .slide-content>p:nth-child(3) {align-self:center;}
+.ax-cas-demo .slide-content>p:nth-child(3)>a {display:inline-block;padding:17px 23px;background:var(--accent);color:var(--bay);text-decoration:none;font:25px var(--font-sans);border-radius:3px;}
+.ax-cas-demo .slide-content>p:last-child {align-self:start;font:23px var(--font-sans);}
+.axiom-slide.ax-cover h1 {font-size:76px;max-width:990px;}
+.ax-circuit-rules .slide-content th {font-size:24px;}
+.ax-circuit-rules .slide-content td,.ax-circuit-rules .slide-content th {padding:15px 25px 15px 0;}
+.ax-circuit-rules .slide-content p {font-size:30px;line-height:1.3;}
+.ax-circuit-other .property-card p {font-size:29px;line-height:1.3;}
+
+/* Combinatorial invariance: an exact interval, followed by the geometric definition. */
+.axiom-slide.ax-kl-intro .slide-grid {display:flex;flex-direction:column;gap:0;}
+.ax-kl-intro .visual {order:-1;width:100%;margin:0 0 6px;}
+.kl-example {display:grid;grid-template-columns:500px 160px 1fr;gap:20px;align-items:center;height:262px;}
+.kl-example p {font:24px/1.3 var(--font-sans);margin:0;text-align:center;}
+.kl-interval>svg {display:block;width:500px;height:204px;}
+.kl-interval>svg path {fill:none;stroke:var(--accent);stroke-width:1.6;opacity:.55;}
+.kl-interval>svg circle {fill:var(--accent);stroke:var(--paper);stroke-width:1.5;}
+.kl-example .kl-hasse-label {font-size:19px;color:var(--muted);}
+.kl-arrow p {font-size:22px;margin-bottom:8px;}
+.kl-arrow svg {width:160px;fill:none;stroke:var(--accent);stroke-width:2.5;}
+.kl-polynomial {text-align:center;}
+.kl-polynomial>p {margin-bottom:25px;}
+.kl-polynomial>div {font-size:34px;}
+.kl-polynomial .kl-answer {font-size:60px;color:var(--accent);margin-top:10px;}
+.ax-kl-intro .slide-content .katex-display {font-size:31px;margin:5px 0;}
+.ax-kl-intro .slide-content p {margin:0;}
+.ax-kl-intro .slide-content p:nth-last-child(2) {border-top:1px solid var(--line);padding-top:13px;margin-top:14px;}
+.ax-kl-intro .slide-content .fmt-small {font-size:21px;line-height:1.4;}
+.ax-kl-intro .slide-content p:last-child {margin-top:9px;font-size:21px;line-height:1.45;}
