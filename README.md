@@ -195,3 +195,34 @@ pages, local links and fragments, media, notes categories, and translation
 JavaScript. It also tests a nonempty base URL. For visual changes, inspect
 desktop/mobile layouts, the language switcher, photo reel, and fullscreen
 embeds in a browser as well.
+
+## Apollonian spheres laboratory
+
+The note `_posts/2026-10-11-apollonian-spheres.md` extends the circles visualizer
+with common tangent lines and tangent spheres for four spheres in space.
+`assets/visualizers/apollonian-spheres/` contains the self-contained application:
+`geometry.mjs` implements the eight signed-radius quadratics and the
+cubic–quartic line solver; `worker.mjs` keeps recomputation off the UI thread.
+The three bounded projective direction charts cover coordinate-plane directions.
+Every accepted numerical solution is checked against the original equations.
+
+The view uses local Three.js 0.160.1, with its MIT license in `vendor/`, and the
+site's shared photographic stylesheet and materials. Presets, input edits,
+solution inspection, contact markers, keyboard camera controls, JSON downloads,
+and a numerical fallback without WebGL are supported. No remote computation or
+CDN is required by the laboratory. The note keeps prose to one sentence and a
+reference link. The optional post flag `embed_before_content` places its
+interactive diagram above that short caption.
+
+Rendering is event-driven. Sphere meshes share unit geometry, the grid and
+circle outlines use batched lines, and bounded object pools reuse GPU buffers
+across selections. Opacity edits update materials directly. The drawing buffer
+is capped at 2.5 million pixels; camera movement temporarily lowers resolution
+on slow frames and restores resting quality after movement ends. Tangency
+computation stays in a worker when available.
+
+Run `node scripts/check_apollonian_spheres.mjs` for the known real counts,
+coordinate transformations, and contact-point checks, followed by the usual
+`bundle exec ruby scripts/check_site.rb`. Counts near singular configurations
+are numerical rather than certified; coplanar centers and tangent-plane limits
+are explicitly outside the current solver's domain.

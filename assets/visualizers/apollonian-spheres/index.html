@@ -1,0 +1,64 @@
+---
+layout: null
+---
+<!doctype html>
+<html lang="en" data-time="day">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apollonian spheres in P³</title>
+<meta name="description" content="Explore the twelve common tangent lines and sixteen tangent spheres of four spheres in three-dimensional space.">
+<link rel="stylesheet" href="{{ '/slides/kiwari-starter/lib/fonts.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+<link rel="stylesheet" href="app.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+<script type="module" src="app.mjs"></script>
+</head>
+<body>
+<main class="apollonian-app">
+  <header class="app-heading">
+    <div><p class="overline">P³ · affine chart</p><h1>Apollonian spheres</h1></div>
+    <div class="heading-actions"><button id="lighting" type="button">Day</button><button id="reset" type="button">Reset</button><button id="fullscreen" type="button" aria-label="Toggle fullscreen">⛶</button></div>
+  </header>
+  <div class="laboratory">
+    <section class="viewer" aria-label="Interactive three-dimensional tangency diagram">
+      <div class="mode-switch" role="group" aria-label="Tangency problem">
+        <button id="lines-mode" type="button" aria-pressed="true"><strong id="lines-count">—</strong><span>real tangent lines<small>12 over ℂ, generically</small></span></button>
+        <button id="spheres-mode" type="button" aria-pressed="false"><strong id="spheres-count">—</strong><span>real tangent spheres<small>16 over ℂ, generically</small></span></button>
+      </div>
+      <div class="viewport" id="viewport">
+        {% include panel-frame.html %}
+        <div class="scene" id="scene" tabindex="0" role="img" aria-label="Orbitable 3D view. Arrow keys rotate, plus and minus zoom; solution coordinates are listed below."></div>
+        <div class="labels" id="labels" aria-hidden="true"></div>
+        <p id="view-error" class="view-error" hidden></p>
+        <div class="view-topline"><button id="fit" type="button" hidden>Fit solution</button></div>
+        <div class="view-bottomline"><span>Drag to rotate · pinch / scroll to zoom</span><button id="camera-reset" type="button">Reset view</button></div>
+      </div>
+      <div class="solution-bar"><label><input type="checkbox" id="show-all" checked> Show all</label><label><input type="checkbox" id="contacts" checked> Contacts</label><label>Opacity <input type="range" id="opacity" min="0.06" max="0.65" step="0.01" value="0.2"></label></div>
+      <div class="solution-list" id="solution-list" role="group" aria-label="Select a real solution"></div>
+      <p id="status" class="status" role="status" aria-live="polite">Computing…</p>
+    </section>
+    <aside class="controls" aria-label="Configuration and solution details">
+      <section class="control-section">
+        <label class="overline" for="preset">Preset</label><select id="preset"></select>
+      </section>
+      <section class="control-section">
+        <p class="overline">Spheres</p>
+        <div id="input-spheres" class="input-spheres" role="group" aria-label="Select a sphere to edit"></div>
+        <fieldset><legend id="edit-legend">Sphere A</legend><div class="coordinates">
+          <label>x<input type="number" id="cx" step="any" min="-10" max="10"></label>
+          <label>y<input type="number" id="cy" step="any" min="-10" max="10"></label>
+          <label>z<input type="number" id="cz" step="any" min="-10" max="10"></label>
+        </div><div class="radius-control"><label for="radius">Radius</label><input type="number" id="radius" min="0.05" max="5" step="any"><input aria-label="Sphere radius" type="range" id="radius-slider" min="0.05" max="2.5" step="0.005"></div><label class="linked-radii"><input id="linked-radii" type="checkbox"> Link radii</label></fieldset>
+      </section>
+      <section class="control-section solution-detail">
+        <p class="overline">Selected</p><h2 id="solution-title">Tangent line</h2>
+        <div id="solution-data"></div>
+        <p class="explanation" id="contact-description"></p>
+        <button id="download" type="button">Download coordinates</button>
+      </section>
+    </aside>
+  </div>
+  <footer class="app-footer"><span>Spheres <i class="key given"></i> · tangents <i class="key solution"></i> · contacts <i class="key contact"></i></span><a href="{{ site.baseurl }}{% post_url 2025-09-30-apollonius-visualizer %}" target="_top">Circles ↗</a></footer>
+</main>
+<noscript><p>Enable JavaScript to use the visualizer.</p></noscript>
+</body></html>
