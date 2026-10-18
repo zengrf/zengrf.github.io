@@ -99,6 +99,27 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
       assert(actual == expected, "Incorrect notes listing: #{section['id']}")
     end
     assert(html.fetch('/research/').css('.publications > li').size == site.data['publications'].sum { |g| g['entries'].size }, 'Missing publications')
+    publication_order = site.data.fetch('publication_order')
+    publication_groups = site.data.fetch('publications')
+    entries = publication_groups.flat_map { |group| group.fetch('entries') }
+    assert(publication_order.size == entries.size && publication_order.uniq.size == entries.size, 'Publication chronology must cover every entry exactly once')
+    publication_lists = html.fetch('/research/').css('ol.publications')
+    assert(publication_lists.size == publication_groups.size, 'Publication themes changed')
+    publication_groups.zip(publication_lists).each do |group, list|
+      heading = list.previous_element
+      assert(heading.text == group.fetch('title'), 'Publication theme heading changed')
+      assert(list.key?('reversed'), 'Publications must use reverse numbering')
+      assert(list.css('li').size == group.fetch('entries').size, 'Publication theme membership changed')
+      group.fetch('entries').zip(list.css('li')).each do |entry, item|
+        matches = publication_order.select { |url| entry.include?(url) }
+        assert(matches.size == 1, 'Each publication needs exactly one chronological identifier')
+        url = matches.first
+        assert(item.css('a').any? { |link| link['href'] == url }, 'Publication order within a theme changed')
+        assert(item['value'] == (publication_order.index(url) + 1).to_s, 'Incorrect shared publication number')
+      end
+    end
+    numbers = publication_lists.flat_map { |list| list.css('li').map { |item| item['value'].to_i } }
+    assert(numbers.sort == (1..entries.size).to_a, 'Publication numbers have gaps or duplicates')
     assert(html.fetch('/teaching/').at_css('main .section h2'), 'Teaching sections did not render')
     home = html.fetch('/')
     assert(home.css('.hero__frame').size == site.data['home']['photos'].size, 'Missing homepage photos')

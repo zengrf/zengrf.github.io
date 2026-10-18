@@ -2,7 +2,14 @@
 <h4 data-i18n="publications.{{ group.key }}">{{ group.title | escape }}</h4>
 <ol reversed class="publications">
   {% for entry in group.entries %}
-  <li>{{ entry | markdownify | remove: '<p>' | remove: '</p>' }}</li>
+  {% assign publication_number = nil %}
+  {% for publication_url in site.data.publication_order %}
+    {% if entry contains publication_url %}
+      {% assign publication_number = forloop.index %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  <li value="{{ publication_number }}">{{ entry | markdownify | remove: '<p>' | remove: '</p>' }}</li>
   {% endfor %}
 </ol>
 {% endfor %}

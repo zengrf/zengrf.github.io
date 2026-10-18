@@ -13,6 +13,7 @@ custom Jekyll plugins are needed.
 | Contact details, photos, pronunciations, recent activity | `_data/home.yml` |
 | Research interests | `pages/research/index.md` |
 | Publications, grouped in display order | `_data/publications.yml` |
+| Shared chronological publication numbering (oldest first) | `_data/publication_order.yml` |
 | Teaching, seminars, mentorship | `pages/teaching/index.md` |
 | Ogura Shikishi | `pages/ogura-shikishi/index.md` |
 | Notes categories and descriptions | `_data/notes.yml` |

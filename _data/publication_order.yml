@@ -1,0 +1,20 @@
+# Shared numbering across all publication themes: oldest first, newest last.
+# Use the preprint date, or publication/issue date when no preprint is listed.
+# Each URL identifies exactly one entry in publications.yml; citation text and
+# theme order remain there. Comments record the date used for this ordering.
+- https://arxiv.org/abs/2112.13250 # 2021-12-25
+- https://arxiv.org/abs/2504.00889 # 2025-04-01
+- https://arxiv.org/abs/2509.05456 # 2025-09-05
+- https://hdl.handle.net/1773/55355 # 2025-12 (Jinmoncom proceedings)
+- https://arxiv.org/abs/2512.22769 # 2025-12-28
+- https://arxiv.org/abs/2603.17075 # 2026-03-17
+- https://arxiv.org/abs/2604.14536 # 2026-04-16
+- https://doi.org/10.5281/zenodo.18765466 # 2026-04-22 (issued)
+- https://doi.org/10.15460/s8e93666 # 2026-06-02 (journal issue)
+- https://arxiv.org/abs/2606.25394 # 2026-06-24
+- https://arxiv.org/abs/2607.27705 # 2026-07-30
+- https://arxiv.org/abs/2608.00703 # 2026-08-01
+- https://openreview.net/forum?id=fosUuKztgI # 2026-10-01 (publication date confirmed by Michael)
+- https://openreview.net/forum?id=O7FsP3r5VJ # 2026-10-04 (publication date confirmed by Michael)
+- https://openreview.net/forum?id=czjdnMqisw # 2026-10-09 (arXiv:2610.13750)
+- https://arxiv.org/abs/2610.22279 # 2026-10-15
