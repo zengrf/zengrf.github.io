@@ -110,11 +110,14 @@ Dir.mktmpdir('zengrf-site-check-') do |destination|
       assert(heading.text == group.fetch('title'), 'Publication theme heading changed')
       assert(list.key?('reversed'), 'Publications must use reverse numbering')
       assert(list.css('li').size == group.fetch('entries').size, 'Publication theme membership changed')
-      group.fetch('entries').zip(list.css('li')).each do |entry, item|
+      group_numbers = list.css('li').map { |item| item['value'].to_i }
+      assert(group_numbers == group_numbers.sort.reverse, 'Publications within each theme must run newest to oldest')
+      group.fetch('entries').each do |entry|
         matches = publication_order.select { |url| entry.include?(url) }
         assert(matches.size == 1, 'Each publication needs exactly one chronological identifier')
         url = matches.first
-        assert(item.css('a').any? { |link| link['href'] == url }, 'Publication order within a theme changed')
+        item = list.css('li').find { |candidate| candidate.css('a').any? { |link| link['href'] == url } }
+        assert(item, 'Publication theme membership changed')
         assert(item['value'] == (publication_order.index(url) + 1).to_s, 'Incorrect shared publication number')
       end
     end

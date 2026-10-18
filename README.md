@@ -12,7 +12,7 @@ custom Jekyll plugins are needed.
 | Homepage introduction and news | `index.md` |
 | Contact details, photos, pronunciations, recent activity | `_data/home.yml` |
 | Research interests | `pages/research/index.md` |
-| Publications, grouped in display order | `_data/publications.yml` |
+| Publications and theme display order | `_data/publications.yml` |
 | Shared chronological publication numbering (oldest first) | `_data/publication_order.yml` |
 | Teaching, seminars, mentorship | `pages/teaching/index.md` |
 | Ogura Shikishi | `pages/ogura-shikishi/index.md` |

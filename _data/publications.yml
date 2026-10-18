@@ -1,4 +1,5 @@
-# Groups and entries appear in the order listed. Entries support Markdown.
+# Groups appear in the order listed. Entries support Markdown and are displayed
+# newest first using the shared chronology in publication_order.yml.
 - title: Pure Mathematics
   key: pure-math
   entries:
