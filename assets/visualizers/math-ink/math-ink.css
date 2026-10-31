@@ -1,0 +1,60 @@
+@import url('./fonts/fonts.css');
+
+/* Opt in on a wrapper; no resets or theme changes outside it. */
+.math-ink {
+  --mi-paper: #fff;
+  --mi-ivory: #f3f1e9;
+  --mi-ink: #242720;
+  --mi-blue: #52638a;
+  --mi-gold: #c38b13;
+  --mi-purple: #82529d;
+  --mi-olive: #7a8337;
+  --mi-rust: #b85e38;
+  --mi-hand: 'Caveat', cursive;
+  --mi-script: 'Italianno', cursive;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--mi-paper);
+  color: var(--mi-ink);
+  font: 22px/1.3 var(--mi-hand);
+  color-scheme: light;
+}
+.math-ink--fullscreen { width: 100%; height: 100vh; height: 100dvh; }
+.math-ink *, .math-ink *::before, .math-ink *::after { box-sizing: border-box; }
+.math-ink [hidden] { display: none !important; }
+.math-ink__canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.math-ink__canvas:active { cursor: grabbing; }
+.math-ink__caption { position: absolute; inset: 1rem 1.5rem auto; pointer-events: none; }
+.math-ink__caption h1 { font: 52px/1 var(--mi-script); margin: 0; font-weight: 400; }
+.math-ink__actions {
+  position: absolute; inset: auto 1rem max(1rem, env(safe-area-inset-bottom));
+  display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  pointer-events: none;
+}
+.math-ink__actions > * { pointer-events: auto; }
+.math-ink button, .math-ink a { color: inherit; font: inherit; }
+.math-ink button {
+  border: 0; border-radius: 0; background: transparent; cursor: pointer;
+  padding: .25rem .5rem; min-height: 44px;
+}
+.math-ink button:hover, .math-ink button[aria-pressed="true"], .math-ink a:hover { color: var(--mi-purple); }
+.math-ink :focus-visible { outline: 2px solid var(--mi-gold); outline-offset: 4px; }
+.math-ink__hint { margin: 0 0 0 auto; font-size: 18px; color: var(--mi-blue); }
+.math-ink__status { position: absolute; inset: auto 1rem 4.5rem; pointer-events: none; }
+.math-ink__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+/* Focused text remains readable against dense geometry. */
+.math-ink__wash {
+  background: radial-gradient(ellipse, var(--mi-paper) 55%, transparent 72%);
+  padding: 1.5rem 2rem;
+}
+@media (max-width: 520px) {
+  .math-ink__caption h1 { font-size: 40px; }
+  .math-ink__hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .math-ink *, .math-ink *::before, .math-ink *::after { animation: none !important; transition: none !important; }
+}
+@media (forced-colors: active) {
+  .math-ink button { border: 1px solid ButtonText; }
+}

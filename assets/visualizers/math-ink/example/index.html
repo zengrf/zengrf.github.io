@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Math Ink — a cube and a sphere</title>
+  <link rel="stylesheet" href="../math-ink.css">
+  <style>body { margin: 0; } .math-ink__object:focus { clip-path: none; width: auto; height: auto; margin: 0; top: 5rem; left: 1rem; background: white; z-index: 5; }</style>
+  <script type="importmap">{"imports":{"three":"../../apollonian-spheres/vendor/three.module.min.js"}}</script>
+  <script>window.MathJax={startup:{typeset:false},svg:{fontCache:'none'},options:{enableMenu:false}};</script>
+  <script defer src="../vendor/mathjax-tex-svg.js"></script>
+  <script type="module" src="./example.mjs"></script>
+</head>
+<body>
+  <main class="math-ink math-ink--fullscreen" aria-labelledby="title">
+    <canvas class="math-ink__canvas" aria-label="A cube with a reference plane and rotation arrow, and a sphere. Drag to orbit; pinch or scroll to zoom." tabindex="0"></canvas>
+    <header class="math-ink__caption"><h1 id="title">A cube and a sphere</h1></header>
+    <button class="math-ink__object math-ink__sr-only" data-focus="cube">Inspect cube</button>
+    <button class="math-ink__object math-ink__sr-only" data-focus="sphere">Inspect sphere</button>
+    <div class="math-ink__actions"><button id="return">Return to drawing</button><p class="math-ink__hint">drag to turn · choose an object to look closer</p></div>
+    <p class="math-ink__status" role="status" aria-live="polite"></p>
+    <noscript>This interactive drawing requires JavaScript.</noscript>
+  </main>
+</body>
+</html>

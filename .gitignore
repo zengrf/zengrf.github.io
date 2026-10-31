@@ -7,3 +7,6 @@ _site/
 vendor/
 # Ship the pinned browser dependencies with the tangency visualizer.
 !assets/visualizers/apollonian-spheres/vendor/
+
+# Ship the optional pinned TeX runtime with the shared drawing toolkit.
+!assets/visualizers/math-ink/vendor/

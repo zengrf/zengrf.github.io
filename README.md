@@ -101,6 +101,17 @@ applications in `assets/html/` and `demos/` remain HTML/JavaScript because they
 are working software. `DRAFT/` contains legacy material and is not the source
 for the active pages.
 
+## Reusable 3D drawing toolkit
+
+[`assets/visualizers/math-ink/`](assets/visualizers/math-ink/) contains scoped
+styles, local handwritten fonts, graphite and watercolor materials, ink strokes,
+reference planes and rotation arrows, text/LaTeX labels, and smooth camera focus.
+It accepts application-supplied Three.js geometry and contains no subject-specific
+models or mathematical data. See its [README](assets/visualizers/math-ink/README.md)
+and [working example](assets/visualizers/math-ink/example/index.html) for reuse.
+Run `node scripts/check_math_ink.mjs` to check guide orientation, camera framing,
+focus transitions and resource cleanup.
+
 ## Pages, images, and YAML
 
 Research, Teaching, and Ogura Shikishi use `layout: sections`. A Markdown
