@@ -7280,7 +7280,7 @@ function createSpecimenInk(T,id,geometry){
  if(id==='N6s')for(const [a,b]of [[.12,.55],[2.15,2.46],[4.25,4.58]])paths.push(circle(0,0,1.56,a,b));
  if(id==='H2'){paths.push(circle(-1.78,0,.80,.10,.57));paths.push(circle(0,0,.9,3.45,3.9));paths.push(circle(1.82,0,.75,.18,.6))}
  if(id==='N2'){paths.push(circle(0,0,.91,.15,.62));paths.push(circle(0,0,.91,3.3,3.65))}
- if(id==='N1')for(let k=0;k<3;k++){const angle=-Math.PI/2+k*Math.PI*2/3,co=Math.cos(angle),si=Math.sin(angle);paths.push(Array.from({length:25},(_,i)=>{const t=.16+.5*i/24,u=1.08+1.10*Math.cos(t),v=.59*Math.sin(t);return[co*u-si*v,si*u+co*v]}))}
+ if(id==='N1')for(let k=0;k<3;k++){const petal=geometry.userData.asymmetricPetals?.[k],angle=petal?.angle??(-Math.PI/2+k*Math.PI*2/3),co=Math.cos(angle),si=Math.sin(angle);paths.push(Array.from({length:25},(_,i)=>{const t=.16+.5*i/24,u=(petal?.center??1.08)+((petal?.major??.99)+.11)*Math.cos(t),v=((petal?.minor??.485)+.105)*Math.sin(t);return[co*u-si*v,si*u+co*v]}))}
  if(id==='N4'){const style=global.SMOOTH_SPECIMEN_STYLES?.[id];const loops=id==='N3'?Array.from({length:3},(_,i)=>{const t=-Math.PI/2+i*2*Math.PI/3+[0,.035,-.025][i],c=[1.09,1.14,1.04][i];return [c*Math.cos(t),c*Math.sin(t),[.91,.94,.88][i],[.59,.61,.57][i],t]}):[[0,1.17,.97,.54,Math.PI/2],[0,-1.10,.92,.56,-Math.PI/2],[1.12,0,.91,.56,0]];for(const [cx,cz,a,b,t]of loops)paths.push(Array.from({length:23},(_,i)=>{const q=.18+i*.46/22,u=(a+.10)*Math.cos(q),v=(b+.08)*Math.sin(q),x=cx+Math.cos(t)*u-Math.sin(t)*v,z=cz+Math.sin(t)*u+Math.cos(t)*v;return[style.scale[0]*x+style.shear*z,style.scale[2]*z]}))}
  if(id==='N3'){const st=global.SMOOTH_SPECIMEN_STYLES.N3;for(const [a,b]of [[.08,.40],[2.05,2.34],[4.2,4.48]])paths.push(circle(0,0,1.48,a,b).map(([x,z])=>[st.scale[0]*x+st.shear*z,st.scale[2]*z]))}
  const mesh=new T.Mesh(geometry,new T.MeshBasicMaterial({side:T.DoubleSide})),ray=new T.Raycaster(),down=new T.Vector3(0,-1,0);mesh.updateMatrixWorld(true);let projected=0;
@@ -7304,8 +7304,16 @@ function createArtSurfaceData(genus=3,options={}){
   genus=Math.max(0,Math.min(3,Math.round(genus)));
   const tetrahedral=genus===3&&options.shape==='tetrahedral';
   const wheel=genus===3&&options.shape==='wheel';
-  const n=options.resolution||84, ny=tetrahedral?n:Math.max(18,Math.round(n*.28));
-  const lo=tetrahedral?-1.64:(wheel?-1.9:-2.52),hi=-lo,yl=tetrahedral?-1.64:(genus?-.62:-1.3),yh=-yl;
+  const asymmetric=genus===3&&options.shape==='asymmetric-petals';
+  // Unequal apertures and directions for the generic-curve illustration.
+  // A varying height bends the entire tubular surface away from a mirror plane.
+  const petals=asymmetric?[
+    {angle:-1.74,center:1.28,major:1.18,minor:.46},
+    {angle:.35,center:1.04,major:.94,minor:.70},
+    {angle:2.74,center:.87,major:.77,minor:.48}
+  ]:null;
+  const n=options.resolution||84, ny=tetrahedral?n:Math.max(18,Math.round(n*(asymmetric?.50:.28)));
+  const lo=tetrahedral?-1.64:(wheel?-1.9:asymmetric?-2.95:-2.52),hi=-lo,yl=tetrahedral?-1.64:asymmetric?-1.45:(genus?-.62:-1.3),yh=-yl;
   const dx=(hi-lo)/n,dy=(yh-yl)/ny;
   const nx=n+1,nz=n+1,N=nx*nz*(ny+1);
   const field=new Float32Array(N),distance=new Float64Array(nx*nz);
@@ -7313,11 +7321,11 @@ function createArtSurfaceData(genus=3,options={}){
   const tube=.265,hub=.42,smooth=.11;
   const curves=[];
   if(genus&&!tetrahedral&&!wheel)for(let l=0;l<genus;l++){
-    const theta=genus===1?0:-Math.PI/2+l*2*Math.PI/genus;
+    const petal=petals?.[l],theta=petal?petal.angle:genus===1?0:-Math.PI/2+l*2*Math.PI/genus;
     const co=Math.cos(theta),si=Math.sin(theta),segments=100;
     const verts=[];
     for(let k=0;k<=segments;k++){
-      const t=k*2*Math.PI/segments,u=1.08+.99*Math.cos(t),v=.485*Math.sin(t);
+      const t=k*2*Math.PI/segments,u=(petal?.center??1.08)+(petal?.major??.99)*Math.cos(t),v=(petal?.minor??.485)*Math.sin(t);
       verts.push([co*u-si*v,si*u+co*v]);
     }
     for(let k=0;k<segments;k++){
@@ -7354,8 +7362,12 @@ function createArtSurfaceData(genus=3,options={}){
       }
       field[id(x,y,z)]=-k*Math.log(total);continue;
     }
-    const ball=Math.sqrt(px*px+py*py+pz*pz)-(genus?hub:1.1);
-    const torus=Math.sqrt(distance[z*nx+x]+py*py)-tube;
+    // Evaluate the sheared field before extraction, so the conforming mesh
+    // remains an embedded level surface rather than a warped triangle mesh.
+    const height=asymmetric?.16*px+.11*px*pz+.20*Math.sin(1.3*pz)+.08*pz*pz:0;
+    const shiftedY=py-height;
+    const ball=Math.sqrt(px*px+shiftedY*shiftedY+pz*pz)-(genus?hub:1.1);
+    const torus=Math.sqrt(distance[z*nx+x]+shiftedY*shiftedY)-tube;
     field[id(x,y,z)]=genus?smoothMin(ball,torus,smooth):ball;
   }
   const coordinate=i=>{const x=i%nx,z=Math.floor(i/nx)%nz,y=Math.floor(i/(nx*nz));return [lo+x*dx,yl+y*dy,lo+z*dx]};
@@ -7397,7 +7409,7 @@ function createArtSurfaceData(genus=3,options={}){
   const nonmanifold=[...counts.values()].filter(v=>v!==2).length;
   const chi=nv-counts.size+indices.length/3;
   const components=new Set(Array.from({length:nv},(_,i)=>root(i))).size;
-  const validation={genus,shape:tetrahedral?'tetrahedral':wheel?'wheel':'petal',components,vertices:nv,edges:counts.size,faces:indices.length/3,eulerCharacteristic:chi,expectedEulerCharacteristic:2-2*genus,nonmanifoldEdges:nonmanifold};
+  const validation={genus,shape:tetrahedral?'tetrahedral':wheel?'wheel':asymmetric?'asymmetric-petals':'petal',components,vertices:nv,edges:counts.size,faces:indices.length/3,eulerCharacteristic:chi,expectedEulerCharacteristic:2-2*genus,nonmanifoldEdges:nonmanifold,...(asymmetric?{asymmetricPetals:petals}:{} )};
   if(nonmanifold||components!==1||chi!==2-2*genus)throw new Error('Topological art mesh audit failed: '+JSON.stringify(validation));
   return {positions:new Float32Array(positions),indices:new Uint32Array(indices),validation};
 }
@@ -9172,9 +9184,9 @@ function markItem(item){item.marker=new T.Mesh(new T.SphereGeometry(item.boundar
 function addSmooth(d,anchor,pos,scale,color,layout){
  const model=new T.Group();let form,coverVisual=null;const smoothSpecimen=!['N24','N6s','H2','N2','H8v','N1'].includes(d.id)&&!!window.COVER_CONSTRUCTIONS?.[d.id]?.monodromy;
  if(smoothSpecimen){const geom=createSmoothSpecimenGeometry(T,d.id,{resolution:64});form=new T.Group();form.add(new T.Mesh(geom,skinMat),new T.Mesh(geom,outlineMat));form.scale.setScalar(scale);meshAudits['smooth:'+d.id]=geom.userData}
- else form=sculpture(3,scale,d.id==='N24'?'tetrahedral':d.id==='N2'?'bielliptic':d.id==='H2'?'three-chain':d.id==='H8v'?'four-theta':d.id==='N6s'?'wheel':d.id==='N168'?'klein-map':'petals',d.id==='N24'?52:60);
+ else form=sculpture(3,scale,d.id==='N24'?'tetrahedral':d.id==='N2'?'bielliptic':d.id==='H2'?'three-chain':d.id==='H8v'?'four-theta':d.id==='N6s'?'wheel':d.id==='N168'?'klein-map':d.id==='N1'?'asymmetric-petals':'petals',d.id==='N24'?52:d.id==='N1'?84:60);
  if(['N6s','H2','N2','N1','N3','N4'].includes(d.id))form.add(createSpecimenInk(T,d.id,form.children[0].geometry));
- form.rotation.order='ZYX';form.rotation.set(d.id==='N24'?.2:d.id==='N2'?1.02:d.id==='H2'?.76:d.id==='H8v'?Math.atan(1/3):smoothSpecimen?1.10:.62,d.id==='N24'?-.35:d.id==='H8v'?.10:['H2','N2'].includes(d.id)?.35:.06,layout?.rz||0);
+ form.rotation.order='ZYX';form.rotation.set(d.id==='N24'?.2:d.id==='N2'?1.02:d.id==='H2'?.76:d.id==='H8v'?Math.atan(1/3):d.id==='N1'?1.05:smoothSpecimen?1.10:.62,d.id==='N24'?-.35:d.id==='H8v'?.10:['H2','N2'].includes(d.id)?.35:.06,layout?.rz||0);
  if(d.id==='N1')form.scale.multiply(new T.Vector3(1,.92,.84));model.add(form);model.position.copy(pos);world.add(model);
  const item={id:d.id,data:d,boundary:false,anchor:anchor.clone(),model,form,color,baseScale:scale,focusScale:smoothSpecimen?Math.max(.69,scale):scale,defaultRotation:form.rotation.clone(),defaultScale:form.scale.clone(),label:null,coverVisual,smoothSpecimen};
  markItem(item);item.link=connector(anchor,pos.clone().add(new T.Vector3(0,-.35,0)),color,!!layout?.wide);
