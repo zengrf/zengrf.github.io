@@ -34,7 +34,7 @@
     <p data-i18n="posts.{{ post.slug }}.intro" data-i18n-summary>{{ post.content | strip_html | truncate: 200 }}</p>
     {% endif %}
     {% if preview != '' %}
-    <div class="featured-card__preview">
+    <div class="featured-card__preview{% if post.embed_mobile_portrait %} embed--mobile-portrait{% endif %}">
       {% include panel-frame.html %}
       <button class="embed-fullscreen" type="button" aria-label="View {{ post.title | escape }} fullscreen" data-i18n-aria="ui.fullscreen">
         <svg class="embed-fullscreen__icon embed-fullscreen__icon--enter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
