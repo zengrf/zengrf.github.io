@@ -1,8 +1,8 @@
 ---
 title: "Apollonian spheres in P³"
 date: 2026-10-11
-featured: true
-tags: [notes, code, visualizers]
+featured: false
+tags: [code, visualizers]
 excerpt: "12 common tangent lines. 16 tangent spheres. A three-dimensional sequel to the circles visualizer."
 embed_html: "/assets/visualizers/apollonian-spheres/index.html"
 embed_before_content: true
