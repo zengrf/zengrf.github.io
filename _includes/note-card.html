@@ -1,7 +1,7 @@
 {%- comment -%}
   One card for the notes lists.
 
-  A featured post carries a live preview of its demo; the rest are text only.
+  A featured post can carry a linked screenshot or a live preview.
   Both render as list items of the same list, so they pack into the same
   columns instead of the featured ones sitting apart in a block of their own.
   The preview keeps the .featured-card__preview class because that is what
@@ -12,7 +12,9 @@
 {%- assign post = include.post -%}
 {%- assign preview = '' -%}
 {%- if post.featured -%}
-  {%- if post.embed_html -%}
+  {%- if post.preview_image -%}
+    {%- assign preview = post.preview_image.src | relative_url | uri_escape -%}
+  {%- elsif post.embed_html -%}
     {%- assign preview = post.embed_html | relative_url | uri_escape -%}
   {%- elsif post.embed_url -%}
     {%- assign preview = post.embed_url -%}
@@ -33,7 +35,12 @@
     {% else %}
     <p data-i18n="posts.{{ post.slug }}.intro" data-i18n-summary>{{ post.content | strip_html | truncate: 200 }}</p>
     {% endif %}
-    {% if preview != '' %}
+    {% if post.featured and post.preview_image %}
+    <a class="featured-card__preview featured-card__poster" href="{{ post.url | relative_url }}">
+      {% include panel-frame.html %}
+      <img src="{{ preview | escape }}" width="{{ post.preview_image.width }}" height="{{ post.preview_image.height }}" loading="lazy" decoding="async" alt="Open {{ post.title | escape }}">
+    </a>
+    {% elsif preview != '' %}
     <div class="featured-card__preview{% if post.embed_mobile_portrait %} embed--mobile-portrait{% endif %}">
       {% include panel-frame.html %}
       <button class="embed-fullscreen" type="button" aria-label="View {{ post.title | escape }} fullscreen" data-i18n-aria="ui.fullscreen">

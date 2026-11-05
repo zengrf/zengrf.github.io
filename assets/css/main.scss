@@ -908,6 +908,9 @@ th { background: var(--panel); font-variant-caps: all-small-caps; letter-spacing
   overflow: hidden;
   background: var(--panel);
 }
+.featured-card__poster,
+.featured-card__poster img { display: block; }
+.featured-card__poster img { width: 100%; height: auto; }
 .featured-card__preview iframe {
   display: block;
   width: 100%;

@@ -2,6 +2,10 @@
 title: "A Mathematical Trinity"
 date: 2026-11-03
 featured: true
+preview_image:
+  src: "/assets/img/mathematical-trinity-overview.jpg"
+  width: 2048
+  height: 1280
 tags: [code, visualizers]
 embed_html: "/assets/html/exceptional-correspondences.html"
 embed_before_content: true
