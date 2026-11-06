@@ -1,7 +1,7 @@
 ---
 title: "Pipe Dream Builder"
 date: 2026-08-18
-featured: true
+featured: false
 tags: [code, visualizers]
 embed_html: "/assets/html/pipe-dreams.html"
 ---
