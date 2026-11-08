@@ -1,376 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Circles of Apollonius — Interactive Visualizer (v4.2)</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@600;700&display=swap">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Circles of Apollonius</title>
+<link rel="stylesheet" href="../visualizers/math-ink/math-ink.css">
+<link rel="stylesheet" href="../visualizers/apollonius.css">
 <style>
-  :root {
-    --bg: #faf7ee;
-    --fg: #2b2724;
-    --muted: #6d635a;
-    --panel: #ffffff;
-    --accent: #165e83;     /* given circles + handles */
-    --accent-2: #8f2e14;   /* solution circles */
-    --grid: rgba(43, 39, 36, 0.16);
-    --ring: rgba(22, 94, 131, 0.14);
-    --shadow: none;
-    --label: #2b2724;
-  }
-  [data-theme="dark"] {
-    --bg: #17130f;
-    --fg: #ece1c5;
-    --muted: #b3a687;
-    --panel: #221c16;
-    --accent: #7fb2cc;
-    --accent-2: #d0703f;
-    --grid: rgba(236, 225, 197, 0.16);
-    --ring: rgba(127, 178, 204, 0.2);
-    --shadow: none;
-    --label: #ece1c5;
-  }
-
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    background: var(--bg);
-    color: var(--fg);
-  }
-
-  .app {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 16px;
-    height: 100dvh;
-    min-height: 560px;
-    padding: 16px;
-  }
-  @media (max-width: 1000px) {
-    .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  }
-
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--grid);
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    padding: 14px 16px;
-  }
-  .title {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .title h1 { margin: 0; font-size: 18px; }
-  .subtle { color: var(--muted); }
-  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-  .badge { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--grid); }
-  .dot { width: 10px; height: 10px; border-radius: 999px; }
-  .dot.blue { background: var(--accent); }
-  .dot.red { background: var(--accent-2); }
-  .controls-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .switch {
-    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    user-select: none; padding: 6px 10px; border-radius: 999px;
-    background: var(--panel); border: 1px solid var(--grid);
-    box-shadow: var(--shadow);
-  }
-  .switch input { display: none; }
-  .switch .thumb { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; background: var(--bg); border: 1px solid var(--grid); }
-  button.btn {
-    appearance: none; border: 1px solid var(--grid); background: var(--panel);
-    color: var(--fg); padding: 6px 10px; border-radius: 10px; cursor: pointer;
-    box-shadow: var(--shadow);
-  }
-  button.btn:active { transform: translateY(1px); }
-
-  .stat { margin-top: 10px; padding: 8px; border: 1px dashed var(--grid); border-radius: 8px; color: var(--muted); }
-
-  .canvas-wrap {
-    position: relative;
-    height: 100%;
-    min-height: 560px;
-    border-radius: 14px; overflow: hidden;
-    border: 1px solid var(--grid); background: var(--bg); box-shadow: var(--shadow);
-  }
-  canvas { display: block; width: 100%; height: 100%; }
-  canvas.hover { cursor: pointer; }
-  canvas.grab { cursor: grab; }
-  canvas.grabbing { cursor: grabbing; }
-
-  .hint {
-    position: absolute; bottom: 10px; right: 12px; padding: 6px 10px;
-    border-radius: 999px; background: var(--panel); border: 1px solid var(--grid);
-    color: var(--muted);
-  }
-
-/* ---------------------------------------------------------------------
-   Grounding pass. Squares off the corners, drops the shadows, glass and
-   gradients, and puts the page on the site's paper-and-ink palette in a
-   serif face. Nothing here changes behaviour; opacity is never animated.
-   --------------------------------------------------------------------- */
-body, button, input, select, textarea, .panel, .dock, .legend, .info, .graph {
-  font-family: "EB Garamond", Georgia, serif !important;
-}
-h1, h2, h3, .title { font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif !important; }
-*, *::before, *::after {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  text-shadow: none !important;
-}
-*, *::before, *::after { transition-property: none !important; animation: none !important; }
-input[type="range"] { accent-color: #8f2e14 !important; }
-:focus-visible { outline: 2px solid #8f2e14 !important; outline-offset: 1px; }
-
-.panel { border: 1px solid rgba(43, 39, 36, 0.34) !important; }
-button, .btn { border: 1px solid rgba(43, 39, 36, 0.34) !important; background: #ffffff; color: #2b2724; }
-button:hover, .btn:hover { border-color: #2b2724 !important; }
-
-  .presets { margin-top: 14px; }
-  .presets h2 {
-    font: inherit; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted); margin: 0 0 6px; font-weight: 600;
-  }
-  .presets__note, .presets__foot {
-    margin: 0 0 8px; font-size: 0.82rem; line-height: 1.45; color: var(--muted);
-  }
-  .presets__foot { margin: 8px 0 0; font-style: italic; }
-  .presets__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  .presets__grid button {
-    font: inherit; font-size: 1rem; padding: 8px 0; cursor: pointer;
-    background: var(--bg); color: var(--fg);
-    border: 1px solid var(--grid);
-  }
-  .presets__grid button:hover { border-color: var(--fg); }
-  .presets__grid button[aria-pressed="true"] {
-    background: var(--accent-2); border-color: var(--accent-2); color: #faf7ee;
-  }
-</style>
-</head>
-<body data-theme="light">
-  <div class="app">
-    <aside class="panel">
-      <div class="title">
-        <div>
-          <h1>Circles of Apollonius</h1>
-        </div>
-        <div class="controls-inline">
-          <button id="reset" class="btn">Reset</button>
-          <label class="switch" title="Toggle light/dark">
-            <input id="themeToggle" type="checkbox" />
-            <span class="thumb" aria-hidden="true">🌓</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="stat">
-        Real solutions found: <strong id="count">0</strong>
-      </div>
-
-      <section class="presets">
-        <h2>Configurations</h2>
-        <p class="presets__note">
-          Apollonius' problem admits 0, 1, 2, 3, 4, 5, 6 or 8 tangent circles —
-          never 7. Each button loads three circles realising that count.
-        </p>
-        <div class="presets__grid" id="presets" role="group" aria-label="Solution count configurations"></div>
-        <p class="presets__foot">
-          The 0, 4 and 8 sets fill open regions and hold their count while you
-          drag. The rest sit on a tangency boundary, so they change the moment
-          a circle moves — that is where the odd counts live.
-        </p>
-      </section>
-    </aside>
-
-    <main class="canvas-wrap">
-      <canvas id="canvas"></canvas>
-      <div class="hint">Drag centers • Drag radius handles • Shift+Drag pan • Scroll zoom</div>
-    </main>
-  </div>
-
+html,body{margin:0;height:100%}
+body.math-ink{overflow:auto}
+.circle-drawing{height:100vh;height:100dvh;min-height:220px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:clamp(8px,2vh,24px) clamp(12px,4vw,60px) max(7px,env(safe-area-inset-bottom));box-sizing:border-box}
+canvas{display:block;width:100%;height:100%;min-height:0;touch-action:none;cursor:grab}
+canvas[data-cursor="handle"]{cursor:pointer}canvas[data-cursor="drag"]{cursor:grabbing}
+.margin{display:flex;justify-content:space-between;align-items:center;gap:12px 28px;flex-wrap:wrap;border-top:1px solid var(--rule);padding:6px 0 0;font-size:clamp(17px,1.85vw,24px)}
+.count-line,.examples{display:flex;align-items:center;gap:.45em;min-width:0}
+.count-line output{white-space:nowrap;color:var(--tangent)}
+.count-line button{font-size:25px;min-width:36px}
+.examples{gap:2px}.examples span{color:var(--muted);margin-right:.4em}
+#presets{display:flex;flex-wrap:wrap}#presets button{min-width:32px}
+#presets button[aria-pressed=true]{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:690px){.margin{justify-content:center;gap:0;flex-direction:column;padding-top:2px}.count-line{gap:.6em}.count-line button{min-height:36px}.examples span{font-size:17px}#presets button{min-width:clamp(27px,7vw,39px);padding:2px}.examples{gap:0}}
+@media(max-width:350px){.examples{width:100%;justify-content:center}.examples span{display:none}#presets button{min-width:34px}}
+@media(max-height:365px) and (min-width:500px){.margin{flex-direction:row;justify-content:space-between;font-size:16px}.examples span{display:none}.margin button{min-height:32px}}
+.example-note{position:relative;color:var(--muted);font-size:19px}
+.example-note summary{list-style:none;cursor:pointer;padding:5px 3px}
+.example-note summary::-webkit-details-marker{display:none}
+.example-note p{position:absolute;bottom:100%;left:0;z-index:2;width:min(255px,75vw);margin:0;padding:12px 14px;background:var(--mi-paper);border:1px solid var(--rule);color:var(--mi-ink);line-height:1.24}
+@media(max-width:500px){.examples{width:100%;justify-content:center}.example-note{font-size:16px}.example-note summary{min-height:40px;display:flex;align-items:center}#presets{flex:1;max-width:310px;justify-content:space-around}#presets button{flex:1;min-width:0;min-height:44px}}
+</style></head>
+<body class="math-ink apollonius" data-theme="light">
+<main class="circle-drawing">
+<header class="ink-header"><h1>Circles of Apollonius</h1><div class="ink-actions"><button id="themeToggle" aria-label="Toggle day and night paper" type="button">Day</button><button id="reset" type="button">Reset</button></div></header>
+<canvas id="canvas" tabindex="0" aria-label="Three given circles and their common tangent circles. Drag a center or its radius mark. With the keyboard, choose A, B, or C and use the arrows to move it or Shift with an arrow to change its radius."></canvas>
+<footer class="margin">
+<div class="count-line"><button id="prev" aria-label="Previous tangent circle">‹</button><output id="count" aria-live="polite"></output><button id="next" aria-label="Next tangent circle">›</button></div>
+<div class="examples"><details class="example-note"><summary>Examples</summary><p>Choose a count to load three circles with that many solutions. The examples with one, three, and five solutions lie on a tangency boundary.</p></details><div id="presets" role="group" aria-label="Configurations by number of real tangent circles"></div></div>
+</footer></main>
 <script>
 (() => {
-  const $ = (sel) => document.querySelector(sel);
-  const canvas = $('#canvas');
-  const ctx = canvas.getContext('2d', {alpha: true});
-
-  // Theme toggle
-  $('#themeToggle').addEventListener('change', (e) => {
-    document.body.setAttribute('data-theme', e.target.checked ? 'dark' : 'light');
-    draw();
-  });
-  $('#reset').addEventListener('click', () => {
-    circles = [
-      { id: 'C1', cx: 0, cy: 0,  r: 1, th: 0 },
-      { id: 'C2', cx: 2, cy: 0,  r: 1, th: 0 },
-      { id: 'C3', cx: 1, cy: 1.5, r: 1, th: 0 },
-    ];
-    view.scale = 80; view.ox = 0; view.oy = 0;
-    draw();
-  });
-
-  // State
-  let circles = [
-    { id: 'C1', cx: 0, cy: 0,  r: 1, th: 0 },
-    { id: 'C2', cx: 2, cy: 0,  r: 1, th: 0 },
-    { id: 'C3', cx: 1, cy: 1.5, r: 1, th: 0 },
-  ];
-  const view = { scale: 80, ox: 0, oy: 0 };
-
-  // Robust canvas sizing
-  /* Pointer events can outpace the display, and every one of them used to
-     force a synchronous redraw. draw() now batches to a single repaint per
-     animation frame; drawNow() is the immediate version. Device pixel ratio
-     is capped at 2, past which the extra pixels cost more than they show. */
-  var drawQueued = false;   // hoisted: draw() may be called before this line runs
-  function draw() {
-    if (drawQueued) return;
-    drawQueued = true;
-    requestAnimationFrame(() => { drawQueued = false; drawNow(); });
-  }
-
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-    const cssW = Math.max(1, rect.width|0);
-    const cssH = Math.max(1, rect.height|0);
-    canvas.width = cssW * dpr;
-    canvas.height = cssH * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw();
-  }
-  window.addEventListener('load', () => requestAnimationFrame(resize), {once: true});
-  window.addEventListener('resize', resize, {passive: true});
-
-  function canvasSize() {
-    const rect = canvas.getBoundingClientRect();
-    return { W: Math.max(1, rect.width|0), H: Math.max(1, rect.height|0) };
-  }
-
-  // Coordinate transforms (CSS pixels)
-  function worldToScreen(x, y) {
-    const { W, H } = canvasSize();
-    return [view.ox + x * view.scale + W/2, view.oy - y * view.scale + H/2];
-  }
-  function screenToWorld(px, py) {
-    const { W, H } = canvasSize();
-    return [(px - W/2 - view.ox) / view.scale, -(py - H/2 - view.oy) / view.scale];
-  }
-
-  // Pointer helpers: convert event to canvas-local CSS coords
-  function getLocal(e) {
-    const rect = canvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }
-
-  // Interaction
-  let dragging = null; // {type:'center'|'radius', idx:number} or 'pan'
-  let last = {x: 0, y: 0};
-
-  function hitTest(px, py) {
-    const R_HANDLE = 12;
-    const C_HANDLE = 10;
-    // radius handles first
-    for (let i=0; i<circles.length; i++) {
-      const c = circles[i];
-      const hx = c.cx + c.r * Math.cos(c.th);
-      const hy = c.cy + c.r * Math.sin(c.th);
-      const [sx, sy] = worldToScreen(hx, hy);
-      if (Math.hypot(px - sx, py - sy) <= R_HANDLE + 3) return {type: 'radius', idx: i};
-    }
-    // then centers
-    for (let i=0; i<circles.length; i++) {
-      const c = circles[i];
-      const [sx, sy] = worldToScreen(c.cx, c.cy);
-      if (Math.hypot(px - sx, py - sy) <= C_HANDLE + 3) return {type: 'center', idx: i};
-    }
-    return null;
-  }
-
-  function setCursor(px, py) {
-    const hit = hitTest(px, py);
-    if (!hit) {
-      canvas.classList.remove('hover', 'grab', 'grabbing');
-      canvas.classList.add('grab');
-      return;
-    }
-    canvas.classList.remove('grab', 'grabbing');
-    canvas.classList.add('hover');
-  }
-
-  canvas.addEventListener('pointerdown', (e) => {
-    clearPresetSelection();
-    const p = getLocal(e);
-    canvas.setPointerCapture?.(e.pointerId);
-    if (e.shiftKey) {
-      dragging = 'pan';
-      last.x = p.x; last.y = p.y;
-      canvas.classList.remove('hover', 'grab');
-      canvas.classList.add('grabbing');
-      return;
-    }
-    const hit = hitTest(p.x, p.y);
-    if (hit) {
-      dragging = hit;
-      canvas.classList.remove('hover', 'grab');
-      canvas.classList.add('grabbing');
-    } else {
-      dragging = 'pan';
-      last.x = p.x; last.y = p.y;
-      canvas.classList.remove('hover', 'grab');
-      canvas.classList.add('grabbing');
-    }
-  });
-
-  canvas.addEventListener('pointermove', (e) => {
-    const p = getLocal(e);
-    if (!dragging) { setCursor(p.x, p.y); return; }
-    if (dragging === 'pan') {
-      const dx = p.x - last.x;
-      const dy = p.y - last.y;
-      view.ox += dx; view.oy += dy;
-      last.x = p.x; last.y = p.y;
-      draw();
-      return;
-    }
-    const hit = dragging;
-    const c = circles[hit.idx];
-    const [wx, wy] = screenToWorld(p.x, p.y);
-    if (hit.type === 'center') {
-      c.cx = wx; c.cy = wy;
-    } else if (hit.type === 'radius') {
-      const dx = wx - c.cx, dy = wy - c.cy;
-      c.r = Math.max(0, Math.hypot(dx, dy));
-      c.th = Math.atan2(dy, dx);
-    }
-    draw();
-  }, {passive: true});
-
-  function stopDrag(e){
-    dragging = null;
-    canvas.releasePointerCapture?.(e.pointerId);
-    canvas.classList.remove('grabbing');
-    canvas.classList.add('grab');
-  }
-  canvas.addEventListener('pointerup', stopDrag);
-  canvas.addEventListener('pointercancel', stopDrag);
-
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const p = getLocal(e);
-    const scaleFactor = Math.exp(-e.deltaY * 0.001);
-    const [wx0, wy0] = screenToWorld(p.x, p.y);
-    view.scale = Math.max(10, Math.min(800, view.scale * scaleFactor));
-    const [sx1, sy1] = worldToScreen(wx0, wy0);
-    view.ox += (p.x - sx1);
-    view.oy += (p.y - sy1);
-    draw();
-  }, {passive: false});
-
-  // ---- Apollonius solver (renamed params to avoid shadowing/TDZ) ----
+  const $=s=>document.querySelector(s), canvas=$('#canvas'), ctx=canvas.getContext('2d');
+  const names=['A','B','C'];
+  const initial=[{cx:0,cy:0,r:1},{cx:2,cy:0,r:1},{cx:1,cy:1.5,r:1}];
+  let circles=[], solutions=[], selected=-1, editing=0, geometryDirty=true, collinear=false;
+  let width=1,height=1,frame=0,automaticFit=true;
+  const view={cx:0,cy:0,scale:1};
+  const pointers=new Map();
+  let drag=null;
   function solveApollonius(p1, p2, p3, R1, R2, R3) {
     const sols = [];
     const signs = [
@@ -474,149 +149,193 @@ button:hover, .btn:hover { border-color: #2b2724 !important; }
     { n: 8, circles: [{ cx: -2, cy: 0, r: 0.5 }, { cx: 1, cy: -0.5, r: 0.5 }, { cx: 0.5, cy: 2.5, r: 0.5 }] }
   ];
 
-  function fitView(pad = 1.35) {
-    const xs = circles.map(c => [c.cx - c.r, c.cx + c.r]).flat();
-    const ys = circles.map(c => [c.cy - c.r, c.cy + c.r]).flat();
-    const minX = Math.min(...xs), maxX = Math.max(...xs);
-    const minY = Math.min(...ys), maxY = Math.max(...ys);
-    const { W, H } = canvasSize();
-    const spanX = Math.max(1e-6, (maxX - minX) * pad);
-    const spanY = Math.max(1e-6, (maxY - minY) * pad);
-    view.scale = Math.max(12, Math.min(W / spanX, H / spanY));
-    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
-    view.ox = -cx * view.scale;
-    view.oy =  cy * view.scale;
-  }
 
-  function applyPreset(i) {
-    const p = PRESETS[i];
-    circles = p.circles.map((c, k) => ({ id: 'C' + (k + 1), cx: c.cx, cy: c.cy, r: c.r, th: 0 }));
-    fitView();
-    drawNow();
-    [...presetHost.children].forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
-  }
 
-  const presetHost = $('#presets');
-  PRESETS.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.textContent = p.n;
-    b.setAttribute('aria-pressed', 'false');
-    b.setAttribute('aria-label', p.n + (p.n === 1 ? ' solution' : ' solutions'));
-    b.title = p.n + (p.n === 1 ? ' tangent circle' : ' tangent circles');
-    b.addEventListener('click', () => applyPreset(i));
-    presetHost.appendChild(b);
+  function colors(){
+    const style=getComputedStyle(document.body);
+    const night=document.body.dataset.theme==='dark';
+    return {ink:style.color, paper:style.getPropertyValue('--mi-paper').trim(),
+      given:night?['#afbee5','#b8c88f','#dab4df']:['#52638a','#75824c','#825b91'],
+      tangent:style.getPropertyValue('--tangent').trim(), gold:night?'#edc876':'#a37523', grid:night?'#b5afa0':'#9a9381'};
+  }
+  let pigment=colors();
+  function repaint(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;paint();});}
+  function recompute(){
+    if(!geometryDirty)return;
+    const [a,b,c]=circles;
+    collinear=Math.abs((a.cx-b.cx)*(a.cy-c.cy)-(a.cy-b.cy)*(a.cx-c.cx))<1e-10;
+    solutions=collinear?[]:solveApollonius(...circles.map(s=>({x:s.cx,y:s.cy})),...circles.map(s=>s.r));
+    selected=Math.min(selected,solutions.length-1); geometryDirty=false;
+  }
+  const screen=(x,y)=>[width/2+(x-view.cx)*view.scale,height/2-(y-view.cy)*view.scale];
+  const local=(x,y)=>[view.cx+(x-width/2)/view.scale,view.cy-(y-height/2)/view.scale];
+  function fit(){
+    recompute();
+    const disks=[...circles.map(c=>[c.cx,c.cy,c.r]),...solutions.map(s=>[s.x,s.y,s.r])];
+    const min=(i)=>Math.min(...disks.map(c=>c[i]-c[2])),max=(i)=>Math.max(...disks.map(c=>c[i]+c[2]));
+    const x0=min(0),x1=max(0),y0=min(1),y1=max(1);
+    view.cx=(x0+x1)/2;view.cy=(y0+y1)/2;
+    view.scale=Math.min(Math.max(1,width-34)/Math.max(.05,x1-x0),Math.max(1,height-28)/Math.max(.05,y1-y0))*.93;
+  }
+  function load(items,preset){
+    circles=items.map(c=>({...c,th:0}));geometryDirty=true;selected=-1;editing=0;automaticFit=true;
+    [...$('#presets').children].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===preset)));
+    fit();repaint();
+  }
+  PRESETS.forEach((p,i)=>{
+    const b=document.createElement('button');b.type='button';b.textContent=p.n;
+    b.setAttribute('aria-label',p.n+(p.n===1?' solution':' solutions'));
+    b.onclick=()=>load(p.circles,i);$('#presets').append(b);
   });
-
-  // dragging a circle leaves whichever configuration was loaded
-  function clearPresetSelection() {
-    [...presetHost.children].forEach(b => b.setAttribute('aria-pressed', 'false'));
+  $('#reset').onclick=()=>load(initial,-1);
+  $('#themeToggle').onclick=()=>{
+    const dark=document.body.dataset.theme!=='dark';document.body.dataset.theme=dark?'dark':'light';
+    $('#themeToggle').textContent=dark?'Night':'Day';pigment=colors();repaint();
+  };
+  function resize(){
+    const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+    width=Math.max(1,rect.width);height=Math.max(1,rect.height);
+    canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+    ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);
+    if(automaticFit)fit();repaint();
   }
-
-  // Drawing
-  function drawGrid() {
-    const { W, H } = canvasSize();
-    const bg = getComputedStyle(document.body).getPropertyValue('--bg');
-    const grid = getComputedStyle(document.body).getPropertyValue('--grid');
-    const axis = getComputedStyle(document.body).getPropertyValue('--muted');
-
-    ctx.save();
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
-
-    // grid lines
-    const [x0w, y0w] = screenToWorld(0, 0);
-    const [x1w, y1w] = screenToWorld(W, H);
-    const xStart = Math.floor(x0w), xEnd = Math.ceil(x1w);
-    const yStart = Math.floor(y1w), yEnd = Math.ceil(y0w);
-    ctx.strokeStyle = grid; ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let x = xStart; x <= xEnd; x++) {
-      const [sx] = worldToScreen(x, 0);
-      ctx.moveTo(sx + .5, 0); ctx.lineTo(sx + .5, H);
+  function strokeCircle(x,y,r,color,w,opacity){
+    ctx.globalAlpha=opacity;ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.stroke();
+  }
+  function dot(x,y,r,color,fill){
+    ctx.globalAlpha=1;ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=1.6;ctx.strokeStyle=color;ctx.stroke();
+  }
+  function trace(a,b,color,w,opacity){
+    ctx.strokeStyle=color;ctx.lineWidth=w;ctx.globalAlpha=opacity;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();
+  }
+  function grid(){
+    const step=10**Math.floor(Math.log10(85/view.scale));
+    let spacing=step*view.scale;if(spacing<32)spacing*=5;
+    const [ox,oy]=screen(0,0);
+    ctx.lineWidth=.6;ctx.strokeStyle=pigment.grid;ctx.globalAlpha=.18;ctx.beginPath();
+    for(let x=((ox%spacing)+spacing)%spacing;x<width;x+=spacing){ctx.moveTo(x,0);ctx.lineTo(x,height);}
+    for(let y=((oy%spacing)+spacing)%spacing;y<height;y+=spacing){ctx.moveTo(0,y);ctx.lineTo(width,y);}
+    ctx.stroke();trace([ox,0],[ox,height],pigment.grid,.9,.42);trace([0,oy],[width,oy],pigment.grid,.9,.42);
+  }
+  function drawSolution(s,i){
+    const [x,y]=screen(s.x,s.y),r=s.r*view.scale,active=i===selected;
+    if(r<.7){dot(x,y,2,pigment.tangent,pigment.paper);return;}
+    strokeCircle(x,y,r,pigment.tangent,active?2.8:1.4,active?.96:selected<0?.69:.22);
+  }
+  function paint(){
+    recompute();ctx.clearRect(0,0,width,height);ctx.lineCap='round';grid();
+    circles.forEach((s,i)=>{
+      const [x,y]=screen(s.cx,s.cy),r=s.r*view.scale,c=pigment.given[i];
+      const wash=ctx.createRadialGradient(x-r*.30,y-r*.40,0,x,y,Math.max(.01,r));
+      wash.addColorStop(0,pigment.paper);wash.addColorStop(.72,c);wash.addColorStop(1,c);
+      ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=wash;ctx.globalAlpha=.17;ctx.fill();
+      // Short graphite hatches follow the shaded rim; the exact outline is separate.
+      ctx.save();ctx.clip();ctx.beginPath();
+      const spacing=Math.max(6,r/22);
+      for(let k=-5;k<=11;k++){
+        const xx=x+r*.44+k*spacing,yy=y+r*.60-k*spacing*.26;
+        ctx.moveTo(xx,yy);ctx.lineTo(xx-r*.16,yy+r*.25);
+      }
+      ctx.strokeStyle=c;ctx.lineWidth=.65;ctx.globalAlpha=.21;ctx.stroke();ctx.restore();
+      strokeCircle(x,y,r,c,2,.92);
+      if(r>2)strokeCircle(x,y,r-.90,c,.55,.3);
+    });
+    solutions.forEach((s,i)=>{if(i!==selected)drawSolution(s,i);});
+    if(selected>=0){
+      const s=solutions[selected];drawSolution(s,selected);
+      for(const c of circles){
+        const dx=s.x-c.cx,dy=s.y-c.cy,d=Math.hypot(dx,dy);if(d<1e-9)continue;
+        const sign=Math.abs(Math.abs(d-c.r)-s.r)<=Math.abs(d+c.r-s.r)?1:-1;
+        const p=screen(c.cx+sign*c.r*dx/d,c.cy+sign*c.r*dy/d);
+        ctx.setLineDash([3,5]);trace(screen(c.cx,c.cy),p,pigment.gold,1,.72);ctx.setLineDash([]);dot(...p,3.3,pigment.gold,pigment.paper);
+      }
     }
-    for (let y = yStart; y <= yEnd; y++) {
-      const [, sy] = worldToScreen(0, y);
-      ctx.moveTo(0, sy + .5); ctx.lineTo(W, sy + .5);
+    circles.forEach((s,i)=>{
+      const [x,y]=screen(s.cx,s.cy),end=screen(s.cx+s.r*Math.cos(s.th),s.cy+s.r*Math.sin(s.th)),c=pigment.given[i];
+      ctx.setLineDash([2,4]);trace([x,y],end,c,.9,.72);ctx.setLineDash([]);
+      dot(x,y,3.6,c,c);dot(...end,4.6,c,pigment.paper);
+      ctx.globalAlpha=1;ctx.font='23px Caveat, cursive';ctx.textAlign='right';ctx.fillStyle=c;
+      ctx.strokeStyle=pigment.paper;ctx.lineWidth=3;ctx.strokeText(names[i],x-6,y-7);ctx.fillText(names[i],x-6,y-7);
+    });
+    const count=collinear?'Collinear centers':selected<0?solutions.length+' real tangent '+(solutions.length===1?'circle':'circles'):'Tangent circle '+(selected+1)+' of '+solutions.length;
+    if($('#count').textContent!==count)$('#count').textContent=count;
+    $('#prev').disabled=$('#next').disabled=!solutions.length;
+  }
+  function cycle(d){
+    if(solutions.length){selected=selected<0?(d>0?0:solutions.length-1):(selected+d+solutions.length)%solutions.length;repaint();}
+  }
+  $('#prev').onclick=()=>cycle(-1);$('#next').onclick=()=>cycle(1);
+  function handleAt(p,touch){
+    let best=null,dist=touch?23:12;
+    circles.forEach((s,i)=>{
+      for(const [kind,pt] of [['center',screen(s.cx,s.cy)],['radius',screen(s.cx+s.r*Math.cos(s.th),s.cy+s.r*Math.sin(s.th))]]){
+        const d=Math.hypot(p.x-pt[0],p.y-pt[1]);if(d<=dist){dist=d;best={kind,i};}
+      }
+    });return best;
+  }
+  function solutionAt(p){
+    let best=-1,dist=10;
+    solutions.forEach((s,i)=>{const [x,y]=screen(s.x,s.y);const d=Math.abs(Math.hypot(x-p.x,y-p.y)-s.r*view.scale);if(d<dist){dist=d;best=i;}});
+    return best;
+  }
+  function pointer(e){const r=canvas.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+  function anchorZoom(scale,x,y,world){
+    view.scale=Math.max(.1,Math.min(2500,scale));
+    view.cx=world[0]-(x-width/2)/view.scale;view.cy=world[1]+(y-height/2)/view.scale;automaticFit=false;
+  }
+  function markEdited(){
+    geometryDirty=true;selected=-1;automaticFit=false;
+    for(const b of $('#presets').children)b.setAttribute('aria-pressed','false');
+    repaint();
+  }
+  canvas.addEventListener('pointerdown',e=>{
+    if((e.button!==0&&e.button!==1)||pointers.size>=2)return;
+    const p=pointer(e);pointers.set(e.pointerId,p);canvas.setPointerCapture(e.pointerId);canvas.dataset.cursor='drag';
+    if(pointers.size===2){
+      const [a,b]=pointers.values();drag={kind:'zoom',distance:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),scale:view.scale,world:local((a.x+b.x)/2,(a.y+b.y)/2)};
+    }else if(pointers.size===1){
+      const hit=!e.shiftKey&&e.button!==1&&handleAt(p,e.pointerType!=='mouse');
+      drag=hit?{...hit,start:p,origin:{...circles[hit.i]}}:{kind:'pan',start:p,cx:view.cx,cy:view.cy,moved:false};
+      if(hit)editing=hit.i;
     }
-    ctx.stroke();
-
-    // axes
-    ctx.strokeStyle = axis; ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    const [sx0, sy0] = worldToScreen(0, 0);
-    ctx.moveTo(0, sy0 + .5); ctx.lineTo(W, sy0 + .5);
-    ctx.moveTo(sx0 + .5, 0); ctx.lineTo(sx0 + .5, H);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function circleStroke() {
-    return getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#2563eb';
-  }
-  function solutionStroke() {
-    return getComputedStyle(document.body).getPropertyValue('--accent-2').trim() || '#ef4444';
-  }
-
-  function drawCircle(cx, cy, r, stroke, width=2, alpha=1) {
-    const [sx, sy] = worldToScreen(cx, cy);
-    const rad = r * view.scale;
-    if (rad < 0.5) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.beginPath();
-    ctx.arc(sx, sy, rad, 0, Math.PI*2);
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = width;
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawHandle(cx, cy, filled=true) {
-    const [sx, sy] = worldToScreen(cx, cy);
-    const border = (document.body.getAttribute('data-theme') === 'dark') ? '#e5e7eb' : '#111827';
-    ctx.save();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = border;
-    ctx.fillStyle = circleStroke();
-    ctx.beginPath();
-    ctx.arc(sx, sy, 7.5, 0, Math.PI*2);
-    if (filled) ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawNow() {
-    const { W, H } = canvasSize();
-    if (W === 0 || H === 0) return;
-
-    drawGrid();
-
-    // Given circles + handles
-    const cs = circleStroke();
-    for (const c of circles) {
-      drawCircle(c.cx, c.cy, c.r, cs, 3, 1);
-      // center (solid) and radius (ring) handles
-      drawHandle(c.cx, c.cy, true);
-      const hx = c.cx + c.r * Math.cos(c.th);
-      const hy = c.cy + c.r * Math.sin(c.th);
-      drawHandle(hx, hy, false);
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointermove',e=>{
+    const p=pointer(e);
+    if(!pointers.has(e.pointerId)){canvas.dataset.cursor=handleAt(p,false)||solutionAt(p)>=0?'handle':'';return;}
+    pointers.set(e.pointerId,p);if(!drag)return;
+    if(drag.kind==='zoom'){
+      const [a,b]=pointers.values();if(!b)return;
+      anchorZoom(drag.scale*Math.hypot(a.x-b.x,a.y-b.y)/drag.distance,(a.x+b.x)/2,(a.y+b.y)/2,drag.world);repaint();return;
     }
-
-    // Solve & draw solutions (rename locals to avoid 'C1/C2' names)
-    const p1 = {x: circles[0].cx, y: circles[0].cy};
-    const p2 = {x: circles[1].cx, y: circles[1].cy};
-    const p3 = {x: circles[2].cx, y: circles[2].cy};
-    const sols = solveApollonius(p1, p2, p3, circles[0].r, circles[1].r, circles[2].r);
-    $('#count').textContent = String(sols.length);
-    const ss = solutionStroke();
-    for (const s of sols) drawCircle(s.x, s.y, s.r, ss, 3, 0.95);
+    const dx=p.x-drag.start.x,dy=p.y-drag.start.y;
+    if(drag.kind==='pan'){
+      if(Math.hypot(dx,dy)>3)drag.moved=true;
+      if(drag.moved){view.cx=drag.cx-dx/view.scale;view.cy=drag.cy+dy/view.scale;automaticFit=false;repaint();}
+    }else{
+      const c=circles[drag.i],o=drag.origin;
+      if(drag.kind==='center'){c.cx=o.cx+dx/view.scale;c.cy=o.cy-dy/view.scale;}
+      else{const x=o.r*Math.cos(o.th)+dx/view.scale,y=o.r*Math.sin(o.th)-dy/view.scale;c.r=Math.hypot(x,y);c.th=Math.atan2(y,x);}
+      markEdited();
+    }
+  });
+  function end(e){
+    if(!pointers.delete(e.pointerId))return;
+    if(e.type==='pointerup'&&drag?.kind==='pan'&&!drag.moved){selected=solutionAt(pointer(e));repaint();}
+    const remaining=pointers.values().next().value;
+    drag=remaining?{kind:'pan',start:remaining,cx:view.cx,cy:view.cy,moved:true}:null;
+    canvas.dataset.cursor=remaining?'drag':'';
   }
-
-  // First paint
-  resize();
-})(); 
-</script>
-</body>
-</html>
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(type,end);
+  canvas.addEventListener('wheel',e=>{e.preventDefault();const p=pointer(e);anchorZoom(view.scale*Math.exp(-e.deltaY*.001),p.x,p.y,local(p.x,p.y));repaint();},{passive:false});
+  canvas.addEventListener('keydown',e=>{
+    const n=names.indexOf(e.key.toUpperCase());if(n>=0){editing=n;return;}
+    if(e.key==='+'||e.key==='-'||e.key==='='){e.preventDefault();anchorZoom(view.scale*(e.key==='-'?.85:1.18),width/2,height/2,[view.cx,view.cy]);repaint();return;}
+    const dir={ArrowUp:[0,1],ArrowDown:[0,-1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];if(!dir)return;
+    e.preventDefault();const c=circles[editing],step=4/view.scale;
+    if(e.shiftKey)c.r=Math.max(0,c.r+(dir[0]+dir[1])*step);else{c.cx+=dir[0]*step;c.cy+=dir[1]*step;}
+    markEdited();
+  });
+  load(initial,-1);resize();new ResizeObserver(resize).observe(canvas);document.fonts.ready.then(repaint);
+})();
+</script></body></html>

@@ -2,6 +2,10 @@
 title: "Moduli of genus 3 curves"
 date: 2026-10-30
 featured: true
+preview_image:
+  src: "/assets/img/genus-three-overview.jpg"
+  width: 2048
+  height: 1280
 tags: [code, visualizers]
 embed_html: "/assets/html/genus-three-atlas.html"
 embed_before_content: true

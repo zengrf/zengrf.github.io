@@ -1,7 +1,7 @@
 ---
 title: "InvariantRing^2 Tutorial for Macaulay2"
 date: 2024-10-05
-featured: true
+featured: false
 tags: [code, tutorials, macaulay2]
 embed_url: "https://zengrf.github.io/macaulay2-invariantring-tutorial/"
 ---
