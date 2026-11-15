@@ -1110,7 +1110,37 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   justify-content: space-between;
   gap: 1rem;
 }
+.footer-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+}
+.footer-details p { flex-basis: 100%; }
 .site-footer p { margin: 0; font-size: 0.88rem; letter-spacing: 0.06em; }
+.visitor-map {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  width: 194px;
+  max-width: 100%;
+  padding: 6px;
+  background-color: var(--beam-lo);
+  border: 1px solid var(--gold-quiet);
+  box-shadow: 0 2px 5px var(--toko-shadow);
+  color: var(--beam-ink);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-align: center;
+  text-underline-offset: 0.18em;
+}
+.visitor-map img { display: block; width: 100%; height: auto; }
+.visitor-map:hover, .visitor-map:focus-visible { color: var(--plaque); border-color: currentColor; }
+
+@media (max-width: 600px) {
+  .site-footer .container, .footer-details { justify-content: center; }
+  .footer-details { width: 100%; text-align: center; }
+}
 
 /* --------------------------------------------------------------------------
    16. Controls — wooden tablets

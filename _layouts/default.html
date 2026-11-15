@@ -64,20 +64,29 @@
 
     <footer class="site-footer">
       <div class="container">
-        <button class="time-toggle" type="button" aria-label="Theme: auto. Click to change.">
-          <span class="time-icon" aria-hidden="true"></span>
-        </button>
-        <div class="lang-overlay" id="lang-overlay" aria-hidden="true">
-          <button class="lang-toggle" aria-controls="lang-overlay" aria-expanded="false" aria-label="Change language" data-i18n-aria="ui.language">
-            <span class="lang-current">English</span>
+        <div class="footer-details">
+          <button class="time-toggle" type="button" aria-label="Theme: auto. Click to change.">
+            <span class="time-icon" aria-hidden="true"></span>
           </button>
-          <ul class="lang-list">
-            <li><button type="button" data-lang="en" class="lang-option">English</button></li>
-            <li><button type="button" data-lang="zh-Hans" class="lang-option">简体中文</button></li>
-            <li><button type="button" data-lang="ja" class="lang-option">日本語</button></li>
-          </ul>
+          <div class="lang-overlay" id="lang-overlay" aria-hidden="true">
+            <button class="lang-toggle" aria-controls="lang-overlay" aria-expanded="false" aria-label="Change language" data-i18n-aria="ui.language">
+              <span class="lang-current">English</span>
+            </button>
+            <ul class="lang-list">
+              <li><button type="button" data-lang="en" class="lang-option">English</button></li>
+              <li><button type="button" data-lang="zh-Hans" class="lang-option">简体中文</button></li>
+              <li><button type="button" data-lang="ja" class="lang-option">日本語</button></li>
+            </ul>
+          </div>
+          <p data-i18n="footer.copyright">&copy; {{ site.title | escape }} · {{ "now" | date: "%Y" }} · Seattle, WA</p>
         </div>
-        <p data-i18n="footer.copyright">&copy; {{ site.title | escape }} · {{ "now" | date: "%Y" }} · Seattle, WA</p>
+        {% if jekyll.environment == 'production' %}
+        <a class="visitor-map" href="https://mapmyvisitors.com/web/1c9i9">
+          <img src="https://mapmyvisitors.com/map.png?d=QTQQ2QtpjUjxo4diOqmuOPYkEpEkPYwidOXpAX07thQ&amp;cl=efe4ca&amp;co=443629&amp;ct=efe4ca&amp;cmo=c95137&amp;cmn=efb548"
+               width="180" height="112" alt="World map of approximate visitor locations" data-i18n-alt="footer.map_alt" />
+          <span data-i18n="footer.map_link">Visitor statistics</span>
+        </a>
+        {% endif %}
       </div>
     </footer>
 
