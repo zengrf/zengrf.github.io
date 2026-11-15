@@ -2,6 +2,7 @@
 title: "The Moduli of Triangles"
 date: 2026-11-08
 featured: true
+linked_excerpt: true
 preview_image:
   src: "/assets/img/moduli-of-triangles-overview.jpg"
   width: 2048
@@ -12,5 +13,5 @@ embed_before_content: true
 embed_mobile_portrait: true
 ---
 
-Draw an arc in the moduli space of triangles to see the family it defines, then forget the vertex labels to see which shapes coincide.
+Draw an arc in the moduli space of triangles to see the family it defines, then forget the vertex labels to see which shapes coincide. See also [Jonathan Wise’s earlier interactive visualization](https://math.colorado.edu/~jonathan.wise/visual/triangles.html).
 {: data-i18n="posts.moduli-of-triangles.intro"}

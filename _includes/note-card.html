@@ -30,7 +30,9 @@
       <a href="{{ post.url | relative_url }}" data-i18n="posts.{{ post.slug }}.title">{{ post.title }}</a>
     </h3>
     <div class="post__meta"><time datetime="{{ post.date | date_to_xmlschema }}" data-local-date>{{ post.date | date: "%B %e, %Y" }}</time></div>
-    {% if post.excerpt %}
+    {% if post.linked_excerpt %}
+    {{ post.excerpt }}
+    {% elsif post.excerpt %}
     <p data-i18n="posts.{{ post.slug }}.intro" data-i18n-summary>{{ post.excerpt | strip_html | truncate: 200 }}</p>
     {% else %}
     <p data-i18n="posts.{{ post.slug }}.intro" data-i18n-summary>{{ post.content | strip_html | truncate: 200 }}</p>

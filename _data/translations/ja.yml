@@ -382,4 +382,4 @@ posts.apollonian-spheres.title: |-
 posts.moduli-of-triangles.title: |-
   三角形のモジュライ
 posts.moduli-of-triangles.intro: |-
-  三角形のモジュライ空間に弧を描いて対応する三角形の族をたどり、頂点のラベルを忘れるとどの形が同一視されるかを確かめられます。
+  三角形のモジュライ空間に弧を描いて対応する三角形の族をたどり、頂点のラベルを忘れるとどの形が同一視されるかを確かめられます。[Jonathan Wise による先行の対話型可視化](https://math.colorado.edu/~jonathan.wise/visual/triangles.html)もご覧ください。
