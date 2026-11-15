@@ -13,5 +13,5 @@ embed_before_content: true
 embed_mobile_portrait: true
 ---
 
-Draw an arc in the moduli space of triangles to see the family it defines, then forget the vertex labels to see which shapes coincide. See also [Jonathan Wise’s earlier interactive visualization](https://math.colorado.edu/~jonathan.wise/visual/triangles.html).
+Draw an arc in the moduli space of triangles to see the family it defines, then forget the vertex labels to see which shapes coincide. See Jarod Alper’s [*Stacks and Moduli*, §1.2.1](https://sites.math.washington.edu/~jarod/moduli-versions/moduli-1-5-26.pdf#page=21) and [Jonathan Wise’s earlier interactive visualization](https://math.colorado.edu/~jonathan.wise/visual/triangles.html).
 {: data-i18n="posts.moduli-of-triangles.intro"}
