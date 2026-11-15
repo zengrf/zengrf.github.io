@@ -82,9 +82,10 @@
         </div>
         {% if jekyll.environment == 'production' %}
         <a class="visitor-map" href="https://mapmyvisitors.com/web/1c9i9">
-          <img src="https://mapmyvisitors.com/map.png?d=QTQQ2QtpjUjxo4diOqmuOPYkEpEkPYwidOXpAX07thQ&amp;cl=efe4ca&amp;co=443629&amp;ct=efe4ca&amp;cmo=c95137&amp;cmn=efb548"
-               width="180" height="112" alt="World map of approximate visitor locations" data-i18n-alt="footer.map_alt" />
-          <span data-i18n="footer.map_link">Visitor statistics</span>
+          {% include panel-frame.html %}
+          <img src="https://mapmyvisitors.com/map.png?d=QTQQ2QtpjUjxo4diOqmuOPYkEpEkPYwidOXpAX07thQ&amp;w=360&amp;t=n&amp;cl=8b8071&amp;co=ffffff&amp;cmo=aa432e&amp;cmn=b22920"
+               width="360" height="176" alt="World map of approximate visitor locations" data-i18n-alt="footer.map_alt" />
+          <span class="visitor-map__caption" data-i18n="footer.map_link">Visitor statistics</span>
         </a>
         {% endif %}
       </div>

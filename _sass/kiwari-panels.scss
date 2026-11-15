@@ -22,7 +22,7 @@
     --panel-glint: rgba(249, 220, 161, 0.48);
   }
 
-  .note-card, .featured-card, .featured-card__preview, .post__embed,
+  .visitor-map, .note-card, .featured-card, .featured-card__preview, .post__embed,
   .pdf-frame, .gif-frame, html[lang] figure.material-figure {
     --panel-frame-width: 6px;
     --panel-grain-h: -155px -92px;
@@ -33,7 +33,7 @@
     border-radius: 0;
     box-shadow: var(--panel-seat), var(--panel-rest);
   }
-  .note-card, .featured-card {
+  .visitor-map, .note-card, .featured-card {
     background-color: var(--bay);
     background-image: linear-gradient(var(--paper-veil), var(--paper-veil)), var(--material-paper);
     background-size: auto, var(--paper-size);
@@ -57,7 +57,7 @@
     --panel-grain-v: -238px -463px;
     background-position: 0 0, -287px -224px;
   }
-  .featured-card__preview {
+  .visitor-map, .featured-card__preview {
     --panel-frame-width: 4px;
     --panel-grain-h: -263px -148px;
     --panel-grain-v: -132px -318px;
@@ -195,7 +195,7 @@
   .post__embed:-webkit-full-screen > iframe, .featured-card__preview:-webkit-full-screen > iframe { width: 100%; height: 100%; aspect-ratio: auto; }
   @media (forced-colors: active) {
     .panel-frame { display: none; }
-    html[lang] .note-card, html[lang] .featured-card, .featured-card__preview, .post__embed,
+    .visitor-map, html[lang] .note-card, html[lang] .featured-card, .featured-card__preview, .post__embed,
     .pdf-frame, .gif-frame, html[lang] figure.material-figure {
       border: 1px solid CanvasText;
       background-image: none;
