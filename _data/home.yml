@@ -40,6 +40,15 @@ pronunciations:
 pronunciation_note: You might know me as Michael, マイケル, or Миша.
 activity_title: Recent activity
 activity:
+- key: activity.mathathon-2026
+  text: 'Caltech Mathathon Challenge: Old Problems, New Proofs. Caltech, Pasadena,
+    November 13–15, 2026.'
+- key: activity.algecom-2026
+  text: 'AlGeCom XXVIII (Algebra, Geometry and Combinatorics Day). University of
+    Illinois Urbana-Champaign, November 14, 2026.'
+- key: activity.accelerating-2026
+  text: 'Accelerating Mathematical Discovery: A Crash Course in AI and Computation.
+    Santa Cruz–Capitola, October 28–November 1, 2026.'
 - key: activity.slmath-2026
   text: SLMath Summer School on Moduli of Varieties. Berkeley, July 2026.
 - key: activity.lean-2026
@@ -62,4 +71,4 @@ activity:
     March 2026.
 - key: activity.wags-2026
   text: Western Algebraic Geometry Symposium. UCSD, March 2026.
-activity_updated: Last updated 2026‑08‑17.
+activity_updated: Last updated 2026‑11‑16.

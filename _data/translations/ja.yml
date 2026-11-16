@@ -62,7 +62,7 @@ hero.activity.title: |-
 hero.pronounce.note: |-
   Michael、マイケル、Миша という名前でも呼ばれています。
 hero.activity.note: |-
-  最終更新：2026年8月17日。
+  最終更新：2026年11月16日。
 ui.menu: |-
   メニュー
 ui.language: |-
@@ -364,6 +364,12 @@ hero.photo.caption2.alt: |-
   シアトルのケリーパークにて。背景は市街地とレーニア山。撮影：龚挺
 hero.photo.caption3.alt: |-
   レーニア山の麓にて
+activity.mathathon-2026: |-
+  Caltech Mathathon Challenge: Old Problems, New Proofs。カリフォルニア工科大学、パサデナ、2026年11月13–15日。
+activity.algecom-2026: |-
+  AlGeCom XXVIII（代数・幾何・組合せ論の日）。イリノイ大学アーバナ・シャンペーン校、2026年11月14日。
+activity.accelerating-2026: |-
+  Accelerating Mathematical Discovery: A Crash Course in AI and Computation。サンタクルーズ・キャピトラ、2026年10月28日–11月1日。
 activity.slmath-2026: |-
   SLMath「代数多様体のモジュライ」サマースクール。バークレー、2026年7月。
 activity.lean-2026: |-

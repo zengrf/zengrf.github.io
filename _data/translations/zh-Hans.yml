@@ -62,7 +62,7 @@ hero.pronounce.note: |-
 hero.activity.title: |-
   近期活动
 hero.activity.note: |-
-  更新于 2026 年 8 月 17 日。
+  更新于 2026 年 11 月 16 日。
 ui.menu: |-
   菜单
 ui.language: |-
@@ -364,6 +364,12 @@ hero.photo.caption2.alt: |-
   我在西雅图凯瑞公园的照片，背景是城市天际线和雷尼尔山，龚挺摄
 hero.photo.caption3.alt: |-
   我在雷尼尔山下的照片
+activity.mathathon-2026: |-
+  Caltech Mathathon Challenge: Old Problems, New Proofs。加州理工学院，帕萨迪纳，2026 年 11 月 13–15 日。
+activity.algecom-2026: |-
+  AlGeCom XXVIII（代数、几何与组合数学日）。伊利诺伊大学厄巴纳–香槟分校，2026 年 11 月 14 日。
+activity.accelerating-2026: |-
+  Accelerating Mathematical Discovery: A Crash Course in AI and Computation。圣克鲁兹–卡皮托拉，2026 年 10 月 28 日–11 月 1 日。
 activity.slmath-2026: |-
   SLMath 代数簇模空间暑期学校。伯克利，2026 年 7 月。
 activity.lean-2026: |-
