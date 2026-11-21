@@ -47,7 +47,7 @@
 
       if (!supportsFullscreen) {
         button.addEventListener('click', function () {
-          window.open(iframe.src, '_blank', 'noopener');
+          window.open(button.getAttribute('data-fullscreen-url') || iframe.src, '_blank', 'noopener');
         });
         button.setAttribute('aria-label', 'Open interactive demo in new tab');
         return;

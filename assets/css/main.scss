@@ -1080,6 +1080,15 @@ html[lang="zh-Hans"] .toc [lang="zh-Hans"] { display: inline; }
   width: 2.1rem; height: 2.1rem;
   padding: 0;
 }
+/* Keep the drawing's own controls clear at the upper edge. */
+.embed--controls-above .embed-fullscreen {
+  top: auto; right: 0; bottom: calc(100% + .8rem);
+}
+.embed--controls-above:fullscreen, .embed--controls-above:-webkit-full-screen {
+  box-sizing: border-box;
+  padding-top: 3.5rem;
+  .embed-fullscreen { top: .3rem; right: .5rem; bottom: auto; }
+}
 .embed-fullscreen__icon { width: 1rem; height: 1rem; }
 .embed-fullscreen__icon--exit { display: none; }
 
